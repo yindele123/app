@@ -1,0 +1,140 @@
+{include file="public/header" /}
+<body>
+<div class="layui-fluid">
+  <div class="layui-row">
+    <form class="layui-form">
+      <div class="layui-form-item">
+        <label for="title" class="layui-form-label">
+          <span class="x-red">*</span>文章标题
+        </label>
+        <div class="layui-input-inline">
+          <input type="text" id="title" name="title" lay-verify="required"
+                 autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">
+          <span class="x-red">*</span>将会成为您唯一文章标题
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label for="small_title" class="layui-form-label">
+          简略标题
+        </label>
+        <div class="layui-input-inline">
+          <input type="text" id="small_title" name="small_title" autocomplete="off" class="layui-input">
+        </div>
+
+      </div>
+      <div class="layui-form-item">
+        <label for="catid" class="layui-form-label">
+          <span class="x-red">*</span>分类栏目
+        </label>
+        <div class="layui-input-inline">
+          <select name="catid" class="select">
+            {volist name="cats" id="vo"}
+            <option value="{$key}">{$vo}</option>
+            {/volist}
+
+          </select>
+        </div>
+        <div class="layui-form-mid layui-word-aux">
+          <span class="x-red">*</span>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label for="description" class="layui-form-label">
+          <span class="x-red">*</span>文章摘要
+        </label>
+        <div class="layui-input-block">
+          <textarea autocomplete="off" class="layui-textarea" name="description" id="description"
+                    lay-verify="required"  class="textarea"  placeholder="说点什么...最少输入10个字符" ></textarea>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label for="is_allowcomments" class="layui-form-label">
+          允许评论
+        </label>
+        <div class="layui-input-inline">
+          <input type="checkbox" id="is_allowcomments" lay-skin="primary" name="is_allowcomments" value="1">
+          <label for="is_allowcomments">&nbsp;</label>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label for="is_head_figure" class="layui-form-label">
+          是否推荐到首页头图
+        </label>
+        <div class="layui-input-inline">
+          <input type="checkbox" id="is_head_figure" lay-skin="primary" name="is_head_figure" value="1">
+          <label for="is_head_figure">&nbsp;</label>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label for="is_position" class="layui-form-label">
+          是否推荐
+        </label>
+        <div class="layui-input-inline">
+          <input type="checkbox" id="is_position" lay-skin="primary" name="is_position" value="1">
+          <label for="is_position">&nbsp;</label>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label for="image" class="layui-form-label">
+          <span class="x-red">*</span>缩略图：
+        </label>
+        <div class="layui-input-inline">
+          <input id="file_upload"  type="file" multiple="true" >
+          <img style="display: none" id="upload_org_code_img" src="" width="150" height="150">
+          <input id="file_upload_image" name="image" type="hidden" multiple="true" value="">
+        </div>
+      </div>
+
+      <!--<div class="layui-form-item">
+        <label for="L_pass" class="layui-form-label">
+          <span class="x-red">*</span>文章内容：
+        </label>
+        <div class="">
+          <textarea id="editor" name="content" required lay-verify="required" placeholder="请输入" class="layui-textarea"></textarea>
+        </div>
+      </div>-->
+      <div class="layui-form-item">
+        <label for="editor" class="layui-form-label">
+          <span class="x-red">*</span>文章内容：
+        </label>
+        <div class="layui-input-block">
+          <textarea id="editor" name="content" style="height: 400px;"  required lay-verify="required"  ></textarea>
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <label for="L_repass" class="layui-form-label">
+        </label>
+        <button  class="layui-btn" lay-submit lay-filter="add" type="button">
+          添加
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__STATIC__/common/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="__STATIC__/common/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="__STATIC__/common/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+{load href="__STATIC__/common/uploadify/jquery.uploadify.min.js" /}
+{load href="__STATIC__/common/js/image.js" /}
+<script>
+    var ue = UE.getEditor('editor');
+    layui.use(['form', 'layer'],
+    function() {
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
+
+        //监听提交
+        form.on('submit(add)',
+            function(data) {
+                // 使用Ajax提交表单数据
+                backtrack('{:url(\'news/add\')}',data.field,true);
+            });
+
+    });</script>
+</body>
+
+</html>
