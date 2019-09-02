@@ -6,7 +6,7 @@
  * Time: 21:33
  */
 namespace app\admin\controller;
-
+use app\common\service\Common;
 class News extends BaseController
 {
     public function index() {
@@ -35,25 +35,25 @@ class News extends BaseController
 
         // 模式二
         // page  size  from   limit from  size
-        $this->getPageAndSize($data);
 
+        $request=Common::getPageAndSize($data);
         // 获取表里面的数据
-        $news = model('News')->getNewsByCondition($whereData, $this->from, $this->size);
+        $news = model('News')->getNewsByCondition($whereData, $request['from'], $request['size']);
         // 获取满足条件的数据总数 =》 有多少页
         $total = model('News')->getNewsCountByCondition($whereData);
         /// 结合总数+size  =》 有多少页
-        $pageTotal = ceil($total/$this->size);//1.1 =>2
+        $pageTotal = ceil($total/$request['size']);//1.1 =>2
         return $this->fetch('', [
             'cats' => config('cat.lists'),
             'news' => $news,
             'pageTotal' => $pageTotal,
-            'curr' => $this->page,
+            'curr' => $request['page'],
             'start_time' => empty($data['start_time']) ? '' : $data['start_time'],
             'end_time' => empty($data['end_time']) ? '' : $data['end_time'],
             'catid' => empty($data['catid']) ? '' : $data['catid'],
             'title' => empty($data['title']) ? '' : $data['title'],
             'total' => $total,
-            'size' => $this->size,
+            'size' => $request['size'],
             'query' => $query,
         ]);
     }

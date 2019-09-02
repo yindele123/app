@@ -17,13 +17,14 @@ Route::get('test', 'api/test/index');
 Route::resource('test', 'api/test');
 /// x.com/test  post  => api test save
 
-Route::get('api/:ver/cat', 'api/:ver.cat/read');
-Route::get('api/:ver/index', 'api/:ver.index/index');
-Route::get('api/:ver/init', 'api/:ver.index/init');
+Route::get('api/:version/cat', 'api/:version.cat/read');
+Route::get('api/:version/index', 'api/:version.index/index');
+Route::get('api/:version/init', 'api/:version.index/init');
 
 // news
-Route::resource('api/:ver/news', 'api/:ver.news');
+Route::get('api/:version/newslist', 'api/:version.news/index');
 //排行
-Route::get('api/:ver/rank', 'api/:ver.rank/index');
+Route::get('api/:version/news/rank', 'api/:version.news/rank');
+Route::get('api/:version/news', 'api/:version.news/read');
 //短信验证码相关
-Route::resource('api/:ver/identify', 'api/:ver.identify');
+Route::resource('api/:version/identify', 'api/:version.identify');

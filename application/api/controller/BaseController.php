@@ -8,6 +8,7 @@
 namespace app\api\controller;
 use app\common\service\IAuth;
 use app\lib\exception\ParameterException;
+use think\Cache;
 use think\Controller;
 
 class BaseController extends Controller{
@@ -23,10 +24,8 @@ class BaseController extends Controller{
      * 检查每次app请求的数据是否合法
      */
     public function checkRequestAuth() {
-        // 首先需要获取headers
+        // 获取headers
         $headers = request()->header();
-        // sign 加密需要 客户端工程师 ， 解密：服务端工程师
-
         // 基础参数校验
         if(empty($headers['sign'])) {
             throw new ParameterException([
@@ -34,7 +33,7 @@ class BaseController extends Controller{
                 'errorCode' => 40000
             ]);
         }
-        if(!in_array($headers['app_type'], config('app.apptypes'))) {
+        if(!in_array($headers['apptype'], config('app.apptypes'))) {
             throw new ParameterException([
                 'msg' => 'app_type不合法',
                 'errorCode' => 40001
@@ -50,7 +49,22 @@ class BaseController extends Controller{
         }
         Cache::set($headers['sign'], 1, config('app.app_sign_cache_time'));
 
-        // 1、文件  2、mysql 3、redis
         $this->headers = $headers;
     }
+    /**
+     * 获取处理的新闻的内容数据
+     * @param array $news
+     * @return array
+     */
+    protected  function getDealNews($news = []) {
+        if(empty($news)) {
+            return [];
+        }
+        $cats = config('cat.lists');
+        foreach($news as $key => $new) {
+            $news[$key]['catname'] = $cats[$new['catid']] ? $cats[$new['catid']] : '-';
+        }
+        return $news;
+    }
+
 }

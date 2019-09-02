@@ -19,8 +19,8 @@ class Aes {
      */
     public function __construct() {
         // 需要小伙伴在配置文件app.php中定义aeskey
-        $this->key = config('key.aeskey');
-        $this->iv = config('key.aesvi');
+        $this->key = substr(md5(config('key.aeskey')),2,20);
+        $this->iv = substr(md5(config('key.aesvi')),3,16);
     }
 
     /**
@@ -29,7 +29,7 @@ class Aes {
      * @return HexString
      */
     public function encrypt($input = '') {
-        $data=openssl_encrypt($input, 'AES-128-CBC',md5($this->key),OPENSSL_RAW_DATA,$this->iv);
+        $data=openssl_encrypt($input, 'AES-128-CBC',$this->key,OPENSSL_RAW_DATA,$this->iv);
         $encrypt=base64_encode($data);
         return $encrypt;
     }
@@ -40,7 +40,7 @@ class Aes {
      */
     public function decrypt($sStr) {
         $encrypt = base64_decode($sStr);
-        $decrypt = openssl_decrypt($encrypt, 'AES-128-CBC', md5($this->key), OPENSSL_RAW_DATA, $this->iv);
+        $decrypt = openssl_decrypt($encrypt, 'AES-128-CBC', $this->key, OPENSSL_RAW_DATA, $this->iv);
         return $decrypt;
     }
 

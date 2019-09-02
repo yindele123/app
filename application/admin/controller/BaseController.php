@@ -61,14 +61,6 @@ class BaseController extends Controller{
         }
     }
 
-    /**
-     * 获取分页page size 内容
-     */
-    public function getPageAndSize($data) {
-        $this->page = !empty($data['page']) ? $data['page'] : 1;
-        $this->size = !empty($data['size']) ? $data['size'] : config('paginate.list_rows');
-        $this->from = ($this->page - 1) * $this->size;
-    }
 
     /**
      * 删除逻辑

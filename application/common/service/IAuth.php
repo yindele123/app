@@ -6,7 +6,8 @@
  * Time: 15:50
  */
 namespace app\common\service;
-use app\common\service\Aes;
+use think\Cache;
+
 class IAuth{
     /**
      * 设置密码
@@ -31,7 +32,6 @@ class IAuth{
         $string = http_build_query($data);
         // 3通过aes来加密
         $string = (new Aes())->encrypt($string);
-
         return $string;
     }
 
@@ -43,23 +43,18 @@ class IAuth{
      */
     public static function checkSignPass($data) {
         $str = (new Aes())->decrypt($data['sign']);
-
         if(empty($str)) {
             return false;
         }
-
-        // did=xx&app_type=3
         parse_str($str, $arr);
-        if(!is_array($arr) || empty($arr['did'])
-            || $arr['did'] != $data['did']
-        ) {
+        if(!is_array($arr) || empty($arr['did']) || $arr['did'] != $data['did']) {
             return false;
         }
+        //调试模式就不判断sign过期时间
         if(!config('app_debug')) {
             if ((time() - ceil($arr['time'] / 1000)) > config('app.app_sign_time')) {
                 return false;
             }
-            //echo Cache::get($data['sign']);exit;
             // 唯一性判定
             if (Cache::get($data['sign'])) {
                 return false;
