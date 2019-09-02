@@ -54,7 +54,7 @@ class News extends BaseController{
         (new IDMustBePositiveInt())->goCheck();
         // 通过id 去获取数据表里面的数据
         try{
-            $news = model('News')->get($id);
+            $news = (new CommonNews())->getNewsFind($id);
         }catch (\Exception $e){
             throw new  ErrorException();
         }

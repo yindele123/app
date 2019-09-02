@@ -29,22 +29,29 @@ class News extends BaseModel {
 
     /**
      * 根据来获取列表的数据
-     * @param array $param
+     * @param int $where  查询条件
+     * @param int $catid  栏目ID
+     * @param int $from    起始获取值
+     * @param int $size    获取多少条数据
+     * @param int $title    模糊搜索的新闻标题
+     * @param int $field  要查询的字段
+     * @param int $order  排序
+     * @param array $result  返回按条件获取的新闻列表
      */
-    public function getNewsByCondition($condition = [], $from=0, $size = 5) {
-        if(!isset($condition['status'])) {
-            $condition['status'] = [
+    public function getNewsByCondition($where = [], $catid=[], $from=0, $size = 5,$title='',$field='',$order = ['id' => 'desc']) {
+        $model=new News;
+        if(!empty($catid)){
+            $model->where('catid','in',$catid);
+        }
+        if(!empty($title)) {
+            $where['title'] = ['like', '%'.trim($title).'%'];
+        }
+        if(!isset($where['status'])) {
+            $where['status'] = [
                 'neq', config('code.status_delete')
             ];
         }
-
-        $order = ['id' => 'desc'];
-
-        $result = $this->where($condition)
-            ->limit($from, $size)
-            ->field(self::getListField())
-            ->order($order)
-            ->select();
+        $result = $this->where($where)->limit($from, $size)->field(self::getListField($field))->order($order)->select();
         return $result;
     }
 
@@ -52,16 +59,21 @@ class News extends BaseModel {
      * 根据条件来获取列表的数据的总数
      * @param array $param
      */
-    public function getNewsCountByCondition($condition = []) {
-        if(!isset($condition['status'])) {
-            $condition['status'] = [
+    public function getNewsCountByCondition($where = [], $catid=[],$title='') {
+        $model=new News;
+        if(!empty($catid)){
+            $model->where('catid','in',$catid);
+        }
+        if(!empty($title)) {
+            $where['title'] = ['like', '%'.trim($title).'%'];
+        }
+        if(!isset($where['status'])) {
+            $where['status'] = [
                 'neq', config('code.status_delete')
             ];
         }
-
-        return $this->where($condition)
-            ->count();
-        //echo $this->getLastSql();
+        $data=$model->where($where)->count();
+        return $data;
     }
 
     /**
@@ -81,5 +93,19 @@ class News extends BaseModel {
             ->paginate();
         // 调试
         return $result;
+    }
+
+    /**
+     * 获取新闻排行榜数据
+     * @param int $id  查询新闻ID
+     * @param int $field  要查询的字段
+     * @return $data
+     */
+    public function getNewsFind($id,$field=[]) {
+        if(empty($id)){
+            return false;
+        }
+        $data=$this->where(['id'=>$id])->field($field)->find();
+        return $data;
     }
 }

@@ -11,6 +11,8 @@ class News extends BaseController
 {
     public function index() {
         $data = input('param.');
+        $catid=!empty($data['catid']) ? $data['catid'] : 0;
+        $title=!empty($data['title']) ? $data['title'] : '';
         $query = http_build_query($data);
         $whereData = [];
         // 转换查询条件
@@ -22,25 +24,11 @@ class News extends BaseController
                 ['lt', strtotime($data['end_time'])],
             ];
         }
-        if(!empty($data['catid'])) {
-            $whereData['catid'] = intval($data['catid']);
-        }
-        if(!empty($data['title'])) {
-            $whereData['title'] = ['like', '%'.$data['title'].'%'];
-        }
-        // 获取数据 然后数据 填充到模板
-
-        // 模式一
-        ///$news = model('News')->getNews();
-
-        // 模式二
-        // page  size  from   limit from  size
-
         $request=Common::getPageAndSize($data);
         // 获取表里面的数据
-        $news = model('News')->getNewsByCondition($whereData, $request['from'], $request['size']);
+        $news = model('News')->getNewsByCondition($whereData,$catid, $request['from'], $request['size'],$title);
         // 获取满足条件的数据总数 =》 有多少页
-        $total = model('News')->getNewsCountByCondition($whereData);
+        $total = model('News')->getNewsCountByCondition($whereData,$catid,$title);
         /// 结合总数+size  =》 有多少页
         $pageTotal = ceil($total/$request['size']);//1.1 =>2
         return $this->fetch('', [

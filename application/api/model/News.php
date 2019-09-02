@@ -22,7 +22,7 @@ class News extends BaseModel {
             'id' => 'desc',
         ];
         return $this->where($data)
-            ->field(CommNews::getListField())
+            ->field(CommNews::getListField($field))
             ->order($order)
             ->limit($num)
             ->select();
@@ -48,23 +48,23 @@ class News extends BaseModel {
     }
 
     /**
-     * 获取排行榜数据
-     * @param int $num
+     * 获取新闻排行榜数据
+     * @param int $where  查询条件
+     * @param int $field  要查询的字段
+     * @param int $catid  栏目ID
+     * @param int $num    获取条数
+     * @param int $order  排序
      * @return false|\PDOStatement|string|\think\Collection
      */
-    public function getRankNormalNews($num = 5) {
-        $data = [
-            'status' => 1,
-        ];
-
-        $order = [
-            'read_count' => 'desc',
-        ];
-
-        return $this->where($data)
-            ->field(CommNews::getListField())
-            ->order($order)
-            ->limit($num)
-            ->select();
+    public function getRankNormalNews($where=[],$field=[],$catid=[],$num = 5,$order=['read_count' => 'desc']) {
+        $model=new News;
+        if(!empty($catid)){
+            $model->where('catid','in',$catid);
+        }
+        if(!isset($where['status'])) {
+            $where['status'] = config('code.status_normal');
+        }
+        $data=$model->where($where)->field(CommNews::getListField($field))->order($order)->limit($num)->select();
+        return $data;
     }
 }
