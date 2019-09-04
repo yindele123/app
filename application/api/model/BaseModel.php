@@ -6,8 +6,9 @@
  * Time: 11:56
  */
 namespace app\api\model;
-use think\Model;
 
-class BaseModel extends Model{
+use app\common\model\CommonModel;
+
+class BaseModel extends CommonModel {
 
 }

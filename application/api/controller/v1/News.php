@@ -17,25 +17,21 @@ class News extends BaseController{
     public function index() {
         // 小伙伴仿照我们之前讲解的validate验证机制 去做相关校验
         $data = input('get.');
-
+        $catid=!empty($data['catid']) ? $data['catid'] : 0;
+        $title=!empty($data['title']) ? $data['title'] : '';
         $whereData['status'] = config('code.status_normal');
-        if(!empty($data['catid'])) {
-            $whereData['catid'] = input('get.catid', 0, 'intval');
-        }
-        if(!empty($data['title'])) {
-            $whereData['title'] = ['like', '%'.$data['title'].'%'];
-        }
-
         $recovery=Common::getPageAndSize($data);
         try{
-            $total = (new CommonNews())->getNewsCountByCondition($whereData);
+            $total = (new CommonNews())->getNewsCountByCondition($whereData,$catid,$title);
         }catch (\Exception $e){
-            throw new  ErrorException();
+            Common::setLog(request()->url().'-----'.$e->getMessage());
+            throw new ErrorException();
         }
         try{
-            $news = (new CommonNews())->getNewsByCondition($whereData, $recovery['from'], $recovery['size']);
+            $news = (new CommonNews())->getNewsByCondition($whereData,$catid, $recovery['from'], $recovery['size'],$title);
         }catch (\Exception $e){
-            throw new  ErrorException();
+            Common::setLog(request()->url().'-----'.$e->getMessage());
+            throw new ErrorException();
         }
         $result = [
             'total' => $total,
@@ -56,7 +52,8 @@ class News extends BaseController{
         try{
             $news = (new CommonNews())->getNewsFind($id);
         }catch (\Exception $e){
-            throw new  ErrorException();
+            Common::setLog(request()->url().'-----'.$e->getMessage());
+            throw new ErrorException();
         }
         if(empty($news) || $news->status != config('code.status_normal')) {
             throw new MissException([
@@ -67,7 +64,8 @@ class News extends BaseController{
         try {
             model('News')->where(['id' => $id])->setInc('read_count');
         }catch(\Exception $e) {
-            throw new  ErrorException();
+            Common::setLog(request()->url().'-----'.$e->getMessage());
+            throw new ErrorException();
         }
         $cats = config('cat.lists');
         $news->catname = $cats[$news->catid];
@@ -84,10 +82,22 @@ class News extends BaseController{
             $rands = model('News')->getRankNormalNews();
             $rands = $this->getDealNews($rands);
         }catch (\Exception $e) {
-            throw new  ErrorException();
+            Common::setLog(request()->url().'-----'.$e->getMessage());
+            throw new ErrorException();
         }
 
         return show(config('code.success'), 'OK', $rands, 200);
     }
-
+    //获取推荐新闻
+    public function recommend(){
+        $catid=input('get.catid',0,'intval');
+        $size=Common::setCount(input('get.size',0,'intval'));
+        try{
+            $data=model('News')->getPositionNormalNews($catid,$size);
+        }catch (\Exception $e){
+            Common::setLog(request()->url().'-----'.$e->getMessage());
+            throw new ErrorException();
+        }
+        return show(config('code.success'), 'OK', $data, 200);
+    }
 }

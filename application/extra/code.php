@@ -16,4 +16,7 @@ return [
     'success' => 1,
     //代表返回接口错误
     'error' => 0,
+    //推荐新闻
+    'is_position'=>1,
+    'server_code'=>100006
 ];

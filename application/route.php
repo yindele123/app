@@ -26,5 +26,7 @@ Route::get('api/:version/newslist', 'api/:version.news/index');
 //排行
 Route::get('api/:version/news/rank', 'api/:version.news/rank');
 Route::get('api/:version/news', 'api/:version.news/read');
+//新闻推荐
+Route::get('api/:version/recommend', 'api/:version.news/recommend');
 //短信验证码相关
 Route::resource('api/:version/identify', 'api/:version.identify');

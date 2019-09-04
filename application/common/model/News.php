@@ -6,11 +6,11 @@
  * Time: 11:49
  */
 namespace app\common\model;
-class News extends BaseModel {
+class News extends CommonModel {
     /**
      * 通用化获取参数的数据字段
      */
-    public static function getListField($fiel='') {
+    public static function getListField($field='') {
         if(empty($field)){
             return [
                 'id',
@@ -30,7 +30,7 @@ class News extends BaseModel {
     /**
      * 根据来获取列表的数据
      * @param int $where  查询条件
-     * @param int $catid  栏目ID
+     * @param int $catid  查询的分类，多级分类自行组装传进来
      * @param int $from    起始获取值
      * @param int $size    获取多少条数据
      * @param int $title    模糊搜索的新闻标题
@@ -57,7 +57,10 @@ class News extends BaseModel {
 
     /**
      * 根据条件来获取列表的数据的总数
-     * @param array $param
+     * @param array $where  查询条件
+     * @param array $catid  查询的分类，多级分类自行组装传进来
+     * @param string $title  模糊查询的新闻标题
+     * @param return $data
      */
     public function getNewsCountByCondition($where = [], $catid=[],$title='') {
         $model=new News;
@@ -77,26 +80,7 @@ class News extends BaseModel {
     }
 
     /**
-     * 后台自动化分页
-     * @param array $data
-     */
-    public function getNews($data = []) {
-        $data['status'] = [
-            'neq', config('code.status_delete')
-        ];
-
-        $order = ['id' => 'desc'];
-        // 查询
-
-        $result = $this->where($data)
-            ->order($order)
-            ->paginate();
-        // 调试
-        return $result;
-    }
-
-    /**
-     * 获取新闻排行榜数据
+     * 查询新闻详细
      * @param int $id  查询新闻ID
      * @param int $field  要查询的字段
      * @return $data

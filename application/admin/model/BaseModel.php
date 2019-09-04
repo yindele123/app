@@ -7,11 +7,9 @@
  */
 namespace app\admin\model;
 
+use app\common\model\CommonModel;
 
-use think\Model;
-use traits\model\SoftDelete;
-
-class BaseModel extends Model
+class BaseModel extends CommonModel
 {
     // 软删除，设置后在查询时要特别注意whereOr
     // 使用whereOr会将设置了软删除的记录也查询出来
@@ -29,19 +27,5 @@ class BaseModel extends Model
         return $finalUrl;
     }*/
 
-    protected  $autoWriteTimestamp = true;
 
-    /**
-     * 新增
-     * @param $data
-     * @return mixed
-     */
-    public function add($data) {
-        if(!is_array($data)) {
-            exception('传递数据不合法');
-        }
-        $this->allowField(true)->save($data);
-
-        return $this->id;
-    }
 }

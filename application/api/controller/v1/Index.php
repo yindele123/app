@@ -7,6 +7,8 @@
  */
 namespace app\api\controller\v1;
 use app\api\controller\BaseController;
+use app\common\service\Common;
+use app\lib\exception\ErrorException;
 
 class Index extends BaseController{
     /**
@@ -15,10 +17,19 @@ class Index extends BaseController{
      * 2、推荐位列表 默认4条
      */
     public function index() {
-        $heads = model('News')->getIndexHeadNormalNews();
+        try{
+            $heads = model('News')->getIndexHeadNormalNews();
+        }catch (\Exception $e){
+            Common::setLog(request()->url().'-----'.$e->getMessage());
+            throw new ErrorException();
+        }
         $heads = $this->getDealNews($heads);
-
-        $positions = model('News')->getPositionNormalNews();
+        try{
+            $positions = model('News')->getPositionNormalNews();
+        }catch (\Exception $e){
+            Common::setLog(request()->url().'-----'.$e->getMessage());
+            throw new ErrorException();
+        }
         $positions = $this->getDealNews($positions);
 
         $result = [
@@ -35,17 +46,20 @@ class Index extends BaseController{
      * 1、检测APP是否需要升级
      */
     public function init() {
-        // app_type 去ent_version 查询
-        $version = model('Version')->getLastNormalVersionByAppType($this->headers['app_type']);
-
+        try{
+            $version = model('Version')->getLastNormalVersionByAppType($this->headers['apptype']);
+        }catch (\Exception $e){
+            Common::setLog(request()->url().'-----'.$e->getMessage());
+            throw new ErrorException();
+        }
         if(empty($version)) {
-            return new ApiException('error', 404);
+            throw new ErrorException(['msg'=>'error','code'=>404]);
         }
 
         if($version->version > $this->headers['version']) {
-            $version->is_update = $version->is_force == 1 ? 2 : 1;
+            $version->is_update = $version->is_force == 1 ? config('app.force_update') : config('app.be_update');
         }else {
-            $version->is_update = 0;  // 0 不更新 ， 1需要更新, 2强制更新
+            $version->is_update = config('app.no_update');  // 0 不更新 ， 1需要更新, 2强制更新
         }
 
         // 记录用户的基本信息 用于统计
@@ -57,8 +71,8 @@ class Index extends BaseController{
         try {
             model('AppActive')->add($actives);
         }catch (\Exception $e) {
-            // todo
-            //Log::write();
+            Common::setLog(request()->url().'-----'.$e->getMessage());
+            throw new ErrorException();
         }
         return show(config('code.success'), 'OK', $version, 200);
     }

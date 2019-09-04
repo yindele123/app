@@ -26,9 +26,17 @@ class News extends BaseController
         }
         $request=Common::getPageAndSize($data);
         // 获取表里面的数据
-        $news = model('News')->getNewsByCondition($whereData,$catid, $request['from'], $request['size'],$title);
-        // 获取满足条件的数据总数 =》 有多少页
-        $total = model('News')->getNewsCountByCondition($whereData,$catid,$title);
+        try{
+            $news = model('News')->getNewsByCondition($whereData,$catid, $request['from'], $request['size'],$title);
+        }catch (\Exception $e){
+            return $this->result('', config('code.error'), $e->getMessage());
+        }
+        try{
+            // 获取满足条件的数据总数 =》 有多少页
+            $total = model('News')->getNewsCountByCondition($whereData,$catid,$title);
+        }catch (\Exception $e){
+            return $this->result('', config('code.error'), $e->getMessage());
+        }
         /// 结合总数+size  =》 有多少页
         $pageTotal = ceil($total/$request['size']);//1.1 =>2
         return $this->fetch('', [
