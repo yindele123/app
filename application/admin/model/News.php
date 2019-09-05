@@ -6,7 +6,9 @@
  * Time: 11:49
  */
 namespace app\common\model;
-class News extends CommonModel {
+use app\admin\model\BaseModel;
+
+class News extends BaseModel {
     /**
      * 通用化获取参数的数据字段
      */
@@ -38,10 +40,10 @@ class News extends CommonModel {
      * @param int $order  排序
      * @param array $result  返回按条件获取的新闻列表
      */
-    public function getNewsByCondition($where = [], $catid=[], $from=0, $size = 5,$title='',$field='',$order = ['id' => 'desc']) {
+    public function getNewsByCondition($where = [], $catid=0, $from=0, $size = 5,$title='',$field='',$order = ['id' => 'desc']) {
         $model=new News;
         if(!empty($catid)){
-            $model->where('catid','in',$catid);
+            $model->where('catid',$catid);
         }
         if(!empty($title)) {
             $where['title'] = ['like', '%'.trim($title).'%'];

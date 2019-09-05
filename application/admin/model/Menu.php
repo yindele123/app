@@ -25,6 +25,6 @@ class Menu extends BaseModel{
      */
     public function getchilmenu($cateid){
         $cateres=$this->select();
-        return $this->getColumn($cateres,$cateid);
+        return getColumn($cateres,$cateid);
     }
 }

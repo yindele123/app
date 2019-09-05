@@ -7,7 +7,6 @@
  */
 namespace app\admin\controller;
 use app\common\service\Common;
-use app\common\model\Cate as CommonCate;
 class News extends BaseController
 {
     public function index() {
@@ -26,7 +25,7 @@ class News extends BaseController
             ];
         }
         if (!empty($data['catid'])){
-            $catid=(new CommonCate)->getchilrenid($data['catid']);
+            $catid=model('Cate')->getchilrenid($data['catid']);
             $catid[]=$data['catid'];
         }
         $request=Common::getPageAndSize($data);
@@ -37,6 +36,7 @@ class News extends BaseController
             return $this->result('', config('code.error'), $e->getMessage());
         }
         try{
+            
             // 获取满足条件的数据总数 =》 有多少页
             $total = model('News')->getNewsCountByCondition($whereData,$catid,$title);
         }catch (\Exception $e){
@@ -45,7 +45,7 @@ class News extends BaseController
         /// 结合总数+size  =》 有多少页
         $pageTotal = ceil($total/$request['size']);//1.1 =>2
         return $this->fetch('', [
-            'cats' => (new CommonCate())->getCateList(),
+            'cats' => model('Cate')->getCateList(),
             'news' => $news,
             'pageTotal' => $pageTotal,
             'curr' => $request['page'],
@@ -62,7 +62,8 @@ class News extends BaseController
     public function add() {
         parent::add();
         return $this->fetch('', [
-            'cats' => (new CommonCate())->getCateList()
+            'cats' => model('Cate')->getCateList(),
+            'menu'=>Common::getMenu(2)
         ]);
     }
 }

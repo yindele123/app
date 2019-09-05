@@ -59,4 +59,9 @@ class Common
         ]);
         Log::record($e, 'error');
     }
+
+    public static function getMenu($pid){
+        $menu=model('Menu')->field('id,name,value')->where(['pid'=>2,'status'=>1])->select();
+        return collection($menu)->toArray();
+    }
 }

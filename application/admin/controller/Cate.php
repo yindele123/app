@@ -6,7 +6,6 @@
  * Time: 15:21
  */
 namespace app\admin\controller;
-use app\common\model\Cate as CommonCate;
 
 class Cate extends BaseController{
     public function index(){
@@ -47,7 +46,7 @@ class Cate extends BaseController{
             return $this->result('', config('code.error'), $e->getMessage());
         }
         try{
-            $cateres=(new CommonCate())->getCateList();
+            $cateres=model('Cate')->getCateList();
         }catch (\Exception $e){
             return $this->result('', config('code.error'), $e->getMessage());
         }
@@ -68,7 +67,7 @@ class Cate extends BaseController{
                 return $this->result('', config('code.error'),$e->getMessage());
             }
             try{
-                $sonids=(new CommonCate)->getchilrenid($id);
+                $sonids=model('Cate')->getchilrenid($id);
                 $sonids[]=$id;
             }catch (\Exception $e){
                 return $this->result('', config('code.error'),$e->getMessage());

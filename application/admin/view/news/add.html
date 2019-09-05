@@ -103,7 +103,16 @@
           <textarea id="editor" name="content" style="height: 400px;"  required lay-verify="required"  ></textarea>
         </div>
       </div>
-
+      <div class="layui-form-item">
+        <label for="is_hide" class="layui-form-label">
+          文章状态
+        </label>
+        <div class="layui-input-inline">
+          {volist  name="menu" id="vo"}
+            <input type="radio" name="status" value="{$vo.value}" title="{$vo.name}" {if condition="$key eq 0"}checked=""{/if}>
+          {/volist}
+        </div>
+      </div>
       <div class="layui-form-item">
         <label for="L_repass" class="layui-form-label">
         </label>
