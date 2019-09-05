@@ -18,9 +18,9 @@ class Test extends BaseController {
             'time' => Time::get13TimeStamp(),
         ];
 
-        //$str = 'BX6oMrM9sPyYUeJJx6+RK3twvHxknHAs0r08wVGon2+zm83H6Zb+5sL+Sggvd9lAU1cqXgY7TY1viS51ZYo7CQ==';
+        $str = 'BX6oMrM9sPyYUeJJx6+RK3twvHxknHAs0r08wVGon2+McLE9qIV3jIOv3EtC0Qg5yyLWLshZUA+l2mzbxzQSPQ==';
         // col9j6cqegAKiiey3IrXWo2zCRGHw8vogniwQZab0fgIVnKDb7Rin03dOqY2qLWP
-        echo IAuth::setSign($data);exit;
-        echo (new Aes())->decrypt($str);exit;
+        //echo IAuth::setSign($data);exit;
+        return show(1,'OK');
     }
 }

@@ -112,6 +112,34 @@
 					</li>
 				</ul>
 			</li>
+
+			<li>
+				<a href="javascript:;">
+					<i class="iconfont left-nav-li" lay-tips="菜单管理">&#xe723;</i>
+					<cite>菜单管理</cite>
+					<i class="iconfont nav_right">&#xe697;</i></a>
+				<ul class="sub-menu">
+					<li>
+						<a onclick="xadmin.add_tab('菜单列表','{:url(\'menu/index\')}')">
+							<i class="iconfont">&#xe6a7;</i>
+							<cite>菜单列表</cite></a>
+					</li>
+				</ul>
+			</li>
+
+			<li>
+				<a href="javascript:;">
+					<i class="iconfont left-nav-li" lay-tips="APP版本管理">&#xe723;</i>
+					<cite>APP版本管理</cite>
+					<i class="iconfont nav_right">&#xe697;</i></a>
+				<ul class="sub-menu">
+					<li>
+						<a onclick="xadmin.add_tab('APP版本列表','{:url(\'version/index\')}')">
+							<i class="iconfont">&#xe6a7;</i>
+							<cite>APP版本列表</cite></a>
+					</li>
+				</ul>
+			</li>
 			<li>
 				<a href="javascript:;">
 					<i class="iconfont left-nav-li" lay-tips="分类管理">&#xe723;</i>
@@ -119,7 +147,7 @@
 					<i class="iconfont nav_right">&#xe697;</i></a>
 				<ul class="sub-menu">
 					<li>
-						<a onclick="xadmin.add_tab('多级分类','cate.html')">
+						<a onclick="xadmin.add_tab('多级分类','{:url(\'cate/index\')}')">
 							<i class="iconfont">&#xe6a7;</i>
 							<cite>多级分类</cite></a>
 					</li>

@@ -70,14 +70,16 @@ class BaseController extends Controller{
             return $this->result('', config('code.error'), 'ID不合法');
         }
 
-        // 通过id 去库中查询下记录是否存在
-
-        // 如果你的表和我们控制器文件名 一样。 news news
-        // 但是我们 不一样。
-
         $model = $this->model ? $this->model : request()->controller();
-        // 如果php php7  $model = $this->model ?? request()->controller();
 
+        try{
+            $getFind=model($model)->get($id);
+        }catch (\Exception $e){
+            return $this->result('', config('code.error'), $e->getMessage());
+        }
+        if(empty($getFind)){
+            return $this->result('', config('code.error'), '请不要非法操作');
+        }
         try {
             $res = model($model)->save(['status' => config('code.status_delete')], ['id' => $id]);
         }catch(\Exception $e) {
@@ -92,18 +94,46 @@ class BaseController extends Controller{
     }
 
     /**
-     * 通用化修改状态
+     * 通用修改改状态
      */
     public function status() {
         $data  = input('param.');
-        // tp5  validate 机制 校验  小伙伴自行完成 id status
-
-        // 通过id 去库中查询下记录是否存在
-        //model('News')->get($data['id']);
-
         $model = $this->model ? $this->model : request()->controller();
+        try{
+            $getFind=model($model)->get($data['id']);
+        }catch (\Exception $e){
+            return $this->result('', config('code.error'), $e->getMessage());
+        }
+        if(empty($getFind)){
+            return $this->result('', config('code.error'), '请不要非法操作');
+        }
         try {
             $res = model($model)->save(['status' => $data['status']], ['id' => $data['id']]);
+        }catch(\Exception $e) {
+            return $this->result('', config('code.error'), $e->getMessage());
+        }
+        if($res) {
+            return $this->result(['jump_url' => $_SERVER['HTTP_REFERER']], config('code.success'), 'OK');
+        }
+        return $this->result('', config('code.error'), '修改失败');
+    }
+
+    /**
+     * 通用修改排序
+     */
+    public function sort() {
+        $data  = input('param.');
+        $model = $this->model ? $this->model : request()->controller();
+        try{
+            $getFind=model($model)->get($data['id']);
+        }catch (\Exception $e){
+            return $this->result('', config('code.error'), $e->getMessage());
+        }
+        if(empty($getFind)){
+            return $this->result('', config('code.error'), '请不要非法操作');
+        }
+        try {
+            $res = model($model)->save(['sort' => $data['sort']], ['id' => $data['id']]);
         }catch(\Exception $e) {
             return $this->result('', config('code.error'), $e->getMessage());
         }

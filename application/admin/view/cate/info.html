@@ -1,0 +1,60 @@
+{include file="public/header" /}
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <label for="catename" class="layui-form-label">
+                            <span class="x-red">*</span>分类名称
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="catename" name="catename" lay-verify="required"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="keywords" class="layui-form-label">
+                           分类关键词
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="keywords" name="keywords"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="content" class="layui-form-label">
+                          分类描述
+                        </label>
+                        <div class="layui-input-block">
+          <textarea autocomplete="off" class="layui-textarea" name="content" id="content"
+                    class="textarea"  placeholder="说点什么..." ></textarea>
+                        </div>
+                    </div>
+                  <div class="layui-form-item">
+                      <label for="L_repass" class="layui-form-label">
+                      </label>
+                      <input type="hidden" name="pid" value="{:empty($pid) ? 0 : $pid}">
+                      <button  class="layui-btn" lay-filter="add" type="button" lay-submit="">
+                          增加
+                      </button>
+                  </div>
+              </form>
+            </div>
+        </div>
+        <script>layui.use(['form', 'layer'],
+            function() {
+                $ = layui.jquery;
+                var form = layui.form,
+                layer = layui.layer;
+
+                //监听提交
+                form.on('submit(add)',
+                function(data) {
+                    // 使用Ajax提交表单数据
+                    backtrack('{:url(\'cate/add\')}',data.field,true);
+                });
+
+            });</script>
+    </body>
+
+</html>

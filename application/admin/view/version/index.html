@@ -19,14 +19,6 @@
             <div class="layui-input-inline layui-show-xs-block">
               <input class="layui-input" placeholder="截止日" name="end_time" value="{$end_time}" id="end"></div>
             <div class="layui-input-inline layui-show-xs-block">
-              <select name="catid" lay-filter="aihao">
-                <option value="">全部分类</option>
-                {volist name="$cats" id="vo"}
-                <option {if condition="$vo->id eq $catid"}selected="selected"{/if} value="{$vo.id}">{$vo.html}{$vo.catename}</option>
-                {/volist}
-              </select>
-            </div>
-            <div class="layui-input-inline layui-show-xs-block">
               <input type="text" name="title" id="" value="{$title}" placeholder=" 资讯名称" autocomplete="off" style="width:250px" class="layui-input"></div>
             <div class="layui-input-inline layui-show-xs-block">
               <button class="layui-btn" lay-submit="" lay-filter="sreach">
@@ -66,12 +58,10 @@
               <td><img width="60" height="60" class="picture-thumb" src="{$vo.image}"></td>
               <td>{$vo.update_time}</td>
               <td>{$vo.is_position|isYesNo}</td>
-              <td>
-                <input type="checkbox" name="switch" lay-skin="switch" data-id="{$vo.id}" lay-filter="switchTest"  lay-text="开启|停用"  {if condition="$vo['status'] eq 1"}checked=""{/if} lay-skin="switch">
-              </td>
+              <td>{$vo.status|status=$vo.id, ###}</td>
               <td class="td-manage">
                 <button class="layui-btn layui-btn layui-btn-xs"  onclick="xadmin.open('编辑','admin-edit.html')" ><i class="layui-icon">&#xe642;</i>编辑</button>
-                <button class="layui-btn-danger layui-btn layui-btn-xs" onClick="current_del(this,'{:url(\'news/delete\', [\'id\'=>$vo.id])}')" href="javascript:;" ><i class="layui-icon">&#xe640;</i>删除</button>
+                <button class="layui-btn-danger layui-btn layui-btn-xs" del_url="{:url('news/delete', ['id'=>$vo.id])}" onClick="current_del(this)" href="javascript:;" ><i class="layui-icon">&#xe640;</i>删除</button>
               </td>
             </tr>
             {/volist}
@@ -120,14 +110,6 @@
         //执行一个laydate实例
         laydate.render({
             elem: '#end' //指定元素
-        });
-        form = layui.form;
-        form.on('switch(switchTest)', function(requst){
-            data={
-                "status":this.checked ? 1 : 0,
-                "id":requst.elem.dataset.id
-            };
-            setChecked('{:url(\'news/status\')}',data);
         });
     });
 

@@ -42,9 +42,15 @@ function getCatName($catId) {
     if(!$catId) {
         return '';
     }
-    $cats = config('cat.lists');
+    $catename='';
+    $cats = \app\common\model\Cate::getListCate();
+    foreach($cats as $key=>$val){
+        if($val['id']==$catId){
+            $catename=$val['catename'];
+        }
+    }
 
-    return !empty($cats[$catId]) ? $cats[$catId] : '';
+    return !empty($catename) ? $catename : '';
 }
 
 function isYesNo($str) {
@@ -52,21 +58,37 @@ function isYesNo($str) {
 }
 
 /**
- * 状态
- * @param $id
- * @param $status
+ * description: 查找指定pid的数量总和（判断最后一个）
+ * @param array $array
+ * @param string $keyname
+ * @param int $value
+ * @return boolean
  */
-function status($id, $status) {
-    $controller = request()->controller();
-
-    $sta = $status == 1 ? 0 : 1;
-    $url = url($controller.'/status', ['id' => $id, 'status' => $sta]);
-
-    if($status == 1) {
-        $str = "<a href='javascript:;' title='修改状态' status_url='".$url."' onclick='app_status(this)'><span class='layui-btn layui-btn-normal layui-btn-mini'>正常</span></a>";
-    }elseif($status == 0) {
-        $str = "<a href='javascript:;' title='修改状态' status_url='".$url."' onclick='app_status(this)'><span class='layui-btn layui-btn-danger layui-btn-mini'>待审</span></a>";
+function searchPidCount($array, $keyname, $value)
+{
+    $countNum = 0;
+    foreach ($array as $key => $val) {
+        if ($val[$keyname] == $value) {
+            $countNum++;
+        }
     }
+    return $countNum;
+}
 
-    return $str;
+/**
+ * description: 二维数组查找指定的值知否存在
+ * @param array $array
+ * @param string $keyname
+ * @param int $value
+ * @return boolean
+ */
+
+function searchArrayVal($array, $keyname, $value)
+{
+    foreach ($array as $key => $val) {
+        if ($val[$keyname] == $value) {
+            return true;
+        }
+    }
+    return false;
 }

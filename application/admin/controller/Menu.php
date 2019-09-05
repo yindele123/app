@@ -2,17 +2,17 @@
 /**
  * Created by PhpStorm.
  * User: kezihang
- * Date: 2019/8/30 0030
- * Time: 21:33
+ * Date: 2019/9/4 0004
+ * Time: 15:07
  */
 namespace app\admin\controller;
 use app\common\service\Common;
-use app\common\model\Cate as CommonCate;
-class News extends BaseController
-{
-    public function index() {
+
+class Menu extends BaseController{
+
+    public function index(){
         $data = input('param.');
-        $catid=[];
+        $catid=!empty($data['catid']) ? $data['catid'] : 0;
         $title=!empty($data['title']) ? $data['title'] : '';
         $query = http_build_query($data);
         $whereData = [];
@@ -24,10 +24,6 @@ class News extends BaseController
                 ['gt', strtotime($data['start_time'])],
                 ['lt', strtotime($data['end_time'])],
             ];
-        }
-        if (!empty($data['catid'])){
-            $catid=(new CommonCate)->getchilrenid($data['catid']);
-            $catid[]=$data['catid'];
         }
         $request=Common::getPageAndSize($data);
         // 获取表里面的数据
@@ -45,7 +41,7 @@ class News extends BaseController
         /// 结合总数+size  =》 有多少页
         $pageTotal = ceil($total/$request['size']);//1.1 =>2
         return $this->fetch('', [
-            'cats' => (new CommonCate())->getCateList(),
+            'cats' => config('cat.lists'),
             'news' => $news,
             'pageTotal' => $pageTotal,
             'curr' => $request['page'],
@@ -57,28 +53,5 @@ class News extends BaseController
             'size' => $request['size'],
             'query' => $query,
         ]);
-    }
-
-    public function add() {
-
-        if(request()->isAjax()) {
-            $data = input('post.');
-            $this->validateCheck($data);
-            //入库操作
-            try {
-                $id = model('News')->add($data);
-            }catch (\Exception $e) {
-                return $this->result('', config('code.error'), '新增失败');
-            }
-            if($id) {
-                return $this->result(['jump_url' => url('news/index')], config('code.success'), 'OK');
-            } else {
-                return $this->result('', config('code.error'), '新增失败');
-            }
-        }else {
-            return $this->fetch('', [
-                'cats' => (new CommonCate())->getCateList()
-            ]);
-        }
     }
 }

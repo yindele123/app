@@ -30,10 +30,10 @@
         </label>
         <div class="layui-input-inline">
           <select name="catid" class="select">
-            {volist name="cats" id="vo"}
-            <option value="{$key}">{$vo}</option>
+            <option value="">请选择分类</option>
+            {volist name="$cats" id="vo"}
+            <option value="{$vo.id}">{$vo.html}{$vo.catename}</option>
             {/volist}
-
           </select>
         </div>
         <div class="layui-form-mid layui-word-aux">
