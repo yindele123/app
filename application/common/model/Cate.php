@@ -29,7 +29,7 @@ class Cate extends CommonModel {
      */
     public function getchilrenid($cateid,$field=''){
         $cateres=$this->field(self::getListField($field))->select();
-        return $this->_getchilrenid($cateres,$cateid);
+        return $this->getColumn($cateres,$cateid);
     }
 
     /**
@@ -42,22 +42,7 @@ class Cate extends CommonModel {
         return collection($cateres)->toArray();
     }
 
-    /**
-     * 组装获取子分类
-     * @param $cateres  所有分类内容
-     * @param $cateid   父ID
-     * @return array
-     */
-    private function _getchilrenid($cateres,$cateid){
-        static $arr=[];
-        foreach ($cateres as $k => $v) {
-            if($v['pid'] == $cateid){
-                $arr[]=$v['id'];
-                $this->_getchilrenid($cateres,$v['id']);
-            }
-        }
-        return $arr;
-    }
+
 
     /**
      * 获取公共分类层级树形结构数组

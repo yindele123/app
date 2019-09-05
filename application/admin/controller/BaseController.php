@@ -142,4 +142,56 @@ class BaseController extends Controller{
         }
         return $this->result('', config('code.error'), '修改失败');
     }
+
+
+    /**
+     * 通用添加
+     * @return mixed|void
+     */
+    public function add(){
+        if (request()->isAjax()){
+            $model = $this->model ? $this->model : request()->controller();
+            $data = input('post.');
+            $this->validateCheck($data);
+            //入库操作
+            try {
+                $id = model($model)->add($data);
+            }catch (\Exception $e) {
+                return $this->result('', config('code.error'), '新增失败');
+            }
+            if($id) {
+                return $this->result(['jump_url' => url(''.$model.'/index')], config('code.success'), 'OK');
+            } else {
+                return $this->result('', config('code.error'), '新增失败');
+            }
+        }
+    }
+
+    /**
+     * 通用修改
+     */
+    public function edit(){
+        if (request()->isAjax()){
+            $model = $this->model ? $this->model : request()->controller();
+            $data = input('post.');
+            $this->validateCheck($data);
+            //入库操作
+            try {
+                $save = model($model)->allowField(true)->save($data,['id'=>$data['id']]);
+            }catch (\Exception $e) {
+                return $this->result('', config('code.error'), $e->getMessage());
+            }
+            if($save) {
+                return $this->result(['jump_url' => url(''.$model.'/index')], config('code.success'), 'OK');
+            } else {
+                return $this->result('', config('code.error'), '更新失败');
+            }
+        }
+    }
+
+    function alert($msg='',$url='',$icon='',$time=3){
+        $str='<script type="text/javascript" src="'.config('admin.admin_static').'js/jquery.min.js"></script><script type="text/javascript" src="'.config('admin.common').'lib/layui/layui.js"></script><script type="text/javascript" src="'.config('admin.admin_static').'/js/xadmin.js"></script>';
+        $str.='<script>$(function(){layer.msg("'.$msg.'",{icon:'.$icon.',time:'.($time*1000).'});setTimeout(function(){self.location.href="'.$url.'"},2000)});</script>';//主要方法
+        return $str;
+    }
 }

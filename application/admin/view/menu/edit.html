@@ -1,0 +1,60 @@
+{include file="public/header" /}
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <label for="name" class="layui-form-label">
+                            <span class="x-red">*</span>菜单名称
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="name" value="{$data.name}" name="name" lay-verify="required"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="value" class="layui-form-label">
+                            菜单值
+                        </label>
+                        <div class="layui-input-inline">
+                            <input value="{$data.value}" type="text" id="value" name="value"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="is_hide" class="layui-form-label">
+                            菜单模式
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="radio" name="status" value="1" title="正常" {if condition="$data.status eq 1"}checked=""{/if}>
+                            <input type="radio" name="status" value="0" title="隐藏" {if condition="$data.status eq 0"}checked=""{/if}>
+                        </div>
+                    </div>
+                  <div class="layui-form-item">
+                      <label for="L_repass" class="layui-form-label">
+                      </label>
+                      <input type="hidden" name="id" value="{$data->id}">
+                      <button  class="layui-btn" lay-filter="add" type="button" lay-submit="">
+                          修改
+                      </button>
+                  </div>
+              </form>
+            </div>
+        </div>
+        <script>layui.use(['form', 'layer'],
+            function() {
+                $ = layui.jquery;
+                var form = layui.form,
+                layer = layui.layer;
+
+                //监听提交
+                form.on('submit(add)',
+                function(data) {
+                    // 使用Ajax提交表单数据
+                    backtrack('{:url(\'menu/edit\')}',data.field,true);
+                });
+
+            });</script>
+    </body>
+
+</html>

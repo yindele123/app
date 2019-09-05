@@ -6,7 +6,9 @@ class Index extends BaseController
 {
     public function index()
     {
-        return $this->fetch();
+        return $this->fetch('index',[
+            'user'=>$this->user
+        ]);
     }
     public function welcome(){
         return $this->fetch();

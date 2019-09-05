@@ -60,25 +60,9 @@ class News extends BaseController
     }
 
     public function add() {
-
-        if(request()->isAjax()) {
-            $data = input('post.');
-            $this->validateCheck($data);
-            //入库操作
-            try {
-                $id = model('News')->add($data);
-            }catch (\Exception $e) {
-                return $this->result('', config('code.error'), '新增失败');
-            }
-            if($id) {
-                return $this->result(['jump_url' => url('news/index')], config('code.success'), 'OK');
-            } else {
-                return $this->result('', config('code.error'), '新增失败');
-            }
-        }else {
-            return $this->fetch('', [
-                'cats' => (new CommonCate())->getCateList()
-            ]);
-        }
+        parent::add();
+        return $this->fetch('', [
+            'cats' => (new CommonCate())->getCateList()
+        ]);
     }
 }

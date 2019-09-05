@@ -38,18 +38,16 @@ if (!function_exists('getNumberCode')) {
  * 获取栏目名称
  * @param $catId
  */
-function getCatName($catId) {
-    if(!$catId) {
+function getCatName($cats,$catId) {
+    if(!$catId || !$cats) {
         return '';
     }
     $catename='';
-    $cats = \app\common\model\Cate::getListCate();
     foreach($cats as $key=>$val){
         if($val['id']==$catId){
             $catename=$val['catename'];
         }
     }
-
     return !empty($catename) ? $catename : '';
 }
 

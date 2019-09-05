@@ -21,26 +21,12 @@ class Cate extends BaseController{
     }
 
     public function add(){
-        if (request()->isAjax()){
-            $data = input('post.');
-            $this->validateCheck($data);
-            //入库操作
-            try {
-                $id = model('Cate')->add($data);
-            }catch (\Exception $e) {
-                return $this->result('', config('code.error'), '新增失败');
-            }
-            if($id) {
-                return $this->result(['jump_url' => url('cate/index')], config('code.success'), 'OK');
-            } else {
-                return $this->result('', config('code.error'), '新增失败');
-            }
-        }
+        parent::add();
         $id=input('param.id');
         try{
             $cate=model('Cate')::get($id);
             if(empty($cate)){
-                return $this->result('', config('code.error'), '请不要非法操作');
+                return $this->alert('请不要非法操作',url('cate/index'),6,3);
             }
         }catch (\Exception $e){
             return $this->result('', config('code.error'), $e->getMessage());
@@ -50,21 +36,7 @@ class Cate extends BaseController{
         ]);
     }
     public function edit(){
-        if (request()->isAjax()){
-            $data = input('post.');
-            $this->validateCheck($data);
-            //入库操作
-            try {
-                $save = model('Cate')->allowField(true)->save($data,['id'=>$data['id']]);
-            }catch (\Exception $e) {
-                return $this->result('', config('code.error'), $e->getMessage());
-            }
-            if($save) {
-                return $this->result(['jump_url' => url('cate/index')], config('code.success'), 'OK');
-            } else {
-                return $this->result('', config('code.error'), '更新失败');
-            }
-        }
+        parent::edit();
         $id=input('param.id');
         try{
             $cate=model('Cate')::get($id);

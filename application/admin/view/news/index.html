@@ -62,7 +62,7 @@
                 <input type="checkbox" name="" lay-skin="primary"></td>
               <td>{$vo.id}</td>
               <td>{$vo.title}</td>
-              <td>{$vo.catid|getCatName}</td>
+              <td>{$vo.catid|getCatName=$cats,###}</td>
               <td><img width="60" height="60" class="picture-thumb" src="{$vo.image}"></td>
               <td>{$vo.update_time}</td>
               <td>{$vo.is_position|isYesNo}</td>

@@ -24,4 +24,21 @@ class CommonModel extends Model{
 
         return $this->id;
     }
+
+    /**
+     * 组装获取子分类
+     * @param $cateres  所有分类内容
+     * @param $cateid   父ID
+     * @return array
+     */
+    function getColumn($cateres,$cateid){
+        static $arr=[];
+        foreach ($cateres as $k => $v) {
+            if($v['pid'] == $cateid){
+                $arr[]=$v['id'];
+                $this->getColumn($cateres,$v['id']);
+            }
+        }
+        return $arr;
+    }
 }

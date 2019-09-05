@@ -6,52 +6,78 @@
  * Time: 15:07
  */
 namespace app\admin\controller;
-use app\common\service\Common;
 
 class Menu extends BaseController{
 
     public function index(){
-        $data = input('param.');
-        $catid=!empty($data['catid']) ? $data['catid'] : 0;
-        $title=!empty($data['title']) ? $data['title'] : '';
-        $query = http_build_query($data);
-        $whereData = [];
-        // 转换查询条件
-        if(!empty($data['start_time']) && !empty($data['end_time'])
-            && $data['end_time'] > $data['start_time']
-        ) {
-            $whereData['create_time'] = [
-                ['gt', strtotime($data['start_time'])],
-                ['lt', strtotime($data['end_time'])],
-            ];
-        }
-        $request=Common::getPageAndSize($data);
-        // 获取表里面的数据
         try{
-            $news = model('News')->getNewsByCondition($whereData,$catid, $request['from'], $request['size'],$title);
+            $menus=model('Menu')->menutree();
         }catch (\Exception $e){
-            return $this->result('', config('code.error'), $e->getMessage());
+            return $this->alert('请不要非法操作',url('menu/index'),6,3);
         }
-        try{
-            // 获取满足条件的数据总数 =》 有多少页
-            $total = model('News')->getNewsCountByCondition($whereData,$catid,$title);
-        }catch (\Exception $e){
-            return $this->result('', config('code.error'), $e->getMessage());
-        }
-        /// 结合总数+size  =》 有多少页
-        $pageTotal = ceil($total/$request['size']);//1.1 =>2
-        return $this->fetch('', [
-            'cats' => config('cat.lists'),
-            'news' => $news,
-            'pageTotal' => $pageTotal,
-            'curr' => $request['page'],
-            'start_time' => empty($data['start_time']) ? '' : $data['start_time'],
-            'end_time' => empty($data['end_time']) ? '' : $data['end_time'],
-            'catid' => empty($data['catid']) ? '' : $data['catid'],
-            'title' => empty($data['title']) ? '' : $data['title'],
-            'total' => $total,
-            'size' => $request['size'],
-            'query' => $query,
+        return $this->fetch('index',[
+            'menu'=>$menus
         ]);
+    }
+    public function add(){
+        parent::add();
+        $id=input('param.id');
+        try{
+            $cate=model('Menu')::get($id);
+            if(empty($cate) || $cate->pid !=0){
+                return $this->alert('请不要非法操作',url('menu/index'),6,3);
+            }
+        }catch (\Exception $e){
+            return $this->result('', config('code.error'), $e->getMessage());
+        }
+        return $this->fetch('info',[
+            'pid'=>$id
+        ]);
+    }
+    public function edit(){
+        parent::edit();
+        $id=input('param.id');
+        try{
+            $cate=model('menu')::get($id);
+            if(empty($cate)){
+                return $this->alert('请不要非法操作',url('menu/index'),6,3);
+            }
+        }catch (\Exception $e){
+            return $this->result('', config('code.error'), $e->getMessage());
+        }
+        return $this->fetch('edit',[
+            'data'=>$cate
+        ]);
+    }
+
+    public function del(){
+        if(request()->isAjax()){
+            $id=input('param.id',0,'intval');
+            try{
+                $cate=model('menu')::get($id);
+                if (empty($cate)){
+                    return $this->result('', config('code.error'), '请不要非法操作');
+                }
+            }catch (\Exception $e){
+                return $this->result('', config('code.error'),$e->getMessage());
+            }
+            try{
+                $sonids=model('menu')->getchilmenu($id);
+                $sonids[]=$id;
+            }catch (\Exception $e){
+                return $this->result('', config('code.error'),$e->getMessage());
+            }
+            $list=[];
+            foreach($sonids as $k=>$v){
+                $list[$k]['id']=$v;
+                $list[$k]['status']=-1;
+            }
+            $del=model('menu')->saveAll($list);
+            if($del){
+                return $this->result(['jump_url' => url('menu/index')], config('code.success'), '删除成功');
+            }else{
+                return $this->result('', config('code.error'), '删除失败');
+            }
+        }
     }
 }
