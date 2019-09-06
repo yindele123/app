@@ -44,14 +44,7 @@ class Version extends BaseController{
     public function force(){
         if(request()->isAjax()){
             $data  = input('param.');
-            try{
-                $getFind=model('Version')->get($data['id']);
-            }catch (\Exception $e){
-                return $this->result('', config('code.error'), $e->getMessage());
-            }
-            if(empty($getFind)){
-                return $this->result('', config('code.error'), '请不要非法操作');
-            }
+            $this->usuallyId($data['id']);
             try {
                 $res = model('Version')->save(['is_force' => $data['is_force']], ['id' => $data['id']]);
             }catch(\Exception $e) {
@@ -76,14 +69,7 @@ class Version extends BaseController{
     public function edit(){
         parent::edit();
         $id=input('param.id');
-        try{
-            $version=model('Version')::get($id);
-            if(empty($version)){
-                return $this->alert('请不要非法操作',url('version/index'),6,3);
-            }
-        }catch (\Exception $e){
-            return $this->result('', config('code.error'), $e->getMessage());
-        }
+        $version=$this->usuallyId($id);
         return $this->fetch('info',[
             'data'=>$version,
             'app_type'=>Common::getMenu(1),

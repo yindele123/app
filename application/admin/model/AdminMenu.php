@@ -2,16 +2,16 @@
 /**
  * Created by PhpStorm.
  * User: kezihang
- * Date: 2019/9/4 0004
- * Time: 15:29
+ * Date: 2019/9/6 0006
+ * Time: 20:41
  */
 namespace app\admin\model;
-class Cate extends BaseModel{
+class AdminMenu extends BaseModel{
     /**
      * 获取递归分类
      */
-    public function catetree($field=''){
-        $cateres=$this->order('sort desc')->field($this->getListField($field))->select();
+    public function menutree($field=''){
+        $cateres=$this->order('sort desc,id desc')->field($this->getListField($field))->select();
         return collection($this->sort($cateres))->toArray();
     }
 
@@ -25,21 +25,11 @@ class Cate extends BaseModel{
                 'name',
                 'pid',
                 'sort',
+                'controller',
+                'action',
                 'status'
             ];
         }
         return $field;
     }
-
-    /**
-     * 获取所有分类
-     * @param
-     * @return array
-     */
-    public static function getListCate(){
-        $cateres=self::field('id,name')->select();
-        return collection($cateres)->toArray();
-    }
-
-
 }

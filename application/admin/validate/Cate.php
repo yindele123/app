@@ -9,9 +9,9 @@ namespace app\admin\validate;
 
 class Cate extends BaseValidate{
     protected $rule=[
-        'catename'=>'require'
+        'name'=>'require'
     ];
     protected $message  =   [
-        'catename.require' => '分类名称不能为空'
+        'name.require' => '分类名称不能为空'
     ];
 }

@@ -66,30 +66,24 @@ class BaseController extends Controller{
      * 删除逻辑
      */
     public function delete($id = 0) {
-        if(!intval($id)) {
-            return $this->result('', config('code.error'), 'ID不合法');
-        }
+        if (request()->isAjax()) {
+            if (!intval($id)) {
+                return $this->result('', config('code.error'), 'ID不合法');
+            }
 
-        $model = $this->model ? $this->model : request()->controller();
+            $model = $this->model ? $this->model : request()->controller();
+            $this->usuallyId($id);
+            try {
+                $res = model($model)->save(['status' => config('code.status_delete')], ['id' => $id]);
+            } catch (\Exception $e) {
+                return $this->result('', config('code.error'), $e->getMessage());
+            }
 
-        try{
-            $getFind=model($model)->get($id);
-        }catch (\Exception $e){
-            return $this->result('', config('code.error'), $e->getMessage());
+            if ($res) {
+                return $this->result(['jump_url' => $_SERVER['HTTP_REFERER']], config('code.success'), 'OK');
+            }
+            return $this->result('', config('code.error'), '删除失败');
         }
-        if(empty($getFind)){
-            return $this->result('', config('code.error'), '请不要非法操作');
-        }
-        try {
-            $res = model($model)->save(['status' => config('code.status_delete')], ['id' => $id]);
-        }catch(\Exception $e) {
-            return $this->result('', config('code.error'), $e->getMessage());
-        }
-
-        if($res) {
-            return $this->result(['jump_url' => $_SERVER['HTTP_REFERER']], config('code.success'), 'OK');
-        }
-        return $this->result('', config('code.error'), '删除失败');
 
     }
 
@@ -97,50 +91,40 @@ class BaseController extends Controller{
      * 通用修改改状态
      */
     public function status() {
-        $data  = input('param.');
-        $model = $this->model ? $this->model : request()->controller();
-        try{
-            $getFind=model($model)->get($data['id']);
-        }catch (\Exception $e){
-            return $this->result('', config('code.error'), $e->getMessage());
+        if (request()->isAjax()) {
+            $data = input('param.');
+            $model = $this->model ? $this->model : request()->controller();
+            $this->usuallyId($data['id']);
+            try {
+                $res = model($model)->save(['status' => $data['status']], ['id' => $data['id']]);
+            } catch (\Exception $e) {
+                return $this->result('', config('code.error'), $e->getMessage());
+            }
+            if ($res) {
+                return $this->result(['jump_url' => $_SERVER['HTTP_REFERER']], config('code.success'), 'OK');
+            }
+            return $this->result('', config('code.error'), '修改失败');
         }
-        if(empty($getFind)){
-            return $this->result('', config('code.error'), '请不要非法操作');
-        }
-        try {
-            $res = model($model)->save(['status' => $data['status']], ['id' => $data['id']]);
-        }catch(\Exception $e) {
-            return $this->result('', config('code.error'), $e->getMessage());
-        }
-        if($res) {
-            return $this->result(['jump_url' => $_SERVER['HTTP_REFERER']], config('code.success'), 'OK');
-        }
-        return $this->result('', config('code.error'), '修改失败');
     }
 
     /**
      * 通用修改排序
      */
     public function sort() {
-        $data  = input('param.');
-        $model = $this->model ? $this->model : request()->controller();
-        try{
-            $getFind=model($model)->get($data['id']);
-        }catch (\Exception $e){
-            return $this->result('', config('code.error'), $e->getMessage());
+        if (request()->isAjax()){
+            $data  = input('param.');
+            $model = $this->model ? $this->model : request()->controller();
+            $this->usuallyId($data['id']);
+            try {
+                $res = model($model)->save(['sort' => $data['sort']], ['id' => $data['id']]);
+            }catch(\Exception $e) {
+                return $this->result('', config('code.error'), $e->getMessage());
+            }
+            if($res) {
+                return $this->result(['jump_url' => $_SERVER['HTTP_REFERER']], config('code.success'), 'OK');
+            }
+            return $this->result('', config('code.error'), '修改失败');
         }
-        if(empty($getFind)){
-            return $this->result('', config('code.error'), '请不要非法操作');
-        }
-        try {
-            $res = model($model)->save(['sort' => $data['sort']], ['id' => $data['id']]);
-        }catch(\Exception $e) {
-            return $this->result('', config('code.error'), $e->getMessage());
-        }
-        if($res) {
-            return $this->result(['jump_url' => $_SERVER['HTTP_REFERER']], config('code.success'), 'OK');
-        }
-        return $this->result('', config('code.error'), '修改失败');
     }
 
 
@@ -167,7 +151,7 @@ class BaseController extends Controller{
             try {
                 $id = model($model)->add($data);
             }catch (\Exception $e) {
-                return $this->result('', config('code.error'), '新增失败');
+                return $this->result('', config('code.error'), $e->getMessage());
             }
             if($id) {
                 return $this->result(['jump_url' => url(''.$model.'/index')], config('code.success'), 'OK');
@@ -175,6 +159,51 @@ class BaseController extends Controller{
                 return $this->result('', config('code.error'), '新增失败');
             }
         }
+    }
+    /**
+     * 通用获取ID判断
+     * @return mixed|void
+     */
+    public function usuallyId($id){
+        $model = $this->model ? $this->model : request()->controller();
+        try{
+            $cate=model($model)::get($id);
+        }catch (\Exception $e){
+            return $this->result('', config('code.error'), $e->getMessage());
+        }
+        if(empty($cate)){
+            if (request()->isAjax()){
+                return $this->result('', config('code.error'), '请不要非法操作');
+            }else{
+                $this->error('请不要非法操作');
+            }
+
+        }
+        return $cate;
+    }
+
+    /**
+     * 通用获取分类
+     * @return mixed|void
+     */
+    public function usuallyCate(){
+        $model = $this->model ? $this->model : request()->controller();
+        try{
+            $cateres=model($model)->getCateList([
+                'id',
+                'name',
+                'pid',
+                'sort',
+                'status'
+            ]);
+        }catch (\Exception $e){
+            if (request()->isAjax()){
+                return $this->result('', config('code.error'), $e->getMessage());
+            }else{
+                $this->error($e->getMessage());
+            }
+        }
+        return $cateres;
     }
 
     /**

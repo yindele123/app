@@ -90,4 +90,24 @@ class BaseModel extends CommonModel
         return $data;
     }
 
+    /**
+     * 获取公共分类层级树形结构数组
+     * @param $cateid 父ID
+     * @return array
+     */
+    public function getCateList($field=[]){
+        $cateres=$this->field($field)->select();
+        return getCategoryTree($cateres);
+    }
+
+    /**
+     * 获取所有子分类
+     * @param $cateid 父ID
+     * @return array
+     */
+    public function getchilrenid($cateid){
+        $cateres=$this->field(['id', 'name', 'pid', 'sort', 'status'])->select();
+        return getColumn($cateres,$cateid);
+    }
+
 }

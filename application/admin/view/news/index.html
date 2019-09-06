@@ -22,7 +22,7 @@
               <select name="catid" lay-filter="aihao">
                 <option value="">全部分类</option>
                 {volist name="$cats" id="vo"}
-                <option {if condition="$vo->id eq $catid"}selected="selected"{/if} value="{$vo.id}">{$vo.html}{$vo.catename}</option>
+                <option {if condition="$vo->id eq $catid"}selected="selected"{/if} value="{$vo.id}">{$vo.html}{$vo.name}</option>
                 {/volist}
               </select>
             </div>

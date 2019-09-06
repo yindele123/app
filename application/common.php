@@ -43,13 +43,13 @@ if (!function_exists('getCatName')) {
         if(!$catId || !$cats) {
             return '';
         }
-        $catename='';
+        $name='';
         foreach($cats as $key=>$val){
             if($val['id']==$catId){
-                $catename=$val['catename'];
+                $name=$val['name'];
             }
         }
-        return !empty($catename) ? $catename : '';
+        return !empty($name) ? $name : '';
     }
 }
 if (!function_exists('getMenuName')) {

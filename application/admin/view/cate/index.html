@@ -15,7 +15,7 @@
                         <div class="layui-card-body ">
                             <form class="layui-form layui-col-space5">
                                 <div class="layui-input-inline layui-show-xs-block">
-                                    <input class="layui-input" placeholder="分类名" lay-verify="required" name="catename"></div>
+                                    <input class="layui-input" placeholder="分类名" lay-verify="required" name="name"></div>
                                 <div class="layui-input-inline layui-show-xs-block">
                                     <button class="layui-btn" type="button"  lay-submit="" lay-filter="add"><i class="layui-icon"></i>增加</button>
                                 </div>
@@ -43,7 +43,7 @@
                                       {else}
                                       ├
                                       {/if}
-                                      {$cate.catename}
+                                      {$cate.name}
                                   </td>
                                   <td><input type="text" class="layui-input x-sort" onclick="setSort('sort{$cate.id}','{:url(\'cate/sort\')}')" id="sort{$cate.id}" data-id="{$cate.id}" name="sort" value="{$cate.sort}"></td>
                                   <td>

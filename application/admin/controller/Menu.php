@@ -22,14 +22,7 @@ class Menu extends BaseController{
     public function add(){
         parent::add();
         $id=input('param.id');
-        try{
-            $cate=model('Menu')::get($id);
-            if(empty($cate) || $cate->pid !=0){
-                return $this->alert('请不要非法操作',url('menu/index'),6,3);
-            }
-        }catch (\Exception $e){
-            return $this->result('', config('code.error'), $e->getMessage());
-        }
+        $this->usuallyId($id);
         return $this->fetch('info',[
             'pid'=>$id
         ]);
@@ -37,14 +30,7 @@ class Menu extends BaseController{
     public function edit(){
         parent::edit();
         $id=input('param.id');
-        try{
-            $cate=model('menu')::get($id);
-            if(empty($cate)){
-                return $this->alert('请不要非法操作',url('menu/index'),6,3);
-            }
-        }catch (\Exception $e){
-            return $this->result('', config('code.error'), $e->getMessage());
-        }
+        $cate=$this->usuallyId($id);
         return $this->fetch('edit',[
             'data'=>$cate
         ]);

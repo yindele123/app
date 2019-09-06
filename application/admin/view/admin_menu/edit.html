@@ -5,11 +5,11 @@
                 <form class="layui-form">
                     <div class="layui-form-item">
                         <label for="name" class="layui-form-label">
-                            <span class="x-red">*</span>请选择分类
+                            <span class="x-red">*</span>请选择菜单
                         </label>
                         <div class="layui-input-inline">
                             <select name="pid" lay-filter="aihao">
-                                <option value="">顶级分类</option>
+                                <option value="">顶级菜单</option>
                                 {volist name="$cateres" id="vo"}
                                 <option {if condition="$data->pid eq $vo->id"}selected="selected"{/if} value="{$vo.id}">{$vo.html}{$vo.name}</option>
                                 {/volist}
@@ -18,7 +18,7 @@
                     </div>
                     <div class="layui-form-item">
                         <label for="name" class="layui-form-label">
-                            <span class="x-red">*</span>分类名称
+                            <span class="x-red">*</span>菜单名称
                         </label>
                         <div class="layui-input-inline">
                             <input type="text" id="name" name="name" value="{$data->name}" lay-verify="required"
@@ -26,21 +26,21 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label for="keywords" class="layui-form-label">
-                           分类关键词
+                        <label for="controller" class="layui-form-label">
+                            <span class="x-red">*</span>控制器
                         </label>
                         <div class="layui-input-inline">
-                            <input type="text" value="{$data->keywords}" id="keywords" name="keywords"
+                            <input type="text" id="controller" name="controller" value="{$data->controller}" lay-verify="required"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label for="content" class="layui-form-label">
-                          分类描述
+                        <label for="action" class="layui-form-label">
+                            <span class="x-red">*</span>操作名
                         </label>
-                        <div class="layui-input-block">
-          <textarea autocomplete="off" class="layui-textarea" name="content" id="content"
-                    class="textarea"  placeholder="说点什么..." >{$data->content}</textarea>
+                        <div class="layui-input-inline">
+                            <input type="text" id="action" value="{$data->action}" name="action" lay-verify="required"
+                                   autocomplete="off" class="layui-input">
                         </div>
                     </div>
                   <div class="layui-form-item">
@@ -48,7 +48,7 @@
                       </label>
                       <input type="hidden" name="id" value="{$data->id}">
                       <button  class="layui-btn" lay-filter="add" type="button" lay-submit="">
-                          增加
+                          修改
                       </button>
                   </div>
               </form>
@@ -64,7 +64,7 @@
                 form.on('submit(add)',
                 function(data) {
                     // 使用Ajax提交表单数据
-                    backtrack('{:url(\'cate/edit\')}',data.field,true);
+                    backtrack('{:url(\'AdminMenu/edit\')}',data.field,true);
                 });
 
             });</script>

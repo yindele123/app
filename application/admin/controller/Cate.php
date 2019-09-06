@@ -22,14 +22,7 @@ class Cate extends BaseController{
     public function add(){
         parent::add();
         $id=input('param.id');
-        try{
-            $cate=model('Cate')::get($id);
-            if(empty($cate)){
-                return $this->alert('请不要非法操作',url('cate/index'),6,3);
-            }
-        }catch (\Exception $e){
-            return $this->result('', config('code.error'), $e->getMessage());
-        }
+        $this->usuallyId($id);
         return $this->fetch('info',[
             'pid'=>$id
         ]);
@@ -37,19 +30,8 @@ class Cate extends BaseController{
     public function edit(){
         parent::edit();
         $id=input('param.id');
-        try{
-            $cate=model('Cate')::get($id);
-            if(empty($cate)){
-                return $this->result('', config('code.error'), '请不要非法操作');
-            }
-        }catch (\Exception $e){
-            return $this->result('', config('code.error'), $e->getMessage());
-        }
-        try{
-            $cateres=model('Cate')->getCateList();
-        }catch (\Exception $e){
-            return $this->result('', config('code.error'), $e->getMessage());
-        }
+        $cate=$this->usuallyId($id);
+        $cateres=$this->usuallyCate();
         return $this->fetch('edit',[
             'data'=>$cate,
             'cateres'=>$cateres
@@ -58,14 +40,7 @@ class Cate extends BaseController{
     public function del(){
         if(request()->isAjax()){
             $id=input('param.id');
-            try{
-                $cate=model('Cate')::get($id);
-                if (empty($cate)){
-                    return $this->result('', config('code.error'), '请不要非法操作');
-                }
-            }catch (\Exception $e){
-                return $this->result('', config('code.error'),$e->getMessage());
-            }
+            $this->usuallyId($id);
             try{
                 $sonids=model('Cate')->getchilrenid($id);
                 $sonids[]=$id;
