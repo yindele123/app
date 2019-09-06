@@ -36,9 +36,9 @@ class News extends BaseController
             return $this->result('', config('code.error'), $e->getMessage());
         }
         try{
-            
+
             // 获取满足条件的数据总数 =》 有多少页
-            $total = model('News')->getNewsCountByCondition($whereData,$catid,$title);
+            $total = model('News')->getCountByCondition($whereData,$catid,$title);
         }catch (\Exception $e){
             return $this->result('', config('code.error'), $e->getMessage());
         }

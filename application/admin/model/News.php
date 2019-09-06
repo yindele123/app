@@ -40,31 +40,7 @@ class News extends BaseModel {
      * @param int $order  排序
      * @param array $result  返回按条件获取的新闻列表
      */
-    public function getNewsByCondition($where = [], $catid=0, $from=0, $size = 5,$title='',$field='',$order = ['id' => 'desc']) {
-        $model=new News;
-        if(!empty($catid)){
-            $model->where('catid',$catid);
-        }
-        if(!empty($title)) {
-            $where['title'] = ['like', '%'.trim($title).'%'];
-        }
-        if(!isset($where['status'])) {
-            $where['status'] = [
-                'neq', config('code.status_delete')
-            ];
-        }
-        $result = $this->where($where)->limit($from, $size)->field(self::getListField($field))->order($order)->select();
-        return $result;
-    }
-
-    /**
-     * 根据条件来获取列表的数据的总数
-     * @param array $where  查询条件
-     * @param array $catid  查询的分类，多级分类自行组装传进来
-     * @param string $title  模糊查询的新闻标题
-     * @param return $data
-     */
-    public function getNewsCountByCondition($where = [], $catid=[],$title='') {
+    public function getNewsByCondition($where = [], $catid=[], $from=0, $size = 5,$title='',$field='',$order = ['id' => 'desc']) {
         $model=new News;
         if(!empty($catid)){
             $model->where('catid','in',$catid);
@@ -77,8 +53,8 @@ class News extends BaseModel {
                 'neq', config('code.status_delete')
             ];
         }
-        $data=$model->where($where)->count();
-        return $data;
+        $result = $model->where($where)->limit($from, $size)->field(self::getListField($field))->order($order)->select();
+        return $result;
     }
 
     /**

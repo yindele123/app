@@ -66,4 +66,28 @@ class BaseModel extends CommonModel
     }
 
 
+    /**
+     * 公共根据条件来获取列表的数据的总数
+     * @param array $where  查询条件
+     * @param array $catid  查询的分类，多级分类自行组装传进来
+     * @param string $title  模糊查询的新闻标题
+     * @param return $data
+     */
+    public function getCountByCondition($where = [], $catid=[],$title='') {
+        $model=$this;
+        if(!empty($catid)){
+            $model->where('catid','in',$catid);
+        }
+        if(!empty($title)) {
+            $where['title'] = ['like', '%'.trim($title).'%'];
+        }
+        if(!isset($where['status'])) {
+            $where['status'] = [
+                'neq', config('code.status_delete')
+            ];
+        }
+        $data=$model->where($where)->count();
+        return $data;
+    }
+
 }

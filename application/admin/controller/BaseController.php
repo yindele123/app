@@ -153,6 +153,16 @@ class BaseController extends Controller{
             $model = $this->model ? $this->model : request()->controller();
             $data = input('post.');
             $this->validateCheck($data);
+            if($model=='Version'){
+                try{
+                    $appType=model($model)->where(['app_type'=>$data['app_type']])->field('version')->order('id desc')->find();
+                }catch (\Exception $e){
+                    return $this->result('', config('code.error'), $e->getMessage());
+                }
+                if($appType->version >=$data['version']){
+                    return $this->result('', config('code.error'), '发布的版本必须要比上个版本高,上个版本是：'.$appType->version);
+                }
+            }
             //入库操作
             try {
                 $id = model($model)->add($data);

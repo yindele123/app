@@ -52,6 +52,21 @@ if (!function_exists('getCatName')) {
         return !empty($catename) ? $catename : '';
     }
 }
+if (!function_exists('getMenuName')) {
+    function getMenuName($menuData,$value){
+        if (empty($menuData)){
+            return false;
+        }
+        $data='';
+        foreach($menuData as $key=>$val){
+            if ($val['value']==$value){
+                $data=$val['name'];
+            }
+        }
+        return $data;
+    }
+}
+
 
 if (!function_exists('isYesNo')) {
     function isYesNo($str)

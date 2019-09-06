@@ -1,0 +1,124 @@
+{include file="public/header" /}
+<body>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label for="app_type" class="layui-form-label">
+                    <span class="x-red">*</span>app类型
+                </label>
+                <div class="layui-input-inline">
+                    <select name="app_type" class="select">
+                        {volist name="$app_type" id="vo"}
+                            {if condition="!empty($data)"}
+                                <option {if condition="$data['app_type'] eq $vo.value"} selected {/if}value="{$vo.value}">{$vo.name}</option>
+                            {else /}
+                                <option value="{$vo.value}">{$vo.name}</option>
+                            {/if}
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="version" class="layui-form-label">
+                    <span class="x-red">*</span>版本号
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="version" name="version"
+                           autocomplete="off" value="{:empty($data.version) ? '' : $data.version}" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="version_code" class="layui-form-label">
+                    <span class="x-red">*</span>对外版本号
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="version_code" name="version_code"
+                           autocomplete="off" value="{:empty($data.version_code) ? '' : $data.version_code}" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="is_force" class="layui-form-label">
+                    是否强制更新
+                </label>
+                <div class="layui-input-inline">
+                    {volist name="$is_force" id="vo"}
+                        {if condition="!empty($data)"}
+                            <input type="radio" name="is_force" value="{$vo.value}" title="{$vo.name}" {if condition="$vo.value eq $data.is_force"}checked=""{/if}>
+                        {else /}
+                            <input type="radio" name="is_force" value="{$vo.value}" title="{$vo.name}" {if condition="$key eq 0"
+                           }checked="" {/if}>
+                        {/if}
+                    {/volist}
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="apk_url" class="layui-form-label">
+                    <span class="x-red">*</span>apk最新地址
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="apk_url" value="{:empty($data.apk_url) ? '' : $data.apk_url}" name="apk_url" lay-verify="required"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label for="upgrade_point" class="layui-form-label">
+                    <span class="x-red">*</span>升级提示
+                </label>
+                <div class="layui-input-block">
+          <textarea autocomplete="off" class="layui-textarea" name="upgrade_point" id="upgrade_point"
+                    lay-verify="required" class="textarea" placeholder="说点什么...最少输入10个字符">{:empty($data.upgrade_point) ? '' : $data.upgrade_point}</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="status" class="layui-form-label">
+                    状态
+                </label>
+                <div class="layui-input-block">
+                    {volist  name="$status" id="vo"}
+                        {if condition="!empty($data)"}
+                            <input type="radio" name="status" value="{$vo.value}" title="{$vo.name}" {if condition="$vo.value eq $data.status"}checked=""{/if}>
+                        {else /}
+                            <input type="radio" name="status" value="{$vo.value}" title="{$vo.name}" {if condition="$key eq 0"}checked=""{/if}>
+                        {/if}
+                    {/volist}
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="L_repass" class="layui-form-label">
+                </label>
+                {if condition="!empty($data)"}
+                    <input type="hidden" name="id" value="{$data.id}">
+                {/if}
+                <button class="layui-btn" lay-filter="add" type="button" lay-submit="">
+                    修改
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    layui.use(['form', 'layer'],
+        function () {
+            $ = layui.jquery;
+            var form = layui.form,
+                layer = layui.layer;
+
+            //监听提交
+            form.on('submit(add)',
+                function (data) {
+                    // 使用Ajax提交表单数据
+                    var url='';
+                    {if condition="!empty($data)"}
+                        url+='{:url(\'version/edit\')}'
+                    {else /}
+                        url+='{:url(\'version/add\')}'
+                    {/if}
+                    backtrack(url, data.field, true);
+                });
+
+        });</script>
+</body>
+
+</html>

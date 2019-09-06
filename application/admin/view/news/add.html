@@ -104,10 +104,10 @@
         </div>
       </div>
       <div class="layui-form-item">
-        <label for="is_hide" class="layui-form-label">
+        <label for="status" class="layui-form-label">
           文章状态
         </label>
-        <div class="layui-input-inline">
+        <div class="layui-input-block">
           {volist  name="menu" id="vo"}
             <input type="radio" name="status" value="{$vo.value}" title="{$vo.name}" {if condition="$key eq 0"}checked=""{/if}>
           {/volist}

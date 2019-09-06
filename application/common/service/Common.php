@@ -61,7 +61,7 @@ class Common
     }
 
     public static function getMenu($pid){
-        $menu=model('Menu')->field('id,name,value')->where(['pid'=>2,'status'=>1])->select();
+        $menu=model('Menu')->field('id,name,value')->order(['sort'=>'desc','id'=>'desc'])->where(['pid'=>$pid,'status'=>1])->select();
         return collection($menu)->toArray();
     }
 }
