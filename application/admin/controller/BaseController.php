@@ -155,7 +155,7 @@ class BaseController extends Controller{
             $this->validateCheck($data);
             if($model=='Version'){
                 try{
-                    $appType=model($model)->where(['app_type'=>$data['app_type']])->field('version')->order('id desc')->find();
+                    $appType=model($model)->where(['app_type'=>$data['app_type'],'status'=>1])->field('version')->order('id desc')->find();
                 }catch (\Exception $e){
                     return $this->result('', config('code.error'), $e->getMessage());
                 }

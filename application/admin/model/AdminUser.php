@@ -11,21 +11,6 @@ use app\lib\exception\ParameterException;
 class AdminUser extends BaseModel {
     protected $autoWriteTimestamp = true;
 
-    /**
-     * @param $data 要添加的数据
-     * @throws ParameterException
-     * @return $id 添加ID号
-     */
-    public function add($data){
-        if(!is_array($data) || empty($data)){
-            throw new ParameterException([
-                'msg'=>'请不要非法操作'
-            ]);
-        }
-        $this->allowField(true)->save($data);
-        return $this->id;
-    }
-
     public function getUser($username){
         if(empty($username)){
             throw new ParameterException([

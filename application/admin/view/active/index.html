@@ -2,7 +2,7 @@
 <body>
 <div class="x-nav">
             <span class="layui-breadcrumb">
-                <a href="{:url('version/index')}">APP版本列表</a>
+                <a href="{:url('active/index')}">APP统计使用情况</a>
             </span>
   <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
     <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
@@ -14,7 +14,7 @@
       <div class="layui-card">
         <div class="layui-card-body ">
           <form class="layui-form layui-col-space5">
-            <div class="layui-input-inline layui-show-xs-block" style="float:right">
+            <div class="layui-input-inline layui-show-xs-block">
               <select name="app_type" lay-filter="app_type">
                 <option value="0">全部分类</option>
                 {volist name="$apptype" id="vo"}
@@ -24,10 +24,6 @@
             </div>
           </form>
         </div>
-        <div class="layui-card-header" style="clear: right;">
-          <button class="layui-btn" onclick="xadmin.open('添加','{:url(\'version/add\')}')">
-            <i class="layui-icon"></i>添加</button>
-        </div>
         <div class="layui-card-body ">
           <table class="layui-table layui-form">
             <thead>
@@ -36,32 +32,21 @@
               <th>app类型</th>
               <th>版本号</th>
               <th>对外版本号</th>
-              <th>是否强制更新</th>
-              <th>apk最新地址</th>
-              <th>升级提示</th>
-              <th>状态</th>
+              <th>使用人数</th>
               <th>添加时间</th>
               <th>操作</th></tr>
             </thead>
             <tbody>
-            {volist  name="version" id="vo"}
+            {volist  name="active" id="vo"}
             <tr>
               <td>{$vo.id}</td>
               <td>{$vo.app_type|getMenuName=$apptype,###}</td>
               <td>{$vo.version}</td>
               <td>{$vo.version_code}</td>
-              <td>
-                <input type="checkbox" name="switch" lay-skin="switch" data-id="{$vo.id}" lay-filter="is_force_g"  lay-text="是|否"  {if condition="$vo['is_force'] eq 1"}checked=""{/if} lay-skin="is_force">
-              </td>
-              <td>{$vo.apk_url}</td>
-              <td>{$vo.upgrade_point}</td>
-              <td>
-                <input type="checkbox" name="switch" lay-skin="switch" data-id="{$vo.id}" lay-filter="switch_g"  lay-text="通过|审核"  {if condition="$vo['status'] eq 1"}checked=""{/if} lay-skin="status">
-              </td>
+              <td>{$vo.number}</td>
               <td>{$vo.create_time}</td>
               <td class="td-manage">
-                <button class="layui-btn layui-btn layui-btn-xs"  onclick="xadmin.open('编辑','{:url(\'version/edit\',[\'id\'=>$vo.id])}')" ><i class="layui-icon">&#xe642;</i>编辑</button>
-                <button class="layui-btn-danger layui-btn layui-btn-xs"  onClick="current_del(this,'{:url(\'version/delete\', [\'id\'=>$vo.id])}')" href="javascript:;" ><i class="layui-icon">&#xe640;</i>删除</button>
+                <button class="layui-btn layui-btn layui-btn-xs"  onclick="xadmin.open('查看详细','{:url(\'active/detailed\',[\'app_type\'=>$vo.app_type,\'version\'=>$vo.version])}')" ><i class="layui-icon">&#xe60a;</i>查看详细</button>
               </td>
             </tr>
             {/volist}
@@ -77,7 +62,7 @@
 </div>
 </body>
 <script>
-    var url = '{:url("version/index")}'+'?{$query}';
+    var url = '{:url("active/index")}'+'?{$query}';
     layui.use(['laypage', 'layer'], function(){
         var laypage = layui.laypage
             ,layer = layui.layer;
@@ -112,24 +97,9 @@
             elem: '#end' //指定元素
         });
         form = layui.form;
-        form.on('switch(switch_g)', function(requst){
-            data={
-                "status":this.checked ? 1 : 0,
-                "id":requst.elem.dataset.id
-            };
-            setChecked('{:url(\'version/status\')}',data);
-        });
-
-        form.on('switch(is_force_g)', function(requst){
-            data={
-                "is_force":this.checked ? 1 : 0,
-                "id":requst.elem.dataset.id
-            };
-           setChecked('{:url(\'version/force\')}',data);
-        });
 
         form.on('select(app_type)', function(data){
-            self.location='{:url(\'version/index\')}?app_type='+data.value;
+            self.location='{:url(\'active/index\')}?app_type='+data.value;
         });
     });
 </script>

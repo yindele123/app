@@ -38,6 +38,7 @@ class Version extends BaseController{
             'total' => $total,
             'size' => $request['size'],
             'apptype'=>Common::getMenu(1),
+            'app_type_value'=>empty($data['app_type']) ? '' : $data['app_type']
         ]);
     }
     public function force(){
