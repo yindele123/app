@@ -46,7 +46,7 @@ class Active extends BaseModel{
      */
     public function getActiveDetailedList($where = [], $from=0, $size = 5)
     {
-        $result = $this->where($where)->limit($from, $size)->field('id,version,app_type,version_code,did,create_time,ip')->order('id desc')->select();
+        $result = $this->where($where)->limit($from, $size)->field('id,version,app_type,version_code,did,create_time,did')->order('id desc')->select();
         return collection($result)->toArray();
     }
 

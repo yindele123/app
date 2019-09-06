@@ -20,7 +20,7 @@
               <th>app类型</th>
               <th>版本号</th>
               <th>对外版本号</th>
-              <th>IP</th>
+              <th>设备号</th>
               <th>添加时间</th>
             </thead>
             <tbody>
@@ -30,7 +30,7 @@
               <td>{$vo.app_type|getMenuName=$apptype,###}</td>
               <td>{$vo.version}</td>
               <td>{$vo.version_code}</td>
-              <td>{$vo.ip}</td>
+              <td>{$vo.did}</td>
               <td>{$vo.create_time}</td>
             </tr>
             {/volist}
