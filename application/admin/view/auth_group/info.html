@@ -1,0 +1,127 @@
+{include file="public/header" /}
+
+<body>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <form action="" method="post" class="layui-form layui-form-pane">
+            <div class="layui-form-item">
+                <label for="title" class="layui-form-label">
+                    <span class="x-red">*</span>角色名
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="title" value="{:empty($data) ? '' : $data['title']}" name="title" required="" lay-verify="required"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">
+                    拥有权限
+                </label>
+                <table class="layui-table layui-input-block">
+                    <tbody>
+                    {volist name="authRuleRes" id="authRule"}
+                    <tr>
+                        <td>
+                            <div class="layui-input-block">
+                                {:str_repeat('&nbsp;', $authRule['level']*8)}
+                                {if condition="empty($data)" }
+                                <input name="rules[]" dataid="id-{$authRule.dataid}" class="inverted checkbox-parent{if condition="$authRule['level'] neq 0"} checkbox-child{/if}" value="{$authRule.id}" lay-skin="primary" type="checkbox">
+                                {else}
+                                <input name="rules[]" {if condition="in_array($authRule['id'], $data['rules'])" }checked{/if} dataid="id-{$authRule.dataid}" class="inverted checkbox-parent{if condition="$authRule['level'] neq 0"} checkbox-child{/if}" value="{$authRule.id}" lay-skin="primary" type="checkbox">
+                                {/if}
+                                <span {if condition="$authRule['pid'] eq 0" } style="font-weight:bold; font-size:14px;"
+                                      {/if}>{$authRule.title}</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label for="description" class="layui-form-label">
+                    描述
+                </label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" id="description" name="description" class="layui-textarea">{:empty($data) ? '' : $data['description']}</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                {if condition="!empty($data)" }
+                <input type="hidden" name="id" value="{$data['id']}">
+                {/if}
+                <input type="hidden" name="action" value="{$action}">
+                <button class="layui-btn" lay-submit="" lay-filter="add" type="button">增加</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    /* 权限配置 */
+    $(function () {
+        //动态选择框，上下级选中状态变化
+        $('input.checkbox-parent').on('change', function () {
+            alert('gfg');
+            var dataid = $(this).attr("dataid");
+            $('input[dataid^=' + dataid + ']').prop('checked', $(this).is(':checked'));
+        });
+        $('input.checkbox-child').on('change', function () {
+            var dataid = $(this).attr("dataid");
+            dataid = dataid.substring(0, dataid.lastIndexOf("-"));
+            var parent = $('input[dataid=' + dataid + ']');
+            if ($(this).is(':checked')) {
+                parent.prop('checked', true);
+                //循环到顶级
+                while (dataid.lastIndexOf("-") != 2) {
+                    dataid = dataid.substring(0, dataid.lastIndexOf("-"));
+                    parent = $('input[dataid=' + dataid + ']');
+                    parent.prop('checked', true);
+                }
+            } else {
+                //父级
+                if ($('input[dataid^=' + dataid + '-]:checked').length == 0) {
+                    parent.prop('checked', false);
+                    //循环到顶级
+                    while (dataid.lastIndexOf("-") != 2) {
+                        dataid = dataid.substring(0, dataid.lastIndexOf("-"));
+                        parent = $('input[dataid=' + dataid + ']');
+                        if ($('input[dataid^=' + dataid + '-]:checked').length == 0) {
+                            parent.prop('checked', false);
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+<script>
+    layui.use(['form', 'layer'], function () {
+        $ = layui.jquery;
+        var form = layui.form
+            , layer = layui.layer;
+
+
+
+        //监听提交
+        form.on('submit(add)', function (data) {
+            backtrack("{:url('authGroup/"+data.field.action+"')}",data.field,true);
+        });
+/*
+
+        form.on('checkbox(father)', function (data) {
+
+            if (data.elem.checked) {
+                $(data.elem).parent().siblings('td').find('input').prop("checked", true);
+                form.render();
+            } else {
+                $(data.elem).parent().siblings('td').find('input').prop("checked", false);
+                form.render();
+            }
+        });*/
+
+
+    });
+</script>
+</body>
+
+</html>

@@ -16,11 +16,17 @@
                 <div class="layui-card-body ">
                     <form class="layui-form layui-col-space5">
                         <div class="layui-input-inline layui-show-xs-block">
-                            <input class="layui-input" placeholder="菜单名" lay-verify="required" name="name"></div>
+                            <select name="pid" lay-filter="aihao">
+                                <option value="0">顶级权限</option>
+                                {volist name="menu" id="vo"}
+                                <option value="{$vo.id}">{$vo.html}{$vo.title}</option>
+                                {/volist}
+                            </select>
+                        </div>
                         <div class="layui-input-inline layui-show-xs-block">
-                            <input class="layui-input" placeholder="控制器" lay-verify="required" name="controller"></div>
+                            <input class="layui-input" placeholder="规则中文名称" lay-verify="required" name="title"></div>
                         <div class="layui-input-inline layui-show-xs-block">
-                            <input class="layui-input" placeholder="操作名" lay-verify="required" name="action"></div>
+                            <input class="layui-input" placeholder="控制器/操作名" name="name"></div>
                         <div class="layui-input-inline layui-show-xs-block">
                             <button class="layui-btn" type="button" lay-submit="" lay-filter="add"><i
                                     class="layui-icon"></i>增加
@@ -41,7 +47,7 @@
                             <th width="250">操作</th>
                         </thead>
                         <tbody class="x-cate">
-                        {volist name="menutree" id="cate"}
+                        {volist name="authRule" id="cate"}
                         <tr cate-id='{$cate.id}' fid='{$cate.pid}'>
                             <td>{$cate.id}</td>
                             <td>
@@ -51,17 +57,17 @@
                                 {else}
                                 ├
                                 {/if}
-                                {$cate.name}
+                                {$cate.title}
                             </td>
                             <td>
                                 {if condition="$cate['pid'] neq 0"}
-                                <input type="text" class="layui-input x-sort" onclick="setController('controller{$cate.id}','{:url(\'adminMenu/setController\')}')" id="controller{$cate.id}"
+                                <input type="text" class="layui-input x-sort" onclick="setController('controller{$cate.id}','{:url(\'authRule/setController\')}')" id="controller{$cate.id}"
                                        data-id="{$cate.id}"
-                                       name="controller" value="{$cate.controller}/{$cate.action}">
+                                       name="controller" value="{$cate.name}">
                                 {/if}
                             </td>
                             <td><input type="text" class="layui-input x-sort"
-                                       onclick="setSort('sort{$cate.id}','{:url(\'adminMenu/sort\')}')" id="sort{$cate.id}"
+                                       onclick="setSort('sort{$cate.id}','{:url(\'authRule/sort\')}')" id="sort{$cate.id}"
                                        data-id="{$cate.id}" name="sort" value="{$cate.sort}"></td>
                             <td>
                                 <input type="checkbox" name="switch" lay-skin="switch" data-id="{$cate.id}"
@@ -70,15 +76,15 @@
                             </td>
                             <td class="td-manage">
                                 <button class="layui-btn layui-btn layui-btn-xs"
-                                        onclick="xadmin.open('编辑','{:url(\'adminMenu/edit\',[\'id\'=>$cate.id])}')"><i
+                                        onclick="xadmin.open('编辑','{:url(\'authRule/edit\',[\'id\'=>$cate.id])}')"><i
                                         class="layui-icon">&#xe642;</i>编辑
                                 </button>
                                 <button class="layui-btn layui-btn-warm layui-btn-xs"
-                                        onclick="xadmin.open('添加','{:url(\'adminMenu/add\',[\'id\'=>$cate.id])}')"><i
-                                        class="layui-icon">&#xe642;</i>添加子栏目
+                                        onclick="xadmin.open('添加','{:url(\'authRule/add\',[\'id\'=>$cate.id])}')"><i
+                                        class="layui-icon">&#xe642;</i>添加子权限
                                 </button>
                                 <button class="layui-btn-danger layui-btn layui-btn-xs"
-                                        onclick="current_del(this,'{:url(\'adminMenu/del\',[\'id\'=>$cate.id])}')"
+                                        onclick="current_del(this,'{:url(\'authRule/del\',[\'id\'=>$cate.id])}')"
                                         href="javascript:;"><i class="layui-icon">&#xe640;</i>删除
                                 </button>
                             </td>
@@ -107,14 +113,14 @@
         form.on('submit(add)',
             function (data) {
                 // 使用Ajax提交表单数据
-                backtrack('{:url(\'adminMenu/add\')}', data.field);
+                backtrack('{:url(\'authRule/add\')}', data.field);
             });
         form.on('switch(switchTest)', function (requst) {
             data = {
                 "status": this.checked ? 1 : 0,
                 "id": requst.elem.dataset.id
             };
-            setChecked('{:url(\'adminMenu/status\')}', data);
+            setChecked('{:url(\'authRule/status\')}', data);
         });
     });
     // 分类展开收起的分类的逻辑

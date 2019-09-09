@@ -34,15 +34,18 @@ class BaseModel extends CommonModel
      * @param int $level  分类等级
      * @return array
      */
-    public function sort($data,$pid=0,$level=0){
+    public function sort($data,$pid=0,$level=0,$assembly=false){
         static $arr=[];
         foreach ($data as $k => $v) {
             $data[$k]['subclass']=self::hasChild($data,$v['id']);
             if($v['pid']==$pid){
+                if($assembly==true){
+                    $v['dataid']=getparentid($data,$v['id'],True);
+                }
                 $v['level']=$level;
                 $arr[]=$v;
                 unset($data[$k]);
-                $this->sort($data,$v['id'],$level+1);
+                $this->sort($data,$v['id'],$level+1,$assembly);
             }
         }
 

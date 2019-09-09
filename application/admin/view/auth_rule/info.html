@@ -4,29 +4,20 @@
             <div class="layui-row">
                 <form class="layui-form">
                     <div class="layui-form-item">
+                        <label for="title" class="layui-form-label">
+                            <span class="x-red">*</span>权限名称
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="title" name="title" lay-verify="required"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label for="name" class="layui-form-label">
-                            <span class="x-red">*</span>菜单名称
+                            <span class="x-red">*</span>规则格式
                         </label>
                         <div class="layui-input-inline">
-                            <input type="text" id="name" name="name" lay-verify="required"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label for="controller" class="layui-form-label">
-                            <span class="x-red">*</span>控制器
-                        </label>
-                        <div class="layui-input-inline">
-                            <input type="text" id="controller" name="controller" lay-verify="required"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label for="action" class="layui-form-label">
-                            <span class="x-red">*</span>操作名
-                        </label>
-                        <div class="layui-input-inline">
-                            <input type="text" id="action" name="action" lay-verify="required"
+                            <input placeholder="控制器/操作名" type="text" id="name" name="name" lay-verify="required"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -51,7 +42,7 @@
                 form.on('submit(add)',
                 function(data) {
                     // 使用Ajax提交表单数据
-                    backtrack('{:url(\'adminMenu/add\')}',data.field,true);
+                    backtrack('{:url(\'authRule/add\')}',data.field,true);
                 });
 
             });</script>

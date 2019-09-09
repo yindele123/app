@@ -6,15 +6,14 @@
  * Time: 20:41
  */
 namespace app\admin\model;
-class AdminMenu extends BaseModel{
+class AuthRule extends BaseModel{
     /**
      * 获取递归分类
      */
-    public function menutree($field=''){
+    public function ruleTree($field='',$assembly=false){
         $cateres=$this->order('sort desc,id desc')->field($this->getListField($field))->select();
-        return collection($this->sort($cateres))->toArray();
+        return $assembly==true ? collection($this->sort($cateres,0,0,true))->toArray() : collection($this->sort($cateres))->toArray();
     }
-
     /**
      * 通用化获取参数的数据字段
      */
@@ -25,8 +24,7 @@ class AdminMenu extends BaseModel{
                 'name',
                 'pid',
                 'sort',
-                'controller',
-                'action',
+                'title',
                 'status'
             ];
         }

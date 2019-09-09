@@ -6,15 +6,18 @@
  * Time: 18:52
  */
 namespace app\admin\controller;
-class AdminMenu extends BaseController{
+class AuthRule extends BaseController{
+    private $field=['id', 'title', 'pid', 'sort', 'status'];
     public function index(){
         try{
-            $menutree=model('AdminMenu')->menutree();
+            $authRule=model('AuthRule')->ruleTree();
         }catch (\Exception $e){
             return $this->result('', config('code.error'), $e->getMessage());
         }
+        $menu=$this->usuallyCate($this->field);
         return $this->fetch('index',[
-            'menutree'=>$menutree
+            'authRule'=>$authRule,
+            'menu'=>$menu
         ]);
     }
     public function add(){
@@ -29,10 +32,10 @@ class AdminMenu extends BaseController{
         parent::edit();
         $id=input('param.id');
         $cate=$this->usuallyId($id);
-        $cateres=$this->usuallyCate();
+        $menu=$this->usuallyCate($this->field);
         return $this->fetch('edit',[
             'data'=>$cate,
-            'cateres'=>$cateres
+            'menu'=>$menu
         ]);
     }
 
@@ -41,14 +44,14 @@ class AdminMenu extends BaseController{
             $id=input('param.id');
             $this->usuallyId($id);
             try{
-                $sonids=model('AdminMenu')->getchilrenid($id);
+                $sonids=model('AuthRule')->getchilrenid($id);
                 $sonids[]=$id;
             }catch (\Exception $e){
                 return $this->result('', config('code.error'),$e->getMessage());
             }
-            $del=model('AdminMenu')->destroy($sonids);
+            $del=model('AuthRule')->destroy($sonids);
             if($del){
-                return $this->result(['jump_url' => url('adminMenu/index')], config('code.success'), '删除成功');
+                return $this->result(['jump_url' => url('authRule/index')], config('code.success'), '删除成功');
             }else{
                 return $this->result('', config('code.error'), '删除失败');
             }
@@ -64,16 +67,15 @@ class AdminMenu extends BaseController{
                 return $this->result('', config('code.error'), '修改操作URL应按照控制器/方法名');
             }
             $update=[
-                'controller'=>reset($controller),
-                'action'=>end($controller)
+                'name'=>$data['controller']
             ];
             try{
-                $adminMenu=model('AdminMenu')->save($update,['id' => $data['id']]);
+                $authRule=model('AuthRule')->save($update,['id' => $data['id']]);
             }catch (\Exception $e){
                 return $this->result('', config('code.error'), $e->getMessage());
             }
-            if($adminMenu) {
-                return $this->result(['jump_url' => url('adminMenu/index')], config('code.success'), 'OK');
+            if($authRule) {
+                return $this->result(['jump_url' => url('authRule/index')], config('code.success'), 'OK');
             } else {
                 return $this->result('', config('code.error'), '更新失败');
             }

@@ -5,41 +5,32 @@
                 <form class="layui-form">
                     <div class="layui-form-item">
                         <label for="name" class="layui-form-label">
-                            <span class="x-red">*</span>请选择菜单
+                            <span class="x-red">*</span>请选择权限
                         </label>
                         <div class="layui-input-inline">
                             <select name="pid" lay-filter="aihao">
-                                <option value="">顶级菜单</option>
-                                {volist name="$cateres" id="vo"}
-                                <option {if condition="$data->pid eq $vo->id"}selected="selected"{/if} value="{$vo.id}">{$vo.html}{$vo.name}</option>
+                                <option value="">顶级权限</option>
+                                {volist name="menu" id="vo"}
+                                <option {if condition="$data->pid eq $vo->id"}selected="selected"{/if} value="{$vo.id}">{$vo.html}{$vo.title}</option>
                                 {/volist}
                             </select>
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label for="title" class="layui-form-label">
+                            <span class="x-red">*</span>权限名称
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="title" name="title" value="{$data->title}" lay-verify="required"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label for="name" class="layui-form-label">
-                            <span class="x-red">*</span>菜单名称
+                            <span class="x-red">*</span>规则格式
                         </label>
                         <div class="layui-input-inline">
-                            <input type="text" id="name" name="name" value="{$data->name}" lay-verify="required"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label for="controller" class="layui-form-label">
-                            <span class="x-red">*</span>控制器
-                        </label>
-                        <div class="layui-input-inline">
-                            <input type="text" id="controller" name="controller" value="{$data->controller}" lay-verify="required"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label for="action" class="layui-form-label">
-                            <span class="x-red">*</span>操作名
-                        </label>
-                        <div class="layui-input-inline">
-                            <input type="text" id="action" value="{$data->action}" name="action" lay-verify="required"
+                            <input type="text" id="name" name="name" value="{$data->name}"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -64,7 +55,7 @@
                 form.on('submit(add)',
                 function(data) {
                     // 使用Ajax提交表单数据
-                    backtrack('{:url(\'AdminMenu/edit\')}',data.field,true);
+                    backtrack('{:url(\'authRule/edit\')}',data.field,true);
                 });
 
             });</script>

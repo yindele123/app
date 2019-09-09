@@ -1,4 +1,5 @@
 {include file="public/header" /}
+<script type="text/javascript" src="__STATIC__/admin/js/echarts.min.js"></script>
     <body>
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
@@ -6,7 +7,7 @@
                     <div class="layui-card">
                         <div class="layui-card-body ">
                             <blockquote class="layui-elem-quote">欢迎管理员：
-                                <span class="x-red">test</span>！当前时间:2018-04-25 20:50:53
+                                <span class="x-red">{$user['username']}</span>！当前时间:{:date("Y年n月j日 H:i:s")}
                             </blockquote>
                         </div>
                     </div>
@@ -17,103 +18,29 @@
                         <div class="layui-card-body ">
                             <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
                                 <li class="layui-col-md2 layui-col-xs6">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                    <a href="javascript:;" onclick="xadmin.open('添加用户','{:url(\'news/index\')}')" class="x-admin-backlog-body">
                                         <h3>文章数</h3>
                                         <p>
-                                            <cite>66</cite></p>
+                                            <cite>{$newsTotal}</cite></p>
                                     </a>
                                 </li>
-                                <li class="layui-col-md2 layui-col-xs6">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>会员数</h3>
-                                        <p>
-                                            <cite>12</cite></p>
-                                    </a>
-                                </li>
-                                <li class="layui-col-md2 layui-col-xs6">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>回复数</h3>
-                                        <p>
-                                            <cite>99</cite></p>
-                                    </a>
-                                </li>
-                                <li class="layui-col-md2 layui-col-xs6">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>商品数</h3>
-                                        <p>
-                                            <cite>67</cite></p>
-                                    </a>
-                                </li>
-                                <li class="layui-col-md2 layui-col-xs6">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>文章数</h3>
-                                        <p>
-                                            <cite>67</cite></p>
-                                    </a>
-                                </li>
-                                <li class="layui-col-md2 layui-col-xs6 ">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>文章数</h3>
-                                        <p>
-                                            <cite>6766</cite></p>
-                                    </a>
-                                </li>
+
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-sm6 layui-col-md3">
-                    <div class="layui-card">
-                        <div class="layui-card-header">下载
-                            <span class="layui-badge layui-bg-cyan layuiadmin-badge">月</span></div>
-                        <div class="layui-card-body  ">
-                            <p class="layuiadmin-big-font">33,555</p>
-                            <p>新下载
-                                <span class="layuiadmin-span-color">10%
-                                    <i class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>
-                            </p>
-                        </div>
+                <div class="layui-col-sm6 layui-col-md4">
+                    <div class="layui-card" style="display: block;">
+                        <div id="app" style="width: 600px;height:400px;"></div>
                     </div>
                 </div>
-                <div class="layui-col-sm6 layui-col-md3">
-                    <div class="layui-card">
-                        <div class="layui-card-header">下载
-                            <span class="layui-badge layui-bg-cyan layuiadmin-badge">月</span></div>
-                        <div class="layui-card-body ">
-                            <p class="layuiadmin-big-font">33,555</p>
-                            <p>新下载
-                                <span class="layuiadmin-span-color">10%
-                                    <i class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>
-                            </p>
-                        </div>
+
+                <div class="layui-col-sm6 layui-col-md4">
+                    <div class="layui-card" style="display: block;">
+                        <div id="news" style="width: 600px;height:400px;"></div>
                     </div>
                 </div>
-                <div class="layui-col-sm6 layui-col-md3">
-                    <div class="layui-card">
-                        <div class="layui-card-header">下载
-                            <span class="layui-badge layui-bg-cyan layuiadmin-badge">月</span></div>
-                        <div class="layui-card-body ">
-                            <p class="layuiadmin-big-font">33,555</p>
-                            <p>新下载
-                                <span class="layuiadmin-span-color">10%
-                                    <i class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-col-sm6 layui-col-md3">
-                    <div class="layui-card">
-                        <div class="layui-card-header">下载
-                            <span class="layui-badge layui-bg-cyan layuiadmin-badge">月</span></div>
-                        <div class="layui-card-body ">
-                            <p class="layuiadmin-big-font">33,555</p>
-                            <p>新下载
-                                <span class="layuiadmin-span-color">10%
-                                    <i class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="layui-col-md12">
                     <div class="layui-card">
                         <div class="layui-card-header">系统信息</div>
@@ -121,38 +48,47 @@
                             <table class="layui-table">
                                 <tbody>
                                     <tr>
-                                        <th>xxx版本</th>
-                                        <td>1.0.180420</td></tr>
-                                    <tr>
-                                        <th>服务器地址</th>
-                                        <td>x.xuebingsi.com</td></tr>
-                                    <tr>
                                         <th>操作系统</th>
-                                        <td>WINNT</td></tr>
+                                        <td>{:PHP_OS}</td></tr>
                                     <tr>
                                         <th>运行环境</th>
-                                        <td>Apache/2.4.23 (Win32) OpenSSL/1.0.2j mod_fcgid/2.3.9</td></tr>
+                                        <td>{:$_SERVER["SERVER_SOFTWARE"]}</td></tr>
                                     <tr>
-                                        <th>PHP版本</th>
-                                        <td>5.6.27</td></tr>
+                                        <th>主机名</th>
+                                        <td>{:$_SERVER['SERVER_NAME']}</td></tr>
                                     <tr>
-                                        <th>PHP运行方式</th>
-                                        <td>cgi-fcgi</td></tr>
+                                        <th>WEB服务端口</th>
+                                        <td>{:$_SERVER['SERVER_PORT']}</td></tr>
                                     <tr>
-                                        <th>MYSQL版本</th>
-                                        <td>5.5.53</td></tr>
+                                        <th>网站文档目录</th>
+                                        <td>{:$_SERVER["DOCUMENT_ROOT"]}</td></tr>
                                     <tr>
-                                        <th>ThinkPHP</th>
-                                        <td>5.0.18</td></tr>
+                                        <th>浏览器信息</th>
+                                        <td>{:substr($_SERVER['HTTP_USER_AGENT'], 0, 40)}</td></tr>
+                                    <tr>
+                                        <th>ThinkPHP版本</th>
+                                        <td>{:THINK_VERSION}</td></tr>
                                     <tr>
                                         <th>上传附件限制</th>
-                                        <td>2M</td></tr>
+                                        <td>{:ini_get('upload_max_filesize')}</td></tr>
                                     <tr>
                                         <th>执行时间限制</th>
-                                        <td>30s</td></tr>
+                                        <td>{:ini_get('max_execution_time')}秒</td></tr>
+                                    <tr>
+                                        <th>服务器时间</th>
+                                        <td>{:date("Y年n月j日 H:i:s")}</td></tr>
+                                    <tr>
+                                        <th>北京时间</th>
+                                        <td>{:gmdate("Y年n月j日 H:i:s",time()+8*3600)}</td></tr>
+                                    <tr>
+                                        <th>服务器域名/IP</th>
+                                        <td>{:$_SERVER['SERVER_NAME'].' [ '.gethostbyname($_SERVER['SERVER_NAME']).' ]'}</td></tr>
+                                    <tr>
+                                        <th>用户的IP地址</th>
+                                        <td>{:$_SERVER['REMOTE_ADDR']}</td></tr>
                                     <tr>
                                         <th>剩余空间</th>
-                                        <td>86015.2M</td></tr>
+                                        <td>{:round((disk_free_space(".")/(1024*1024)),2)}M</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -166,22 +102,99 @@
                                 <tbody>
                                     <tr>
                                         <th>版权所有</th>
-                                        <td>xuebingsi(xuebingsi)
+                                        <td>981443737@qq.com
                                             <a href="http://x.xuebingsi.com/" target="_blank">访问官网</a></td>
                                     </tr>
                                     <tr>
                                         <th>开发者</th>
-                                        <td>马志斌(113664000@qq.com)</td></tr>
+                                        <td>柯(981443737@qq.com)</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-                <style id="welcome_style"></style>
-                <div class="layui-col-md12">
-                    <blockquote class="layui-elem-quote layui-quote-nm">感谢layui,百度Echarts,jquery,本系统由x-admin提供技术支持。</blockquote></div>
             </div>
         </div>
         </div>
+        <script>
+            // 绘制图表。
+            echarts.init(document.getElementById('app')).setOption({
+                title : {
+                    text: 'APP统计使用情况',
+                    x:'center'
+                },
+                legend: {
+                    // orient: 'vertical',
+                    // top: 'middle',
+                    bottom: 10,
+                    left: 'center',
+                    data: [
+                        {volist name="active" id="vo"}
+                        '{$vo.app_type|getMenuName=$apptype,###}(版本号{$vo[\'version\']})',
+                        {/volist}
+                    ]
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                series : [
+                    {
+                        type: 'pie',
+                        radius : '65%',
+                        center: ['50%', '50%'],
+                        selectedMode: 'single',
+                        data:[
+                            {volist name="active" id="vo"}
+                            {value:{$vo['number']}, name:'{$vo.app_type|getMenuName=$apptype,###}(版本号{$vo[\'version\']})'},
+                            {/volist}
+                        ]
+                    }
+                ],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            });
+
+            echarts.init(document.getElementById('news')).setOption({
+                title : {
+                    text: '文章添加',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : ['本天','昨天', '本周','上周', '本月','上月', '本年','去年'],
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                series : [
+                    {
+                        name:'添加',
+                        type:'bar',
+                        barWidth: '60%',
+                        data:[{$newsToday}, {$newsYesterday}, {$newsWeek}, {$newsLastWeek},{$newsMonth}, {$newsLastMonth}, {$newsYear}, {$newsLastYear}]
+                    }
+                ]
+            });
+        </script>
     </body>
 </html>

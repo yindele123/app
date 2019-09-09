@@ -147,6 +147,9 @@ class BaseController extends Controller{
                     return $this->result('', config('code.error'), '发布的版本必须要比上个版本高,上个版本是：'.$appType->version);
                 }
             }
+            if($model=='AuthGroup' && isset($data['rules'])){
+                $data['rules']=implode(',', $data['rules']);
+            }
             //入库操作
             try {
                 $id = model($model)->add($data);
@@ -165,6 +168,9 @@ class BaseController extends Controller{
      * @return mixed|void
      */
     public function usuallyId($id){
+        if(request()->action()=='usuallyId'){
+            return $this->alert('请不要非法操作',url('index/index'),6,3);
+        }
         $model = $this->model ? $this->model : request()->controller();
         try{
             $cate=model($model)::get($id);
@@ -186,16 +192,14 @@ class BaseController extends Controller{
      * 通用获取分类
      * @return mixed|void
      */
-    public function usuallyCate(){
+    public function usuallyCate($field=[]){
+        if(request()->action()=='usuallyCate'){
+            return $this->alert('请不要非法操作',url('index/index'),6,3);
+        }
         $model = $this->model ? $this->model : request()->controller();
         try{
-            $cateres=model($model)->getCateList([
-                'id',
-                'name',
-                'pid',
-                'sort',
-                'status'
-            ]);
+            $field=empty($field) ? ['id', 'name', 'pid', 'sort', 'status'] : $field;
+            $cateres=model($model)->getCateList($field);
         }catch (\Exception $e){
             if (request()->isAjax()){
                 return $this->result('', config('code.error'), $e->getMessage());
@@ -214,6 +218,9 @@ class BaseController extends Controller{
             $model = $this->model ? $this->model : request()->controller();
             $data = input('post.');
             $this->validateCheck($data);
+            if($model=='AuthGroup' && isset($data['rules'])){
+                $data['rules']=implode(',', $data['rules']);
+            }
             //入库操作
             try {
                 $save = model($model)->allowField(true)->save($data,['id'=>$data['id']]);

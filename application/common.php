@@ -170,3 +170,28 @@ if (!function_exists('getCategoryTree')) {
         return $column;
     }
 }
+
+/**
+ * @param $AuthRuleRes 所以权限分类
+ * @param $authRuleId 分类ID
+ * @param bool $clear 静态数组重新赋值
+ * @return string
+ */
+if (!function_exists('getparentid')) {
+    function getparentid($AuthRuleRes, $authRuleId, $clear = False)
+    {
+        static $arr = array();
+        if ($clear) {
+            $arr = array();
+        }
+        foreach ($AuthRuleRes as $k => $v) {
+            if ($v['id'] == $authRuleId) {
+                $arr[] = $v['id'];
+                getparentid($AuthRuleRes, $v['pid'], False);
+            }
+        }
+        asort($arr);
+        $arrStr = implode('-', $arr);
+        return $arrStr;
+    }
+}
