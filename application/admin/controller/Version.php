@@ -62,7 +62,8 @@ class Version extends BaseController{
         return $this->fetch('info',[
             'app_type'=>Common::getMenu(1),
             'is_force'=>Common::getMenu(12),
-            'status'=>Common::getMenu(15)
+            'status'=>Common::getMenu(15),
+            'action'=>'add'
         ]);
     }
 
@@ -74,7 +75,8 @@ class Version extends BaseController{
             'data'=>$version,
             'app_type'=>Common::getMenu(1),
             'is_force'=>Common::getMenu(12),
-            'status'=>Common::getMenu(15)
+            'status'=>Common::getMenu(15),
+            'action'=>'edit'
         ]);
     }
 }

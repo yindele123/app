@@ -88,9 +88,10 @@
             <div class="layui-form-item">
                 <label for="L_repass" class="layui-form-label">
                 </label>
-                {if condition="!empty($data)"}
-                    <input type="hidden" name="id" value="{$data.id}">
+                {if condition="!empty($data)" }
+                <input type="hidden" name="id" value="{$data['id']}">
                 {/if}
+                <input type="hidden" name="action" value="{$action}">
                 <button class="layui-btn" lay-filter="add" type="button" lay-submit="">
                     修改
                 </button>
@@ -109,13 +110,7 @@
             form.on('submit(add)',
                 function (data) {
                     // 使用Ajax提交表单数据
-                    var url='';
-                    {if condition="!empty($data)"}
-                        url+='{:url(\'version/edit\')}'
-                    {else /}
-                        url+='{:url(\'version/add\')}'
-                    {/if}
-                    backtrack(url, data.field, true);
+                    backtrack("{:url('version/"+data.field.action+"')}",data.field,true);
                 });
 
         });</script>
