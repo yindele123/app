@@ -5,26 +5,45 @@
  * Date: 2019/8/30 0030
  * Time: 17:05
  */
+
 namespace app\admin\controller;
+
 use think\Controller;
 use think\Request;
+use app\lib\Auth;
 
-class BaseController extends Controller{
-    public $validate='';
-    public $user='';
-    public $model='';
+class BaseController extends Controller
+{
+    public $validate = '';
+    public $user = '';
+    public $model = '';
 
     public function __construct(Request $request = null)
     {
-        $this->user=session(config('admin.session_user'), '', config('admin.session_user_scope'));
+        $this->user = session(config('admin.session_user'), '', config('admin.session_user_scope'));
         parent::__construct($request);
     }
 
-    public function _initialize() {
+    public function _initialize()
+    {
         // 判定用户是否登录
-        $isLogin = $this->isLogin($this->user);
+        /*$isLogin = $this->isLogin($this->user);
         if(!$isLogin) {
             return $this->redirect('login/index');
+        }*/
+        $auth = new Auth();
+        $request = Request::instance();
+        $con = $request->controller();
+        $action = $request->action();
+        $name = $con . '/' . $action;
+        $notCheck = array('Index/index','Index/welcome');
+        if (!in_array($name, $notCheck)) {
+            if (!$auth->check($name, $this->user->id)) {
+                if (request()->isAjax()){
+                    return $this->result('', config('code.error'), '没有权限');
+                }
+                $this->error('没有权限', url('index/index'));
+            }
         }
 
         //$this->checkLogin();
@@ -42,8 +61,9 @@ class BaseController extends Controller{
      * 判定是否登录
      * @return bool
      */
-    public function isLogin($user) {
-        if($user && $user['id']) {
+    public function isLogin($user)
+    {
+        if ($user && $user['id']) {
             return true;
         }
 
@@ -53,11 +73,12 @@ class BaseController extends Controller{
     /**
      * @param $data 需要验证的内容
      */
-    protected function validateCheck($data){
+    protected function validateCheck($data)
+    {
         $validate = $this->validate ? $this->validate : request()->controller();
-        $validateC=validate($validate);
+        $validateC = validate($validate);
         if (!$validateC->check($data)) {
-            return $this->result('',config('code.error'),is_array($validateC->getError()) ? implode(';', $validateC->getError()) : $validateC->getError());
+            return $this->result('', config('code.error'), is_array($validateC->getError()) ? implode(';', $validateC->getError()) : $validateC->getError());
         }
     }
 
@@ -65,7 +86,8 @@ class BaseController extends Controller{
     /**
      * 删除逻辑
      */
-    public function delete($id = 0) {
+    public function delete($id = 0)
+    {
         if (request()->isAjax()) {
             if (!intval($id)) {
                 return $this->result('', config('code.error'), 'ID不合法');
@@ -90,7 +112,8 @@ class BaseController extends Controller{
     /**
      * 通用修改改状态
      */
-    public function status() {
+    public function status()
+    {
         if (request()->isAjax()) {
             $data = input('param.');
             $model = $this->model ? $this->model : request()->controller();
@@ -110,17 +133,18 @@ class BaseController extends Controller{
     /**
      * 通用修改排序
      */
-    public function sort() {
-        if (request()->isAjax()){
-            $data  = input('param.');
+    public function sort()
+    {
+        if (request()->isAjax()) {
+            $data = input('param.');
             $model = $this->model ? $this->model : request()->controller();
             $this->usuallyId($data['id']);
             try {
                 $res = model($model)->save(['sort' => $data['sort']], ['id' => $data['id']]);
-            }catch(\Exception $e) {
+            } catch (\Exception $e) {
                 return $this->result('', config('code.error'), $e->getMessage());
             }
-            if($res) {
+            if ($res) {
                 return $this->result(['jump_url' => $_SERVER['HTTP_REFERER']], config('code.success'), 'OK');
             }
             return $this->result('', config('code.error'), '修改失败');
@@ -132,55 +156,58 @@ class BaseController extends Controller{
      * 通用添加
      * @return mixed|void
      */
-    public function add(){
-        if (request()->isAjax()){
+    public function add()
+    {
+        if (request()->isAjax()) {
             $model = $this->model ? $this->model : request()->controller();
             $data = input('post.');
             $this->validateCheck($data);
-            if($model=='Version'){
-                try{
-                    $appType=model($model)->where(['app_type'=>$data['app_type'],'status'=>1])->field('version')->order('id desc')->find();
-                }catch (\Exception $e){
+            if ($model == 'Version') {
+                try {
+                    $appType = model($model)->where(['app_type' => $data['app_type'], 'status' => 1])->field('version')->order('id desc')->find();
+                } catch (\Exception $e) {
                     return $this->result('', config('code.error'), $e->getMessage());
                 }
-                if($appType->version >=$data['version']){
-                    return $this->result('', config('code.error'), '发布的版本必须要比上个版本高,上个版本是：'.$appType->version);
+                if ($appType->version >= $data['version']) {
+                    return $this->result('', config('code.error'), '发布的版本必须要比上个版本高,上个版本是：' . $appType->version);
                 }
             }
-            if($model=='AuthGroup' && isset($data['rules'])){
-                $data['rules']=implode(',', $data['rules']);
+            if ($model == 'AuthGroup' && isset($data['rules'])) {
+                $data['rules'] = implode(',', $data['rules']);
             }
             //入库操作
             try {
                 $id = model($model)->add($data);
-            }catch (\Exception $e) {
+            } catch (\Exception $e) {
                 return $this->result('', config('code.error'), $e->getMessage());
             }
-            if($id) {
-                return $this->result(['jump_url' => url(''.$model.'/index')], config('code.success'), 'OK');
+            if ($id) {
+                return $this->result(['jump_url' => url('' . $model . '/index')], config('code.success'), 'OK');
             } else {
                 return $this->result('', config('code.error'), '新增失败');
             }
         }
     }
+
     /**
      * 通用获取ID判断
      * @return mixed|void
      */
-    public function usuallyId($id){
-        if(request()->action()=='usuallyId'){
-            return $this->alert('请不要非法操作',url('index/index'),6,3);
+    public function usuallyId($id)
+    {
+        if (request()->action() == 'usuallyId') {
+            return $this->alert('请不要非法操作', url('index/index'), 6, 3);
         }
         $model = $this->model ? $this->model : request()->controller();
-        try{
-            $cate=model($model)::get($id);
-        }catch (\Exception $e){
+        try {
+            $cate = model($model)::get($id);
+        } catch (\Exception $e) {
             return $this->result('', config('code.error'), $e->getMessage());
         }
-        if(empty($cate)){
-            if (request()->isAjax()){
+        if (empty($cate)) {
+            if (request()->isAjax()) {
                 return $this->result('', config('code.error'), '请不要非法操作');
-            }else{
+            } else {
                 $this->error('请不要非法操作');
             }
 
@@ -192,18 +219,19 @@ class BaseController extends Controller{
      * 通用获取分类
      * @return mixed|void
      */
-    public function usuallyCate($field=[]){
-        if(request()->action()=='usuallyCate'){
-            return $this->alert('请不要非法操作',url('index/index'),6,3);
+    public function usuallyCate($field = [])
+    {
+        if (request()->action() == 'usuallyCate') {
+            return $this->alert('请不要非法操作', url('index/index'), 6, 3);
         }
         $model = $this->model ? $this->model : request()->controller();
-        try{
-            $field=empty($field) ? ['id', 'name', 'pid', 'sort', 'status'] : $field;
-            $cateres=model($model)->getCateList($field);
-        }catch (\Exception $e){
-            if (request()->isAjax()){
+        try {
+            $field = empty($field) ? ['id', 'name', 'pid', 'sort', 'status'] : $field;
+            $cateres = model($model)->getCateList($field);
+        } catch (\Exception $e) {
+            if (request()->isAjax()) {
                 return $this->result('', config('code.error'), $e->getMessage());
-            }else{
+            } else {
                 $this->error($e->getMessage());
             }
         }
@@ -213,31 +241,33 @@ class BaseController extends Controller{
     /**
      * 通用修改
      */
-    public function edit(){
-        if (request()->isAjax()){
+    public function edit()
+    {
+        if (request()->isAjax()) {
             $model = $this->model ? $this->model : request()->controller();
             $data = input('post.');
             $this->validateCheck($data);
-            if($model=='AuthGroup' && isset($data['rules'])){
-                $data['rules']=implode(',', $data['rules']);
+            if ($model == 'AuthGroup' && isset($data['rules'])) {
+                $data['rules'] = implode(',', $data['rules']);
             }
             //入库操作
             try {
-                $save = model($model)->allowField(true)->save($data,['id'=>$data['id']]);
-            }catch (\Exception $e) {
+                $save = model($model)->allowField(true)->save($data, ['id' => $data['id']]);
+            } catch (\Exception $e) {
                 return $this->result('', config('code.error'), $e->getMessage());
             }
-            if($save) {
-                return $this->result(['jump_url' => url(''.$model.'/index')], config('code.success'), 'OK');
+            if ($save) {
+                return $this->result(['jump_url' => url('' . $model . '/index')], config('code.success'), 'OK');
             } else {
                 return $this->result('', config('code.error'), '更新失败');
             }
         }
     }
 
-    function alert($msg='',$url='',$icon='',$time=3){
-        $str='<script type="text/javascript" src="'.config('admin.admin_static').'js/jquery.min.js"></script><script type="text/javascript" src="'.config('admin.common').'lib/layui/layui.js"></script><script type="text/javascript" src="'.config('admin.admin_static').'/js/xadmin.js"></script>';
-        $str.='<script>$(function(){layer.msg("'.$msg.'",{icon:'.$icon.',time:'.($time*1000).'});setTimeout(function(){self.location.href="'.$url.'"},2000)});</script>';//主要方法
+    function alert($msg = '', $url = '', $icon = '', $time = 3)
+    {
+        $str = '<script type="text/javascript" src="' . config('admin.admin_static') . 'js/jquery.min.js"></script><script type="text/javascript" src="' . config('admin.common') . 'lib/layui/layui.js"></script><script type="text/javascript" src="' . config('admin.admin_static') . '/js/xadmin.js"></script>';
+        $str .= '<script>$(function(){layer.msg("' . $msg . '",{icon:' . $icon . ',time:' . ($time * 1000) . '});setTimeout(function(){self.location.href="' . $url . '"},2000)});</script>';//主要方法
         return $str;
     }
 }

@@ -131,7 +131,7 @@ class Admin extends BaseController {
             $data = input('post.');
             $this->usuallyId($data['id']);
             $this->model='AuthGroup';
-            $authGroup=$this->usuallyId($data['authGroup']);
+            $this->usuallyId($data['authGroup']);
             try {
                 $find=model('Admin')->field('username')->where(['username'=>$data['username'],'id'=>['neq',$data['id']]])->find();
             }catch (\Exception $e) {
@@ -156,11 +156,12 @@ class Admin extends BaseController {
             $authGroupAccessUpdate=['group_id'=>$data['authGroup']];
             $adminModel=model('Admin');
             $AuthGroupAccessModel=model('AuthGroupAccess');
+            $AuthGroupAccessModelFind=$AuthGroupAccessModel->where(['uid'=>$data['id']])->find();
             $adminModel->startTrans();
             $AuthGroupAccessModel->startTrans();
             try{
                 $userU=$adminModel->allowField(true)->save($userUpdate,['id'=>$data['id']]);
-                $accessU=$authGroup['id']==$data['authGroup'] ? 1 : $AuthGroupAccessModel->where(array('uid'=>$data['id']))->update($authGroupAccessUpdate);
+                $accessU=$AuthGroupAccessModelFind['group_id']==$data['authGroup'] ? 1 : $AuthGroupAccessModel->where(array('uid'=>$data['id']))->update($authGroupAccessUpdate);
             }catch (\Exception $e){
                 $adminModel->rollback();
                 $AuthGroupAccessModel->rollback();
