@@ -21,7 +21,6 @@ class Index extends BaseController
         }catch (\Exception $e){
             return $this->alert($e->getMessage(),url('index/index'),6,3);
         }
-
         return $this->fetch('index',[
             'authRule'=>(new PHPTree())::makeTree($authRule)
         ]);

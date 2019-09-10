@@ -22,15 +22,16 @@
                     {volist name="authRuleRes" id="authRule"}
                     <tr>
                         <td>
+                            <input type="checkbox" name="rules[]" {if condition="in_array($authRule['id'], $data['rules'])" }checked{/if} value="{$authRule.id}"  lay-skin="primary" lay-filter="father" title="{$authRule['title']}">
+                        </td>
+                        <td>
                             <div class="layui-input-block">
-                                {:str_repeat('&nbsp;', $authRule['level']*8)}
-                                {if condition="empty($data)" }
-                                <input name="rules[]" dataid="id-{$authRule.dataid}" lay-filter="father" class="inverted checkbox-parent{if condition="$authRule['level'] neq 0"} checkbox-child{/if}" value="{$authRule.id}" lay-skin="primary" lay-filter="father" type="checkbox">
-                                {else}
-                                <input name="rules[]" {if condition="in_array($authRule['id'], $data['rules'])" }checked{/if} dataid="id-{$authRule.dataid}" class="inverted checkbox-parent{if condition="$authRule['level'] neq 0"} checkbox-child{/if}" value="{$authRule.id}" lay-skin="primary" type="checkbox">
-                                {/if}
-                                <span {if condition="$authRule['pid'] eq 0" } style="font-weight:bold; font-size:14px;"
-                                      {/if}>{$authRule.title}</span>
+                                {volist  name="$authRule['children']" id="vo"}
+                                <input name="rules[]" {if condition="in_array($vo['id'], $data['rules'])" }checked{/if} lay-skin="primary" value="{$vo.id}" type="checkbox" title="{$vo['title']}">
+                                {volist  name="$vo['children']" id="v"}
+                                <input name="rules[]" lay-skin="primary" {if condition="in_array($v['id'], $data['rules'])" }checked{/if} value="{$v.id}" type="checkbox" title="{$v['title']}">
+                                {/volist}
+                                {/volist}
                             </div>
                         </td>
                     </tr>
@@ -70,7 +71,6 @@
 
         form.on('checkbox(father)', function (data) {
             if(data.elem.checked){
-                alert(data.elem.checked);
                 $(data.elem).parent().siblings('td').find('input').prop("checked", true);
                 form.render();
             }else{

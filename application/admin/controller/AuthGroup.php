@@ -6,6 +6,7 @@
  * Time: 17:28
  */
 namespace app\admin\controller;
+use app\lib\PHPTree;
 class AuthGroup extends BaseController{
     public function index(){
         $authRroupList=model('AuthGroup')->authRroupList();
@@ -28,7 +29,7 @@ class AuthGroup extends BaseController{
         parent::add();
         $authRuleRes=$this->ruleTree();
         return $this->fetch('info',[
-            'authRuleRes'=>$authRuleRes,
+            'authRuleRes'=>(new PHPTree())::makeTree($authRuleRes),
             'action'=>'add'
         ]);
     }
@@ -40,7 +41,7 @@ class AuthGroup extends BaseController{
         $data=$this->usuallyId($id);
         $data['rules']=empty($data['rules']) ? [] : explode(',',$data['rules']);
         return $this->fetch('info',[
-            'authRuleRes'=>$authRuleRes,
+            'authRuleRes'=>(new PHPTree())::makeTree($authRuleRes),
             'action'=>'edit',
             'data'=>$data
         ]);
