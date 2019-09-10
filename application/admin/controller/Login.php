@@ -26,7 +26,7 @@ class Login extends BaseController {
             $data=input('post.');
             $this->validateCheck($data);
             try{
-                $user=model('AdminUser')->getUser($data['username']);
+                $user=model('Admin')->getUser($data['username']);
             }catch (\Exception $e){
                 return $this->result('',config('code.error'),$e->getMessage());
             }
@@ -47,7 +47,7 @@ class Login extends BaseController {
                 'last_login_time'=>time()
             ];
             try{
-                model('AdminUser')->save($update,['id'=>$user['id']]);
+                model('Admin')->save($update,['id'=>$user['id']]);
             }catch (\Exception $e){
                 return $this->result('',config('code.error'),$e->getMessage());
             }

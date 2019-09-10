@@ -7,5 +7,5 @@
  */
 namespace app\admin\model;
 class AuthGroupAccess extends BaseModel{
-
+    protected  $autoWriteTimestamp = false;
 }

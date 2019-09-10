@@ -25,7 +25,7 @@
                             <div class="layui-input-block">
                                 {:str_repeat('&nbsp;', $authRule['level']*8)}
                                 {if condition="empty($data)" }
-                                <input name="rules[]" dataid="id-{$authRule.dataid}" class="inverted checkbox-parent{if condition="$authRule['level'] neq 0"} checkbox-child{/if}" value="{$authRule.id}" lay-skin="primary" type="checkbox">
+                                <input name="rules[]" dataid="id-{$authRule.dataid}" lay-filter="father" class="inverted checkbox-parent{if condition="$authRule['level'] neq 0"} checkbox-child{/if}" value="{$authRule.id}" lay-skin="primary" lay-filter="father" type="checkbox">
                                 {else}
                                 <input name="rules[]" {if condition="in_array($authRule['id'], $data['rules'])" }checked{/if} dataid="id-{$authRule.dataid}" class="inverted checkbox-parent{if condition="$authRule['level'] neq 0"} checkbox-child{/if}" value="{$authRule.id}" lay-skin="primary" type="checkbox">
                                 {/if}
@@ -56,68 +56,28 @@
         </form>
     </div>
 </div>
-<script type="text/javascript">
-    /* 权限配置 */
-    $(function () {
-        //动态选择框，上下级选中状态变化
-        $('input.checkbox-parent').on('change', function () {
-            alert('gfg');
-            var dataid = $(this).attr("dataid");
-            $('input[dataid^=' + dataid + ']').prop('checked', $(this).is(':checked'));
-        });
-        $('input.checkbox-child').on('change', function () {
-            var dataid = $(this).attr("dataid");
-            dataid = dataid.substring(0, dataid.lastIndexOf("-"));
-            var parent = $('input[dataid=' + dataid + ']');
-            if ($(this).is(':checked')) {
-                parent.prop('checked', true);
-                //循环到顶级
-                while (dataid.lastIndexOf("-") != 2) {
-                    dataid = dataid.substring(0, dataid.lastIndexOf("-"));
-                    parent = $('input[dataid=' + dataid + ']');
-                    parent.prop('checked', true);
-                }
-            } else {
-                //父级
-                if ($('input[dataid^=' + dataid + '-]:checked').length == 0) {
-                    parent.prop('checked', false);
-                    //循环到顶级
-                    while (dataid.lastIndexOf("-") != 2) {
-                        dataid = dataid.substring(0, dataid.lastIndexOf("-"));
-                        parent = $('input[dataid=' + dataid + ']');
-                        if ($('input[dataid^=' + dataid + '-]:checked').length == 0) {
-                            parent.prop('checked', false);
-                        }
-                    }
-                }
-            }
-        });
-    });
-</script>
 <script>
     layui.use(['form', 'layer'], function () {
         $ = layui.jquery;
         var form = layui.form
             , layer = layui.layer;
 
-
-
         //监听提交
         form.on('submit(add)', function (data) {
             backtrack("{:url('authGroup/"+data.field.action+"')}",data.field,true);
         });
-/*
+
 
         form.on('checkbox(father)', function (data) {
-
-            if (data.elem.checked) {
+            if(data.elem.checked){
+                alert(data.elem.checked);
                 $(data.elem).parent().siblings('td').find('input').prop("checked", true);
                 form.render();
-            } else {
+            }else{
                 $(data.elem).parent().siblings('td').find('input').prop("checked", false);
                 form.render();
             }
-        });*/
+        });
 
 
     });
