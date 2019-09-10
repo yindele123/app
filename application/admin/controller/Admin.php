@@ -131,17 +131,52 @@ class Admin extends BaseController {
             $data = input('post.');
             $this->usuallyId($data['id']);
             $this->model='AuthGroup';
-            $this->usuallyId($data['authGroup']);
-           /* try {
-                $find=model('Admin')->field('username')->where(['username'=>$data['username'],'id'=>])->find();
+            $authGroup=$this->usuallyId($data['authGroup']);
+            try {
+                $find=model('Admin')->field('username')->where(['username'=>$data['username'],'id'=>['neq',$data['id']]])->find();
             }catch (\Exception $e) {
                 return $this->result('',config('code.error'),$e->getMessage());
 
             }
-            dump($find);
             if($find){
                 return $this->result('',config('code.error'),'用户名已存在');
-            }*/
+            }
+            $pwd_key=getNumberCode(4);
+            if(empty($data['password'])){
+                $userUpdate=[
+                    'username'=>$data['username']
+                ];
+            }else{
+                $userUpdate=[
+                    'username'=>$data['username'],
+                    'pwd_key'=>$pwd_key,
+                    'password'=>IAuth::setPassword($data['password'],config('key.password_key'),$pwd_key)
+                ];
+            }
+            $authGroupAccessUpdate=['group_id'=>$data['authGroup']];
+            $adminModel=model('Admin');
+            $AuthGroupAccessModel=model('AuthGroupAccess');
+            $adminModel->startTrans();
+            $AuthGroupAccessModel->startTrans();
+            try{
+                $userU=$adminModel->allowField(true)->save($userUpdate,['id'=>$data['id']]);
+                $accessU=$authGroup['id']==$data['authGroup'] ? 1 : $AuthGroupAccessModel->where(array('uid'=>$data['id']))->update($authGroupAccessUpdate);
+            }catch (\Exception $e){
+                $adminModel->rollback();
+                $AuthGroupAccessModel->rollback();
+                return $this->result('',config('code.error'),$e->getMessage());
+            }
+            if (!empty($userU) && !empty($accessU)) {
+                //提交事务处理
+                $adminModel->commit();
+                $AuthGroupAccessModel->commit();
+                return $this->result('',config('code.success'),'修改用户成功');
+            } else {
+                //事务回滚
+                $adminModel->rollback();
+                $AuthGroupAccessModel->rollback();
+                return $this->result('',config('code.error'),'修改用户失败');
+            }
         }
         $id=input('param.id');
         try{

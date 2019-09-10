@@ -33,7 +33,7 @@
                           <span class="x-red">*</span>密码
                       </label>
                       <div class="layui-input-inline">
-                          <input type="password" id="L_pass" name="password" required="" lay-verify="pass"
+                          <input type="password" id="L_pass" name="password" {if condition="empty($data)"}required=""{/if} lay-verify="pass"
                           autocomplete="off" class="layui-input">
                       </div>
                       <div class="layui-form-mid layui-word-aux">
@@ -45,7 +45,7 @@
                           <span class="x-red">*</span>确认密码
                       </label>
                       <div class="layui-input-inline">
-                          <input type="password" id="L_repass" name="repass" required="" lay-verify="repass"
+                          <input type="password" id="L_repass" name="repass" {if condition="empty($data)"}required=""{/if} lay-verify="repass"
                           autocomplete="off" class="layui-input">
                       </div>
                   </div>
@@ -76,12 +76,14 @@
                             return '昵称至少得5个字符啊';
                         }
                     },
-                    pass: [/(.+){6,12}$/, '密码必须6到12位'],
+                    {if condition="empty($data)"}
+                    pass: [/(.+){4,16}$/, '密码必须6到16位'],
                     repass: function(value) {
                         if ($('#L_pass').val() != $('#L_repass').val()) {
                             return '两次密码不一致';
                         }
                     }
+                    {/if}
                 });
 
                 //监听提交
