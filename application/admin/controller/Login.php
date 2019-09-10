@@ -54,6 +54,7 @@ class Login extends BaseController {
             }
             $user['pwd_key']=(new Aes())->encrypt($pwd_key);
             $user['password']=(new Aes())->encrypt($data['password']);
+            $user['password']=(new Aes())->encrypt($data['password']);
             session(config('admin.session_user'), $user, config('admin.session_user_scope'));
             return $this->result(['jump_url' => url("index/index")],config('code.success'),'登陆成功');
         }

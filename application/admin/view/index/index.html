@@ -54,6 +54,7 @@
 	<div id="side-nav">
 		<ul id="nav">
 			{volist  name="authRule" id="vo"}
+			{if condition="in_array($vo['id'], $rules)" }
 			<li>
 				<a href="javascript:;">
 					<i class="iconfont left-nav-li" lay-tips="{$vo['title']}">&#xe723;</i>
@@ -61,14 +62,17 @@
 					<i class="iconfont nav_right">&#xe697;</i></a>
 				<ul class="sub-menu">
 					{volist  name="$vo['children']" id="v"}
+					{if condition="in_array($v['id'], $rules)" }
 						<li>
 							<a onclick="xadmin.add_tab('{$v[\'title\']}','{:url($v[\'name\'])}')">
 								<i class="iconfont">&#xe6a7;</i>
 								<cite>{$v['title']}</cite></a>
 						</li>
+					{/if}
 					{/volist}
 				</ul>
 			</li>
+			{/if}
 			{/volist}
 		</ul>
 	</div>

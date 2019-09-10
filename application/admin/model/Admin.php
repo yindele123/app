@@ -65,7 +65,7 @@ class Admin extends BaseModel {
                 'msg'=>'请不要非法操作'
             ]);
         }
-        $user=$this->where(['username'=>$username])->field(self::getListField($field))->find();
+        $user=$this->where(['username'=>$username])->with(['authGroupAccessFind'])->field(self::getListField($field))->find();
         if(empty($user)){
             return false;
         }

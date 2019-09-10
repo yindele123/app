@@ -16,13 +16,16 @@ class Index extends BaseController
 
     public function index()
     {
+        $this->model='AuthGroup';
+        $authGroup=$this->usuallyId($this->user['auth_group_access_find']['group_id']);
         try{
             $authRule=model('AuthRule')->where('status','1')->field('id,pid,name,title')->order('sort asc')->select();
         }catch (\Exception $e){
             return $this->alert($e->getMessage(),url('index/index'),6,3);
         }
         return $this->fetch('index',[
-            'authRule'=>(new PHPTree())::makeTree($authRule)
+            'authRule'=>(new PHPTree())::makeTree($authRule),
+            'rules'=>empty($authGroup['rules']) ? [] : explode(',',$authGroup['rules'])
         ]);
     }
 
