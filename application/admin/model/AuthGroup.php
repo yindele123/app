@@ -12,6 +12,7 @@ class AuthGroup extends BaseModel{
         return collection($data)->toArray();
     }
 
+
     /**
      * 通用化获取参数的数据字段
      */

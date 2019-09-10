@@ -8,7 +8,7 @@
                           <span class="x-red">*</span>登录名
                       </label>
                       <div class="layui-input-inline">
-                          <input type="text" id="username" name="username" required="" lay-verify="required"
+                          <input type="text" id="username" name="username" value="{:empty($data) ? '' : $data['username']}" required="" lay-verify="required"
                           autocomplete="off" class="layui-input">
                       </div>
                       <div class="layui-form-mid layui-word-aux">
@@ -19,7 +19,12 @@
                       <label class="layui-form-label"><span class="x-red">*</span>角色</label>
                       <div class="layui-input-block">
                           {volist  name="authGroup" id="vo"}
-                          <input type="radio" name="authGroup" value="{$vo.id}" title="{$vo.title}" {if condition="$key eq 0"}checked=""{/if}>
+                          {if condition="!empty($data)"}
+                             <input type="radio" name="authGroup" value="{$vo.id}" title="{$vo.title}" {if condition="$vo.id eq $data.auth_group_access_find.group_id"}checked=""{/if}>
+                          {else /}
+                            <input type="radio" name="authGroup" value="{$vo.id}" title="{$vo.title}" {if condition="$key eq 0"}checked=""{/if}>
+                          {/if}
+
                           {/volist}
                       </div>
                   </div>
@@ -45,6 +50,10 @@
                       </div>
                   </div>
                   <div class="layui-form-item">
+                      {if condition="!empty($data)" }
+                      <input type="hidden" name="id" value="{$data['id']}">
+                      {/if}
+                      <input type="hidden" name="action" value="{$action}">
                       <label for="L_repass" class="layui-form-label">
                       </label>
                       <button  class="layui-btn" lay-filter="add" lay-submit="" type="button">
@@ -78,7 +87,7 @@
                 //监听提交
                 form.on('submit(add)',
                 function(data) {
-                    backtrack('{:url(\'admin/add\')}',data.field,true);
+                    backtrack("{:url('admin/"+data.field.action+"')}",data.field,true);
                 });
 
             });</script>

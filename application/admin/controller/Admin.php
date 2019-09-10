@@ -124,4 +124,36 @@ class Admin extends BaseController {
             'authGroup'=>$authGroup
         ]);
     }
+
+    public function edit()
+    {
+        if (request()->isAjax()){
+            $data = input('post.');
+            $this->usuallyId($data['id']);
+            $this->model='AuthGroup';
+            $this->usuallyId($data['authGroup']);
+           /* try {
+                $find=model('Admin')->field('username')->where(['username'=>$data['username'],'id'=>])->find();
+            }catch (\Exception $e) {
+                return $this->result('',config('code.error'),$e->getMessage());
+
+            }
+            dump($find);
+            if($find){
+                return $this->result('',config('code.error'),'用户名已存在');
+            }*/
+        }
+        $id=input('param.id');
+        try{
+            $user=model('Admin')->getAdminGroup($id);
+        }catch (\Exception $e){
+            return $this->alert($e->getMessage(),url('Admin/index'),6,3);
+        }
+        $authGroup=$this->authGroup();
+        return $this->fetch('info',[
+            'action'=>'edit',
+            'authGroup'=>$authGroup,
+            'data'=>$user
+        ]);
+    }
 }
