@@ -52,6 +52,10 @@ class BaseController extends Controller
         }
     }
 
+    /**
+     * 检查用户只能再一端登陆
+     * @return bool|void
+     */
     protected function checkLogin(){
         $user=model('Admin')->getUser($this->user['username']);
         $sessionP=(new Aes())->decrypt($this->user['password']);

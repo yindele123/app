@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use app\common\service\Common;
 use think\Request;
+use app\lib\PHPTree;
 
 class Index extends BaseController
 {
@@ -15,8 +16,17 @@ class Index extends BaseController
 
     public function index()
     {
-        return $this->fetch('index');
+        try{
+            $authRule=model('AuthRule')->where('status','1')->field('id,pid,name,title')->order('sort asc')->select();
+        }catch (\Exception $e){
+            return $this->alert($e->getMessage(),url('index/index'),6,3);
+        }
+
+        return $this->fetch('index',[
+            'authRule'=>(new PHPTree())::makeTree($authRule)
+        ]);
     }
+
     public function welcome(){
         try{
             $active=model('Active')->getActiveList();
