@@ -8,6 +8,8 @@
 
 namespace app\admin\controller;
 
+use app\common\service\Aes;
+use app\common\service\IAuth;
 use think\Controller;
 use think\Request;
 use app\lib\Auth;
@@ -27,35 +29,39 @@ class BaseController extends Controller
     public function _initialize()
     {
         // 判定用户是否登录
-        /*$isLogin = $this->isLogin($this->user);
+        $isLogin = $this->isLogin($this->user);
         if(!$isLogin) {
             return $this->redirect('login/index');
-        }*/
+        }
+        $this->checkLogin();
         $auth = new Auth();
         $request = Request::instance();
         $con = $request->controller();
         $action = $request->action();
         $name = $con . '/' . $action;
         $notCheck = array('Index/index','Index/welcome');
-        if (!in_array($name, $notCheck)) {
-            if (!$auth->check($name, $this->user->id)) {
-                if (request()->isAjax()){
-                    return $this->result('', config('code.error'), '没有权限');
+        if($this->user->id!=1) {
+            if (!in_array($name, $notCheck)) {
+                if (!$auth->check($name, $this->user->id)) {
+                    if (request()->isAjax()) {
+                        return $this->result('', config('code.error'), '没有权限');
+                    }
+                    $this->error('没有权限', url('index/index'));
                 }
-                $this->error('没有权限', url('index/index'));
             }
         }
-
-        //$this->checkLogin();
-
     }
 
-    /*protected function checkLogin(){
-        $user=model('AdminUser')->getUser($this->user['username']);
-        if($this->user['password'] !== $user['password']){
-
+    protected function checkLogin(){
+        $user=model('Admin')->getUser($this->user['username']);
+        $sessionP=(new Aes())->decrypt($this->user['password']);
+        $sessionK=(new Aes())->decrypt($this->user['pwd_key']);
+        if(IAuth::setPassword($sessionP,config('key.password_key'),$sessionK) !== $user['password']){
+            session(null, config('admin.session_user_scope'));
+            return $this->redirect('login/index');
         }
-    }*/
+        return true;
+    }
 
     /**
      * 判定是否登录

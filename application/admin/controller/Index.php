@@ -18,7 +18,6 @@ class Index extends BaseController
         return $this->fetch('index');
     }
     public function welcome(){
-
         try{
             $active=model('Active')->getActiveList();
         }catch (\Exception $e){
