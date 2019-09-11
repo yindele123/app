@@ -23,18 +23,17 @@ class Index extends BaseController{
             Common::setLog(request()->url().'-----'.$e->getMessage());
             throw new ErrorException();
         }
-        $heads = $this->getDealNews($heads);
+
         try{
             $positions = model('News')->getPositionNormalNews();
         }catch (\Exception $e){
             Common::setLog(request()->url().'-----'.$e->getMessage());
             throw new ErrorException();
         }
-        $positions = $this->getDealNews($positions);
 
         $result = [
-            'heads' => $heads,
-            'positions' => $positions,
+            'heads' => Common::isNumeric($heads),
+            'positions' => Common::isNumeric($positions),
         ];
 
 

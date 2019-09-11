@@ -144,4 +144,59 @@ class News extends CommonModel{
     public function cateFind(){
         return $this->belongsTo('Cate','catid')->field('id,name');
     }
+
+    /**
+     * 获取首页头图数据
+     * @param int $num
+     * @return array
+     */
+    public function getIndexHeadNormalNews($cache='is_head_figure',$cacheTime=900,$num = 4) {
+        $data = Cache::get($cache.$num);
+        if (empty($data)) {
+            $data = [
+                'status' => 1,
+                'is_head_figure' => 1,
+            ];
+
+            $order = [
+                'id' => 'desc',
+            ];
+            $data=$this->where($data)->with(['cateFind'])->field($this->_getListField())->order($order)->limit($num)->select();
+            if($data){
+                Cache::set($cache.$num, $data, $cacheTime);
+            }else{
+                $data=Cache::remember($cache.$num,function() use ($data){
+                    return time();
+                },$cacheTime);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * 获取推荐的数据
+     */
+    public function getPositionNormalNews($cache='is_position',$cacheTime=900,$num = 20) {
+        $data = Cache::get($cache.$num);
+        if (empty($data)) {
+            $data = [
+                'status' => 1,
+                'is_position' => 1,
+            ];
+
+            $order = [
+                'id' => 'desc',
+            ];
+
+            $data=$this->where($data)->with(['cateFind'])->field($this->_getListField())->order($order)->limit($num)->select();
+            if($data){
+                Cache::set($cache.$num, $data, $cacheTime);
+            }else{
+                $data=Cache::remember($cache.$num,function() use ($data){
+                    return time();
+                },$cacheTime);
+            }
+        }
+        return $data;
+    }
 }
