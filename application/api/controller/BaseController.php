@@ -33,7 +33,7 @@ class BaseController extends Controller{
                 'errorCode' => 40000
             ]);
         }
-        if(!in_array($headers['apptype'], config('app.apptypes'))) {
+        if(!in_array($headers['apptype'], apptype())) {
             throw new ParameterException([
                 'msg' => 'app_type不合法',
                 'errorCode' => 40001

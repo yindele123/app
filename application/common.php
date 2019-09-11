@@ -195,3 +195,41 @@ if (!function_exists('getparentid')) {
         return $arrStr;
     }
 }
+
+/***
+ * @param
+ * @return array 返回APP类型一维数组
+ */
+if (!function_exists('apptype')) {
+    function apptype()
+    {
+        $apptypes=config('app.apptypes');
+        $apptypeA=[];
+        foreach($apptypes as $v){
+            foreach ($v as $key=>$vv){
+                $apptypeA[]=$vv;
+            }
+        }
+        return $apptypeA;
+    }
+}
+/***
+ * @param $apptypeS header传输过来的apptype
+ * @return string 返回APP类型ID
+ */
+if (!function_exists('apptypeValue')) {
+    function apptypeValue($apptypeS)
+    {
+        $apptypes=config('app.apptypes');
+        $apptype='';
+        foreach($apptypes as $v){
+            foreach ($v as $key=>$vv){
+                if($apptypeS==$vv){
+                    $apptype=$key;
+                    break;
+                }
+            }
+        }
+        return $apptype;
+    }
+}
