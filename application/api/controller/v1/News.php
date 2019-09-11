@@ -18,7 +18,7 @@ class News extends BaseController{
         $catid=!empty($data['catid']) ? $data['catid'] : 0;
         $title=!empty($data['title']) ? $data['title'] : '';
         $whereData = [];
-        $whereData[] = isset($data['is_position']) ? ['is_position' => $data['is_position']] : '';
+        $whereData[] = isset($data['position']) ? ['is_position' => $data['position']] : '';
         $whereData = Common::setWhere($whereData);
         $recovery=Common::getPageAndSize($data);
         if(!empty($catid)){
@@ -71,7 +71,8 @@ class News extends BaseController{
             Common::setLog(request()->url().'-----'.$e->getMessage());
             throw new ErrorException();
         }
-        if(empty($news) || $news->status != config('code.status_normal')) {
+        $news=Common::isNumeric($news);
+        if(empty($news)) {
             throw new MissException([
                 'msg' => '请求新闻不存在',
                 'errorCode' => 40000

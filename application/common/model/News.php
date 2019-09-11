@@ -126,7 +126,7 @@ class News extends CommonModel{
             if (empty($id)) {
                 return false;
             }
-            $data = $this->where(['id' => $id])->with('cateFind')->field($this->_getListField($field))->find();
+            $data = $this->where(['id' => $id,'status'=>config('code.status_normal')])->with('cateFind')->field($this->_getListField($field))->find();
             if($data){
                 Cache::set($cache.$id, $data, $cacheTime);
             }else{

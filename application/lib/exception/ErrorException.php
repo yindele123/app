@@ -14,7 +14,7 @@ namespace app\lib\exception;
  */
 class ErrorException extends BaseException
 {
-    public $code = 400;
-    public $errorCode = 10000;
+    public $code = 500;
+    public $errorCode = 20000;
     public $msg = "error";
 }

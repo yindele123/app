@@ -127,6 +127,10 @@
 <script type="text/javascript" src="__STATIC__/common/ueditor/1.4.3/ueditor.all.min.js"> </script>
 <script type="text/javascript" src="__STATIC__/common/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 {load href="__STATIC__/common/uploadify/jquery.uploadify.min.js" /}
+<script>
+    swf = '__STATIC__/common/uploadify/uploadify.swf';
+    image_upload_url = "{:url('image/upload')}";
+</script>
 {load href="__STATIC__/common/js/image.js" /}
 <script>
     var ue = UE.getEditor('editor');
