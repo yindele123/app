@@ -45,8 +45,9 @@ class Index extends BaseController{
      * 1、检测APP是否需要升级
      */
     public function init() {
+        $apptype=apptypeValue($this->headers['apptype']);
         try{
-            $version = model('Version')->getLastNormalVersionByAppType($this->headers['apptype']);
+            $version = model('Version')->getLastNormalVersionByAppType($apptype);
         }catch (\Exception $e){
             Common::setLog(request()->url().'-----'.$e->getMessage());
             throw new ErrorException();
@@ -54,7 +55,6 @@ class Index extends BaseController{
         if(empty($version)) {
             throw new ErrorException(['msg'=>'error','code'=>404]);
         }
-
         if($version->version > $this->headers['version']) {
             $version->is_update = $version->is_force == 1 ? config('app.force_update') : config('app.be_update');
         }else {
@@ -64,11 +64,12 @@ class Index extends BaseController{
         // 记录用户的基本信息 用于统计
         $actives = [
             'version' => $this->headers['version'],
-            'app_type' => $this->headers['apptype'],
+            'app_type' => $apptype,
             'did' => $this->headers['did'],
+            'version_code' => $this->headers['versioncode'],
         ];
         try {
-            model('AppActive')->add($actives);
+            model('Active')->add($actives);
         }catch (\Exception $e) {
             Common::setLog(request()->url().'-----'.$e->getMessage());
             throw new ErrorException();

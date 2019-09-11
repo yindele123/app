@@ -12,19 +12,28 @@ class Version extends CommonModel{
      * 通过apptype获取最后一条版本内容
      * @param string $appType
      */
-    public function getLastNormalVersionByAppType($appType = '') {
-        $data = [
-            'status' => 1,
-            'app_type' => $appType,
-        ];
+    public function getLastNormalVersionByAppType($appType = '',$cache='version',$cacheTime=86400) {
+        $result = Cache::get($cache.$appType);
 
-        $order = [
-            'id' => 'desc',
-        ];
+        if (empty($result)) {
+            $data = [
+                'status' => 1,
+                'app_type' => $appType,
+            ];
 
-        return $this->where($data)
-            ->order($order)
-            ->limit(1)
-            ->find();
+            $order = [
+                'id' => 'desc',
+            ];
+
+            $result=$this->where($data)->order($order)->limit(1)->find()->toArray();
+            if($result){
+                Cache::set($cache.$appType, $result, $cacheTime);
+            }else{
+                $result=Cache::remember($cache.$appType,function() use ($result){
+                    return time();
+                },$cacheTime);
+            }
+        }
+        return $result;
     }
 }
