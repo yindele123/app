@@ -60,7 +60,7 @@ class BaseController extends Controller{
         if(empty($news)) {
             return [];
         }
-        $cats = config('cat.lists');
+        $cats = model('Cate')->getCate();
         foreach($news as $key => $new) {
             $news[$key]['catname'] = $cats[$new['catid']] ? $cats[$new['catid']] : '-';
         }

@@ -56,18 +56,4 @@ class News extends BaseModel {
         $result = $model->where($where)->limit($from, $size)->field(self::getListField($field))->order($order)->select();
         return $result;
     }
-
-    /**
-     * 查询新闻详细
-     * @param int $id  查询新闻ID
-     * @param int $field  要查询的字段
-     * @return $data
-     */
-    public function getNewsFind($id,$field=[]) {
-        if(empty($id)){
-            return false;
-        }
-        $data=$this->where(['id'=>$id])->field($field)->find();
-        return $data;
-    }
 }

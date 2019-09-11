@@ -12,9 +12,8 @@ use app\common\service\Common;
 use app\common\model\News as CommonNews;
 use app\lib\exception\ErrorException;
 use app\lib\exception\MissException;
-use think\Cache;
 
-class News{
+class News extends BaseController{
     public function index() {
         $data = input('get.');
         $catid=!empty($data['catid']) ? $data['catid'] : 0;
@@ -26,24 +25,23 @@ class News{
             $common->model='Cate';
             $common->usuallyId($catid,'cate');
         }
-       /* try{
-            $total = model('News')->getNewsList('newslist',600,$whereData,$catid,$title);
+        try{
+            $total = model('News')->getNewsCount(config('cacheName.api_news_list_count'),config('cacheTiem.api_news_list_count'),$whereData,$catid,$title);
         }catch (\Exception $e){
             Common::setLog(request()->url().'-----'.$e->getMessage());
-            throw new ErrorException();
-        }*/
+            throw new ErrorException(['msg'=>$e->getMessage()]);
+        }
         try{
-            $news = (new CommonNews)->getNewsList('newslist',600,$whereData,$catid, $recovery['from'], $recovery['size'],$title);
+            $news = model('News')->getNewsList(config('cacheName.api_news_list'),config('cacheTiem.api_news_list'),$whereData,$catid, $recovery['from'], $recovery['size'],$title);
         }catch (\Exception $e){
             Common::setLog(request()->url().'-----'.$e->getMessage());
             throw new ErrorException(['msg'=>$e->getMessage()]);
         }
         $news=Common::isNumeric($news);
-        dump($news);
         $result = [
             'total' => $total,
             'page_num' => ceil($total / $recovery['size']),
-            'list' => $this->getDealNews($news),
+            'list' => $news,
         ];
 
         return show(config('code.success'), 'OK', $result, 200);
@@ -56,8 +54,18 @@ class News{
         $id=input('get.id','','intval');
         (new IDMustBePositiveInt())->goCheck();
         // 通过id 去获取数据表里面的数据
+        $field=[
+            'id',
+            'catid',
+            'image',
+            'title',
+            'status',
+            'create_time',
+            'description',
+            'content'
+        ];
         try{
-            $news = (new CommonNews())->getNewsFind($id);
+            $news = model('News')->getNewsFind(config('cacheName.api_news_find'),config('cacheTiem.api_news_find'),$id,$field);
         }catch (\Exception $e){
             Common::setLog(request()->url().'-----'.$e->getMessage());
             throw new ErrorException();
@@ -74,8 +82,6 @@ class News{
             Common::setLog(request()->url().'-----'.$e->getMessage());
             throw new ErrorException();
         }
-        $cats = config('cat.lists');
-        $news->catname = $cats[$news->catid];
         return show(config('code.success'), 'OK', $news, 200);
     }
 

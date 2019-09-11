@@ -40,7 +40,7 @@ class News extends CommonModel{
                     'neq', config('code.status_delete')
                 ];
             }
-            $result = $model->where($where)->limit($from, $size)->field(self::getListField($field))->order($order)->select();
+            $result = $model->where($where)->with(['cateFind'])->limit($from, $size)->field(self::getListField($field))->order($order)->select();
             if($result){
                 Cache::set($cache.$catid.$from.$size.$title, $result, $cacheTime);
             }else{
@@ -52,6 +52,48 @@ class News extends CommonModel{
         return $result;
     }
 
+    /**
+     * 公共根据条件来获取列表的数据的总数
+     * @param array $where  查询条件
+     * @param array $catid  查询的分类
+     * @param string $title  模糊查询的新闻标题
+     * @param return $data
+     */
+    public function getNewsCount($cache='newslistCount',$cacheTime=500,$where = [], $catid=0,$title='') {
+        $data = Cache::get($cache.$catid.$title);
+        if (empty($data)) {
+            $model = $this;
+            if (!empty($catid)) {
+                $cate=new Cate;
+                $catidArray=$cate->getCatechilrenid($catid);
+                $catidArray[]=$catid;
+                $model->where('catid', 'in', $catidArray);
+            }
+            if (!empty($title)) {
+                $where['title'] = ['like', '%' . trim($title) . '%'];
+            }
+            if (!isset($where['status'])) {
+                $where['status'] = [
+                    'neq', config('code.status_delete')
+                ];
+            }
+            $data = $model->where($where)->count();
+            if($data){
+                Cache::set($cache.$catid.$title, $data, $cacheTime);
+            }else{
+                $data=Cache::remember($cache.$catid.$title,function() use ($data){
+                    return time();
+                },$cacheTime);
+            }
+        }
+        return $data;
+    }
+
+    /***
+     * 获取新闻通用字段
+     * @param string $field
+     * @return array|string
+     */
     public static function getListField($field='') {
         if(empty($field)){
             return [
@@ -63,5 +105,35 @@ class News extends CommonModel{
             ];
         }
         return $field;
+    }
+    /**
+     * 查询新闻详细
+     * @param int $id  查询新闻ID
+     * @param int $field  要查询的字段
+     * @return $data
+     */
+    public function getNewsFind($cache='newsFind',$cacheTime=1000,$id,$field=[]) {
+        $data = Cache::get($cache.$id);
+        if (empty($data)) {
+            if (empty($id)) {
+                return false;
+            }
+            $data = $this->where(['id' => $id])->with('cateFind')->field(self::getListField($field))->find();
+            if($data){
+                Cache::set($cache.$id, $data, $cacheTime);
+            }else{
+                $data=Cache::remember($cache.$id,function() use ($data){
+                    return time();
+                },$cacheTime);
+            }
+        }
+        return $data;
+    }
+    /**
+     * 关联分类表
+     * @return \think\model\relation\HasOne
+     */
+    public function cateFind(){
+        return $this->belongsTo('Cate','catid')->field('id,name');
     }
 }
