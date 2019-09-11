@@ -85,33 +85,4 @@ class News extends BaseController{
         }
         return show(config('code.success'), 'OK', $news, 200);
     }
-
-    /**
-     * 获取排行榜数据列表
-     * 1、获取数据库 然 read_count排序  5 - 10
-     * 2、优化 redis
-     */
-    public function rank() {
-        try {
-            $rands = model('News')->getRankNormalNews();
-            $rands = $this->getDealNews($rands);
-        }catch (\Exception $e) {
-            Common::setLog(request()->url().'-----'.$e->getMessage());
-            throw new ErrorException();
-        }
-
-        return show(config('code.success'), 'OK', $rands, 200);
-    }
-    //获取推荐新闻
-    public function recommend(){
-        $catid=input('get.catid',0,'intval');
-        $size=Common::setCount(input('get.size',0,'intval'));
-        try{
-            $data=model('News')->getPositionNormalNews($catid,$size);
-        }catch (\Exception $e){
-            Common::setLog(request()->url().'-----'.$e->getMessage());
-            throw new ErrorException();
-        }
-        return show(config('code.success'), 'OK', $data, 200);
-    }
 }
