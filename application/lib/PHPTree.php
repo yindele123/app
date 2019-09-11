@@ -16,7 +16,7 @@ class PHPTree{
 		/* 展开属性 */
 		'expanded_key'  => 'expanded',
 		/* 叶子节点属性 */
-		'leaf_key'      => 'leaf',
+		//'leaf_key'      => 'leaf',
 		/* 孩子节点属性 */
 		'children_key'  => 'children',
 		/* 是否展开子节点 */
@@ -72,13 +72,13 @@ class PHPTree{
 			if($type=='normal'){
 				if(isset($data[$id]))
 				{
-					$item[$expanded_key]= self::$config['expanded'];
+					//$item[$expanded_key]= self::$config['expanded'];
 					$item[$children_key]= self::makeTreeCore($id,$data,$type);
 				}
-				else
+				/*else
 				{
-					$item[$leaf_key]= true;  
-				}
+					$item[$leaf_key]= true;
+				}*/
 				$r[] = $item;
 			}else if($type=='linear'){
 				$parent_id = $item[$parent_key];

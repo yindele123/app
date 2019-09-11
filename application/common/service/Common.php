@@ -11,10 +11,13 @@
  */
 
 namespace app\common\service;
+use app\lib\exception\ErrorException;
+use think\Cache;
 use think\Log;
 
 class Common
 {
+    public $model='';
     public static function getPageAndSize($data)
     {
         $result = [];
@@ -63,5 +66,39 @@ class Common
     public static function getMenu($pid){
         $menu=model('Menu')->field('id,name,value')->order(['sort'=>'desc','id'=>'desc'])->where(['pid'=>$pid,'status'=>1])->select();
         return collection($menu)->toArray();
+    }
+
+    /**
+     * 通用获取ID判断
+     * @return mixed|void
+     */
+    public function usuallyId($id,$cache='usuallyId',$cacheTime=500)
+    {
+        $cate = Cache::get($cache.$id);
+        if (empty($cate)) {
+            $model = $this->model ? $this->model : request()->controller();
+            try {
+                $cate = model($model)::get($id);
+            } catch (\Exception $e) {
+                Common::setLog(request()->url() . '-----' . $e->getMessage());
+                throw new ErrorException();
+            }
+            if (empty($cate)) {
+                throw new ErrorException(['msg' => '请不要非法操作']);
+            }
+            Cache::set($cache.$id, $cate, $cacheTime);
+        }
+        return $cate;
+    }
+
+    /****
+     * 处理空查询缓存
+     * @param $str 要判断的字符串
+     */
+    public static function isNumeric($str){
+        if(is_numeric($str)){
+            $str=[];
+        }
+        return $str;
     }
 }

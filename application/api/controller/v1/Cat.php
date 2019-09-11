@@ -10,24 +10,20 @@
  */
 namespace app\api\controller\v1;
 use app\api\controller\BaseController;
+use app\common\service\Common;
+use app\lib\exception\ErrorException;
+use app\lib\PHPTree;
 
 class Cat extends BaseController{
     public function read() {
-        $cats = config('cat.lists');
-
-        $result[] = [
-            'catid' => 0,
-            'catname' => '首页',
-        ];
-
-        foreach($cats as $catid => $catname) {
-            $result[] = [
-                'catid' => $catid,
-                'catname' => $catname,
-            ];
+        try{
+            $cate=model('Cate')->getCate();
+        }catch (\Exception $e){
+            Common::setLog(request()->url().'-----'.$e->getMessage());
+            throw new ErrorException();
         }
-
-        return show(config('code.success'), 'OK', $result, 200);
+        $cateTree=(new PHPTree())::makeTree($cate);
+        return show(config('code.success'), 'OK', $cateTree, 200);
     }
 }
 

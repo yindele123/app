@@ -12,27 +12,34 @@ use app\common\service\Common;
 use app\common\model\News as CommonNews;
 use app\lib\exception\ErrorException;
 use app\lib\exception\MissException;
+use think\Cache;
 
-class News extends BaseController{
+class News{
     public function index() {
-        // 小伙伴仿照我们之前讲解的validate验证机制 去做相关校验
         $data = input('get.');
         $catid=!empty($data['catid']) ? $data['catid'] : 0;
         $title=!empty($data['title']) ? $data['title'] : '';
         $whereData['status'] = config('code.status_normal');
         $recovery=Common::getPageAndSize($data);
-        try{
-            $total = (new CommonNews())->getNewsCountByCondition($whereData,$catid,$title);
+        if(!empty($catid)){
+            $common=new Common();
+            $common->model='Cate';
+            $common->usuallyId($catid,'cate');
+        }
+       /* try{
+            $total = model('News')->getNewsList('newslist',600,$whereData,$catid,$title);
         }catch (\Exception $e){
             Common::setLog(request()->url().'-----'.$e->getMessage());
             throw new ErrorException();
-        }
+        }*/
         try{
-            $news = (new CommonNews())->getNewsByCondition($whereData,$catid, $recovery['from'], $recovery['size'],$title);
+            $news = (new CommonNews)->getNewsList('newslist',600,$whereData,$catid, $recovery['from'], $recovery['size'],$title);
         }catch (\Exception $e){
             Common::setLog(request()->url().'-----'.$e->getMessage());
-            throw new ErrorException();
+            throw new ErrorException(['msg'=>$e->getMessage()]);
         }
+        $news=Common::isNumeric($news);
+        dump($news);
         $result = [
             'total' => $total,
             'page_num' => ceil($total / $recovery['size']),
