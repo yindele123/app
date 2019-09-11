@@ -12,4 +12,6 @@ return[
     'api_news_list_count'=>'api_news_list_count',
     //api模块新闻详情缓存名称
     'api_news_find'=>'api_news_find',
+    //api模块获取单条分类ID
+    'api_cate_id'=>'api_cate_id',
 ];

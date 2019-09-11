@@ -12,4 +12,6 @@ return[
     'api_news_list_count'=>600,
     //api模块新闻详情缓存时间
     'api_news_find'=>600,
+    //api模块获取单条分类ID
+    'api_cate_id'=>'800',
 ];

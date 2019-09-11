@@ -72,7 +72,7 @@ class Common
      * 通用获取ID判断
      * @return mixed|void
      */
-    public function usuallyId($id,$cache='usuallyId',$cacheTime=500)
+    public function usuallyId($id,$msg='请不要非法操作',$cache='usuallyId',$cacheTime=500)
     {
         $cate = Cache::get($cache.$id);
         if (empty($cate)) {
@@ -84,7 +84,7 @@ class Common
                 throw new ErrorException();
             }
             if (empty($cate)) {
-                throw new ErrorException(['msg' => '请不要非法操作']);
+                throw new ErrorException(['msg' => $msg]);
             }
             Cache::set($cache.$id, $cate, $cacheTime);
         }
@@ -101,4 +101,5 @@ class Common
         }
         return $str;
     }
+
 }

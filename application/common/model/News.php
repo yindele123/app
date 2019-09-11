@@ -23,7 +23,9 @@ class News extends CommonModel{
      */
     public function getNewsList($cache='newslist',$cacheTime=500,$where = [], $catid=0, $from=0, $size = 5,$title='',$field='',$order = ['id' => 'desc'])
     {
-        $result = Cache::get($cache.$catid.$from.$size.$title);
+        $is_position=$this->_setIsPosition($where);
+        $result = Cache::get($cache.$catid.$from.$size.$title.$is_position);
+
         if (empty($result)) {
             $model = new News;
             if (!empty($catid)) {
@@ -36,15 +38,13 @@ class News extends CommonModel{
                 $where['title'] = ['like', '%' . trim($title) . '%'];
             }
             if (!isset($where['status'])) {
-                $where['status'] = [
-                    'neq', config('code.status_delete')
-                ];
+                $where['status'] = config('code.status_normal');
             }
-            $result = $model->where($where)->with(['cateFind'])->limit($from, $size)->field(self::getListField($field))->order($order)->select();
+            $result = $model->where($where)->with(['cateFind'])->limit($from, $size)->field($this->_getListField($field))->order($order)->select();
             if($result){
-                Cache::set($cache.$catid.$from.$size.$title, $result, $cacheTime);
+                Cache::set($cache.$catid.$from.$size.$title.$is_position, $result, $cacheTime);
             }else{
-                $result=Cache::remember($cache.$catid.$from.$size.$title,function() use ($result){
+                $result=Cache::remember($cache.$catid.$from.$size.$title.$is_position,function() use ($result){
                     return time();
                 },$cacheTime);
             }
@@ -60,7 +60,8 @@ class News extends CommonModel{
      * @param return $data
      */
     public function getNewsCount($cache='newslistCount',$cacheTime=500,$where = [], $catid=0,$title='') {
-        $data = Cache::get($cache.$catid.$title);
+        $is_position=$this->_setIsPosition($where);
+        $data = Cache::get($cache.$catid.$title.$is_position);
         if (empty($data)) {
             $model = $this;
             if (!empty($catid)) {
@@ -73,15 +74,13 @@ class News extends CommonModel{
                 $where['title'] = ['like', '%' . trim($title) . '%'];
             }
             if (!isset($where['status'])) {
-                $where['status'] = [
-                    'neq', config('code.status_delete')
-                ];
+                $where['status'] = config('code.status_normal');
             }
             $data = $model->where($where)->count();
             if($data){
-                Cache::set($cache.$catid.$title, $data, $cacheTime);
+                Cache::set($cache.$catid.$title.$is_position, $data, $cacheTime);
             }else{
-                $data=Cache::remember($cache.$catid.$title,function() use ($data){
+                $data=Cache::remember($cache.$catid.$title.$is_position,function() use ($data){
                     return time();
                 },$cacheTime);
             }
@@ -89,19 +88,28 @@ class News extends CommonModel{
         return $data;
     }
 
+    private function _setIsPosition($where){
+        $is_position='';
+        if (isset($where['is_position'])) {
+            $is_position = $where['is_position'];
+        }
+        return $is_position;
+    }
+
     /***
      * 获取新闻通用字段
      * @param string $field
      * @return array|string
      */
-    public static function getListField($field='') {
+    private function _getListField($field='') {
         if(empty($field)){
             return [
                 'id',
                 'catid',
                 'image',
                 'title',
-                'create_time'
+                'create_time',
+                'is_position'
             ];
         }
         return $field;
@@ -118,7 +126,7 @@ class News extends CommonModel{
             if (empty($id)) {
                 return false;
             }
-            $data = $this->where(['id' => $id])->with('cateFind')->field(self::getListField($field))->find();
+            $data = $this->where(['id' => $id])->with('cateFind')->field($this->_getListField($field))->find();
             if($data){
                 Cache::set($cache.$id, $data, $cacheTime);
             }else{

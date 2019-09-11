@@ -9,7 +9,6 @@ namespace app\api\controller\v1;
 use app\api\controller\BaseController;
 use app\api\validate\IDMustBePositiveInt;
 use app\common\service\Common;
-use app\common\model\News as CommonNews;
 use app\lib\exception\ErrorException;
 use app\lib\exception\MissException;
 
@@ -18,12 +17,14 @@ class News extends BaseController{
         $data = input('get.');
         $catid=!empty($data['catid']) ? $data['catid'] : 0;
         $title=!empty($data['title']) ? $data['title'] : '';
-        $whereData['status'] = config('code.status_normal');
+        $whereData = [];
+        $whereData[] = isset($data['is_position']) ? ['is_position' => $data['is_position']] : '';
+        $whereData = Common::setWhere($whereData);
         $recovery=Common::getPageAndSize($data);
         if(!empty($catid)){
             $common=new Common();
             $common->model='Cate';
-            $common->usuallyId($catid,'cate');
+            $common->usuallyId($catid,'没有该分类ID，请输入正常的分类ID',config('cacheName.api_cate_id'),config('cacheName.api_cate_id'));
         }
         try{
             $total = model('News')->getNewsCount(config('cacheName.api_news_list_count'),config('cacheTiem.api_news_list_count'),$whereData,$catid,$title);
