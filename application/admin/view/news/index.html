@@ -35,17 +35,12 @@
           </form>
         </div>
         <div class="layui-card-header">
-          <button class="layui-btn layui-btn-danger" onclick="delAll()">
-            <i class="layui-icon"></i>批量删除</button>
           <button class="layui-btn" onclick="xadmin.open('添加用户','{:url(\'news/add\')}')">
             <i class="layui-icon"></i>添加</button></div>
         <div class="layui-card-body ">
           <table class="layui-table layui-form">
             <thead>
             <tr>
-              <th>
-                <input type="checkbox" name="" lay-skin="primary">
-              </th>
               <th>ID</th>
               <th>标题</th>
               <th>分类</th>
@@ -58,8 +53,6 @@
             <tbody>
             {volist  name="news" id="vo"}
             <tr>
-              <td>
-                <input type="checkbox" name="" lay-skin="primary"></td>
               <td>{$vo.id}</td>
               <td>{$vo.title}</td>
               <td>{$vo.catid|getCatName=$cats,###}</td>

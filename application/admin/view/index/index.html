@@ -3,7 +3,7 @@
 <!-- 顶部开始 -->
 <div class="container">
 	<div class="logo">
-		<a href="./index.html">X-admin</a></div>
+		<a href="./index.html">后台管理</a></div>
 	<div class="left_open">
 		<a><i title="展开左侧栏" class="iconfont">&#xe699;</i></a>
 	</div>
@@ -74,6 +74,19 @@
 			</li>
 			{/if}
 			{/volist}
+			<li>
+				<a href="javascript:;">
+					<i class="iconfont left-nav-li" lay-tips="API文档">&#xe723;</i>
+					<cite>API文档(密码test1)</cite>
+					<i class="iconfont nav_right">&#xe697;</i></a>
+				<ul class="sub-menu">
+					<li>
+						<a onclick="xadmin.add_tab('API文档','https://console.apipost.cn/doc/22757?du_id=0')">
+							<i class="iconfont">&#xe6a7;</i>
+							<cite>API文档</cite></a>
+					</li>
+				</ul>
+			</li>
 		</ul>
 	</div>
 </div>

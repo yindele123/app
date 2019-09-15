@@ -6,8 +6,8 @@
                 <div class="layui-col-md12">
                     <div class="layui-card">
                         <div class="layui-card-body ">
-                            <blockquote class="layui-elem-quote">欢迎管理员：
-                                <span class="x-red">{$user['username']}</span>！当前时间:{:date("Y年n月j日 H:i:s")}
+                            <blockquote class="layui-elem-quote">欢迎{$user['auth_group_access_find']['auth_group_access_find']['title']}：
+                                <span class="x-red">{$user['username']}</span>！当前时间:{:date("Y年n月j日 H:i:s")}  <span style="color: red; font-weight: bold;">一些接口文档 <a href="https://console.apipost.cn/doc/22757?du_id=0" target="_blank">https://console.apipost.cn/doc/22757?du_id=0</a>密码:test1</span>
                             </blockquote>
                         </div>
                     </div>
@@ -103,7 +103,7 @@
                                     <tr>
                                         <th>版权所有</th>
                                         <td>981443737@qq.com
-                                            <a href="http://x.xuebingsi.com/" target="_blank">访问官网</a></td>
+                                            <a href="http://106.13.223.43/" target="_blank">访问官网</a></td>
                                     </tr>
                                     <tr>
                                         <th>开发者</th>
