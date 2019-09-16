@@ -39,14 +39,7 @@ class Menu extends BaseController{
     public function del(){
         if(request()->isAjax()){
             $id=input('param.id',0,'intval');
-            try{
-                $cate=model('menu')::get($id);
-                if (empty($cate)){
-                    return $this->result('', config('code.error'), '请不要非法操作');
-                }
-            }catch (\Exception $e){
-                return $this->result('', config('code.error'),$e->getMessage());
-            }
+            $this->usuallyId($id);
             try{
                 $sonids=model('menu')->getchilmenu($id);
                 $sonids[]=$id;
