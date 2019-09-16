@@ -51,20 +51,4 @@ class BaseController extends Controller{
 
         $this->headers = $headers;
     }
-    /**
-     * 获取处理的新闻的内容数据
-     * @param array $news
-     * @return array
-     */
-    protected  function getDealNews($news = []) {
-        if(empty($news)) {
-            return [];
-        }
-        $cats = model('Cate')->getCate();
-        foreach($news as $key => $new) {
-            $news[$key]['catname'] = $cats[$new['catid']] ? $cats[$new['catid']] : '-';
-        }
-        return $news;
-    }
-
 }
