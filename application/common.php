@@ -233,3 +233,18 @@ if (!function_exists('apptypeValue')) {
         return $apptype;
     }
 }
+// 转换查询条件
+if (!function_exists('setCheckTime')) {
+    function setCheckTime($data){
+        $whereData=[];
+        if (!empty($data['start_time']) && !empty($data['end_time'])
+            && $data['end_time'] > $data['start_time']
+        ) {
+            $whereData['create_time'] = [
+                ['gt', strtotime($data['start_time'])],
+                ['lt', strtotime($data['end_time'])],
+            ];
+        }
+        return $whereData;
+    }
+}

@@ -19,18 +19,8 @@ class Admin extends BaseController {
         $data = input('param.');
         $search=!empty($data['search']) ? $data['search'] : '';
         $query = http_build_query($data);
-        $whereData = [];
-        // 转换查询条件
-        if(!empty($data['start_time']) && !empty($data['end_time'])
-            && $data['end_time'] > $data['start_time']
-        ) {
-            $whereData['create_time'] = [
-                ['gt', strtotime($data['start_time'])],
-                ['lt', strtotime($data['end_time'])],
-            ];
-        }
+        $whereData = setCheckTime($data);
         $request=Common::getPageAndSize($data);
-
         // 获取表里面的数据
         try{
             $admin = model('Admin')->getAdmin($whereData, $request['from'], $request['size'],$search);

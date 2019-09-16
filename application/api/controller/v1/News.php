@@ -22,9 +22,7 @@ class News extends BaseController{
         $whereData = Common::setWhere($whereData);
         $recovery=Common::getPageAndSize($data);
         if(!empty($catid)){
-            $common=new Common();
-            $common->model='Cate';
-            $common->usuallyId($catid,'没有该分类ID，请输入正常的分类ID',config('cacheName.api_cate_id'),config('cacheName.api_cate_id'));
+            (new Common())->usuallyId($catid,'Cate','没有该分类ID，请输入正常的分类ID',config('cacheName.api_cate_id'),config('cacheTime.api_cate_id'));
         }
         try{
             $total = model('News')->getNewsCount(config('cacheName.api_news_list_count'),config('cacheTiem.api_news_list_count'),$whereData,$catid,$title);
@@ -44,7 +42,6 @@ class News extends BaseController{
             'page_num' => ceil($total / $recovery['size']),
             'list' => $news,
         ];
-
         return show(config('code.success'), 'OK', $result, 200);
     }
 

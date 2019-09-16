@@ -14,16 +14,8 @@ class News extends BaseController
         $catid=[];
         $title=!empty($data['title']) ? $data['title'] : '';
         $query = http_build_query($data);
-        $whereData = [];
-        // 转换查询条件
-        if(!empty($data['start_time']) && !empty($data['end_time'])
-            && $data['end_time'] > $data['start_time']
-        ) {
-            $whereData['create_time'] = [
-                ['gt', strtotime($data['start_time'])],
-                ['lt', strtotime($data['end_time'])],
-            ];
-        }
+        $whereData = setCheckTime($data);
+        //die();
         if (!empty($data['catid'])){
             $catid=model('Cate')->getchilrenid($data['catid']);
             $catid[]=$data['catid'];

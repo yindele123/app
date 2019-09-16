@@ -17,7 +17,6 @@ use think\Log;
 
 class Common
 {
-    public $model='';
     public static function getPageAndSize($data)
     {
         $result = [];
@@ -72,11 +71,10 @@ class Common
      * 通用获取ID判断
      * @return mixed|void
      */
-    public function usuallyId($id,$msg='请不要非法操作',$cache='usuallyId',$cacheTime=500)
+    public function usuallyId($id,$model='',$msg='请不要非法操作',$cache='usuallyId',$cacheTime=500)
     {
         $cate = Cache::get($cache.$id);
         if (empty($cate)) {
-            $model = $this->model ? $this->model : request()->controller();
             try {
                 $cate = model($model)::get($id);
             } catch (\Exception $e) {
