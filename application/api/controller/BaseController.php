@@ -6,7 +6,9 @@
  * Time: 19:49
  */
 namespace app\api\controller;
+use app\common\service\Common;
 use app\common\service\IAuth;
+use app\lib\exception\ErrorException;
 use app\lib\exception\ParameterException;
 use think\Cache;
 use think\Controller;
@@ -50,5 +52,30 @@ class BaseController extends Controller{
         Cache::set($headers['sign'], 1, config('app.app_sign_cache_time'));
 
         $this->headers = $headers;
+    }
+
+    /**
+     * 通用获取ID判断
+     * @return mixed|void
+     */
+    protected function usuallyId($id,$model='',$msg='请不要非法操作',$cache='usuallyId',$cacheTime=500)
+    {
+        if(empty($id) || empty($model)){
+            return false;
+        }
+        $cate = Cache::get($cache.$id);
+        if (empty($cate)) {
+            try {
+                $cate = model($model)::get($id);
+            } catch (\Exception $e) {
+                Common::setLog(request()->url() . '-----' . $e->getMessage());
+                throw new ErrorException();
+            }
+            if (empty($cate)) {
+                throw new ErrorException(['msg' => $msg]);
+            }
+            Cache::set($cache.$id, $cate, $cacheTime);
+        }
+        return $cate;
     }
 }

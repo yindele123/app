@@ -21,9 +21,7 @@ class News extends BaseController{
         $whereData[] = isset($data['position']) ? ['is_position' => $data['position']] : '';
         $whereData = Common::setWhere($whereData);
         $recovery=Common::getPageAndSize($data);
-        if(!empty($catid)){
-            (new Common())->usuallyId($catid,'Cate','没有该分类ID，请输入正常的分类ID',config('cacheName.api_cate_id'),config('cacheTime.api_cate_id'));
-        }
+        $this->usuallyId($catid,'Cate','没有该分类ID，请输入正常的分类ID',config('cacheName.api_cate_id'),config('cacheTime.api_cate_id'));
         try{
             $total = model('News')->getNewsCount(config('cacheName.api_news_list_count'),config('cacheTiem.api_news_list_count'),$whereData,$catid,$title);
         }catch (\Exception $e){
