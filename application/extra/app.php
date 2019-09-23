@@ -9,7 +9,8 @@ return [
     //app类型
     'apptypes' => [
         [1=>'ios'],
-        [2=>'android']
+        [2=>'android'],
+        [3=>'wx']
     ],
     //sign多久时间过期
     'app_sign_cache_time' => 20000,

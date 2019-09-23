@@ -47,6 +47,7 @@ class IAuth{
             return false;
         }
         parse_str($str, $arr);
+
         if(!is_array($arr) || empty($arr['did']) || $arr['did'] != $data['did']) {
             return false;
         }

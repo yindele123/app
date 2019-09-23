@@ -81,9 +81,10 @@
           <span class="x-red">*</span>缩略图：
         </label>
         <div class="layui-input-inline">
-          <input id="file_upload"  type="file" multiple="true" >
+          <!--<input id="file_upload"  type="file" multiple="true" >
           <img style="display: none" id="upload_org_code_img" src="" width="150" height="150">
-          <input id="file_upload_image" name="image" type="hidden" multiple="true" value="">
+          <input id="file_upload_image" name="image" type="hidden" multiple="true" value="">-->
+          <div class="upload" data-name="image" action='{:url("news/upload")}' data-num='1' id='image'></div>
         </div>
       </div>
 
@@ -126,14 +127,14 @@
 <script type="text/javascript" src="__STATIC__/common/ueditor/1.4.3/ueditor.config.js"></script>
 <script type="text/javascript" src="__STATIC__/common/ueditor/1.4.3/ueditor.all.min.js"> </script>
 <script type="text/javascript" src="__STATIC__/common/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
-{load href="__STATIC__/common/uploadify/jquery.uploadify.min.js" /}
 <script>
-    swf = '__STATIC__/common/uploadify/uploadify.swf';
-    image_upload_url = "{:url('image/upload')}";
-</script>
-{load href="__STATIC__/common/js/image.js" /}
-<script>
-    var ue = UE.getEditor('editor');
+    $(function(){
+        $("#image").upload();
+    })
+    var url="{:url('upload/index')}";
+    var ue = UE.getEditor('editor',{
+        serverUrl :url
+    });
     layui.use(['form', 'layer'],
     function() {
         $ = layui.jquery;

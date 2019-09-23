@@ -11,13 +11,14 @@
 
 // 应用公共文件
 if (!function_exists('show')) {
-    function show($status,$message,$data=[],$code=200){
-        $result=[
-            'status'=>$status,
-            'message'=>$message,
-            'data'=>$data
+    function show($status, $message, $data = [], $code = 200)
+    {
+        $result = [
+            'status' => $status,
+            'message' => $message,
+            'data' => $data
         ];
-        return json($result,$code);
+        return json($result, $code);
     }
 }
 /***
@@ -39,28 +40,30 @@ if (!function_exists('getNumberCode')) {
  * @param $catId
  */
 if (!function_exists('getCatName')) {
-    function getCatName($cats,$catId) {
-        if(!$catId || !$cats) {
+    function getCatName($cats, $catId)
+    {
+        if (!$catId || !$cats) {
             return '';
         }
-        $name='';
-        foreach($cats as $key=>$val){
-            if($val['id']==$catId){
-                $name=$val['name'];
+        $name = '';
+        foreach ($cats as $key => $val) {
+            if ($val['id'] == $catId) {
+                $name = $val['name'];
             }
         }
         return !empty($name) ? $name : '';
     }
 }
 if (!function_exists('getMenuName')) {
-    function getMenuName($menuData,$value){
-        if (empty($menuData)){
+    function getMenuName($menuData, $value)
+    {
+        if (empty($menuData)) {
             return false;
         }
-        $data='';
-        foreach($menuData as $key=>$val){
-            if ($val['value']==$value){
-                $data=$val['name'];
+        $data = '';
+        foreach ($menuData as $key => $val) {
+            if ($val['value'] == $value) {
+                $data = $val['name'];
             }
         }
         return $data;
@@ -203,11 +206,11 @@ if (!function_exists('getparentid')) {
 if (!function_exists('apptype')) {
     function apptype()
     {
-        $apptypes=config('app.apptypes');
-        $apptypeA=[];
-        foreach($apptypes as $v){
-            foreach ($v as $key=>$vv){
-                $apptypeA[]=$vv;
+        $apptypes = config('app.apptypes');
+        $apptypeA = [];
+        foreach ($apptypes as $v) {
+            foreach ($v as $key => $vv) {
+                $apptypeA[] = $vv;
             }
         }
         return $apptypeA;
@@ -220,12 +223,12 @@ if (!function_exists('apptype')) {
 if (!function_exists('apptypeValue')) {
     function apptypeValue($apptypeS)
     {
-        $apptypes=config('app.apptypes');
-        $apptype='';
-        foreach($apptypes as $v){
-            foreach ($v as $key=>$vv){
-                if($apptypeS==$vv){
-                    $apptype=$key;
+        $apptypes = config('app.apptypes');
+        $apptype = '';
+        foreach ($apptypes as $v) {
+            foreach ($v as $key => $vv) {
+                if ($apptypeS == $vv) {
+                    $apptype = $key;
                     break;
                 }
             }
@@ -235,8 +238,9 @@ if (!function_exists('apptypeValue')) {
 }
 // 转换查询条件
 if (!function_exists('setCheckTime')) {
-    function setCheckTime($data){
-        $whereData=[];
+    function setCheckTime($data)
+    {
+        $whereData = [];
         if (!empty($data['start_time']) && !empty($data['end_time'])
             && $data['end_time'] > $data['start_time']
         ) {
@@ -246,5 +250,105 @@ if (!function_exists('setCheckTime')) {
             ];
         }
         return $whereData;
+    }
+}
+
+/**
+ * @param string $url post请求地址
+ * @param array $params
+ * @return mixed
+ */
+if (!function_exists('curl_post')) {
+    function curl_post($url, array $params = array())
+    {
+        $data_string = json_encode($params);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt(
+            $ch, CURLOPT_HTTPHEADER,
+            array(
+                'Content-Type: application/json'
+            )
+        );
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return ($data);
+    }
+}
+
+if (!function_exists('curl_post_raw')) {
+    function curl_post_raw($url, $rawData)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $rawData);
+        curl_setopt(
+            $ch, CURLOPT_HTTPHEADER,
+            array(
+                'Content-Type: text'
+            )
+        );
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return ($data);
+    }
+}
+
+/**
+ * @param string $url get请求地址
+ * @param int $httpCode 返回状态码
+ * @return mixed
+ */
+if (!function_exists('curl_get')) {
+    function curl_get($url, &$httpCode = 0)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        //不做证书校验,部署在linux环境下请改为true
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        $file_contents = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        return $file_contents;
+    }
+}
+
+if (!function_exists('getRandChar')) {
+    function getRandChar($length)
+    {
+        $str = null;
+        $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+        $max = strlen($strPol) - 1;
+
+        for ($i = 0;
+             $i < $length;
+             $i++) {
+            $str .= $strPol[rand(0, $max)];
+        }
+
+        return $str;
+    }
+}
+if (!function_exists('fromArrayToModel')) {
+    function fromArrayToModel($m, $array)
+    {
+        foreach ($array as $key => $value) {
+            $m[$key] = $value;
+        }
+        return $m;
     }
 }

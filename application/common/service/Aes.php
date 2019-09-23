@@ -19,8 +19,8 @@ class Aes {
      */
     public function __construct() {
         // 需要小伙伴在配置文件app.php中定义aeskey
-        $this->key = substr(md5(config('key.aeskey')),2,20);
-        $this->iv = substr(md5(config('key.aesvi')),3,16);
+        $this->key = config('key.aeskey');
+        $this->iv = config('key.aesvi');
     }
 
     /**

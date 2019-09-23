@@ -7,6 +7,6 @@
  */
 return [
     'password_key'=>'?+=chinapp.',
-    'aeskey'=>'wl$-pyp.,',
+    'aeskey'=>'wl$-pyp.,ipg951.',
     'aesvi'=>'3B65571F4EB0F92E'
 ];

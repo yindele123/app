@@ -13,6 +13,7 @@ use app\common\service\IAuth;
 use think\Controller;
 use think\Request;
 use app\lib\Auth;
+use app\common\service\Upload as UploadService;
 
 class BaseController extends Controller
 {
@@ -279,5 +280,29 @@ class BaseController extends Controller
         $str = '<script type="text/javascript" src="' . config('admin.admin_static') . 'js/jquery.min.js"></script><script type="text/javascript" src="' . config('admin.common') . 'lib/layui/layui.js"></script><script type="text/javascript" src="' . config('admin.admin_static') . '/js/xadmin.js"></script>';
         $str .= '<script>$(function(){layer.msg("' . $msg . '",{icon:' . $icon . ',time:' . ($time * 1000) . '});setTimeout(function(){self.location.href="' . $url . '"},2000)});</script>';//主要方法
         return $str;
+    }
+    //单个图片上传
+    public function single($model){
+        try {
+            $image = UploadService::image($model);
+        }catch (\Exception $e) {
+            return json([
+                'code'=>config('code.error'),
+                'msg'=>$e->getMessage()
+            ]);
+        }
+        if($image) {
+            $data=[
+                'code'=>config('code.success'),
+                "msg"=>config('qiniu.image_url').'/'.$image
+            ];
+            return json($data);
+        }else {
+            return json([
+                'code'=>config('code.error'),
+                'msg'=>'上传失败'
+            ]);
+        }
+
     }
 }

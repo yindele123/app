@@ -50,7 +50,9 @@ class News extends BaseController
             'query' => $query,
         ]);
     }
-
+    public function upload(){
+        return $this->single('News');
+    }
     public function add() {
         parent::add();
         return $this->fetch('', [
