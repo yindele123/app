@@ -27,6 +27,14 @@
               </select>
             </div>
             <div class="layui-input-inline layui-show-xs-block">
+              <select name="topid" lay-filter="aihao">
+                <option value="">所属标签</option>
+                {volist name="$topid" id="vo"}
+                <option {if condition="$vo['value'] eq $topidV"}selected="selected"{/if} value="{$vo.value}">{$vo.name}</option>
+                {/volist}
+              </select>
+            </div>
+            <div class="layui-input-inline layui-show-xs-block">
               <input type="text" name="title" id="" value="{$title}" placeholder=" 资讯名称" autocomplete="off" style="width:250px" class="layui-input"></div>
             <div class="layui-input-inline layui-show-xs-block">
               <button class="layui-btn" lay-submit="" lay-filter="sreach">
@@ -46,7 +54,6 @@
               <th>分类</th>
               <th>缩图</th>
               <th>更新时间</th>
-              <th>是否推荐</th>
               <th>发布状态</th>
               <th>操作</th></tr>
             </thead>
@@ -58,7 +65,6 @@
               <td>{$vo.catid|getCatName=$cats,###}</td>
               <td><img width="60" height="60" class="picture-thumb" src="{$vo.image}"></td>
               <td>{$vo.update_time}</td>
-              <td>{$vo.is_position|isYesNo}</td>
               <td>
                 <input type="checkbox" name="switch" lay-skin="switch" data-id="{$vo.id}" lay-filter="switchTest"  lay-text="开启|停用"  {if condition="$vo['status'] eq 1"}checked=""{/if} lay-skin="switch">
               </td>

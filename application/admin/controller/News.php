@@ -13,6 +13,7 @@ class News extends BaseController
         $data = input('param.');
         $catid=[];
         $title=!empty($data['title']) ? $data['title'] : '';
+        $topid=!empty($data['topid']) ? $data['topid'] : '';
         $query = http_build_query($data);
         $whereData = setCheckTime($data);
         //die();
@@ -23,31 +24,24 @@ class News extends BaseController
         $request=Common::getPageAndSize($data);
         // 获取表里面的数据
         try{
-            $news = model('News')->getNewsByCondition($whereData,$catid, $request['from'], $request['size'],$title);
+            $news = model('News')->getNewsByCondition($whereData,['catid'=>$catid,'topid'=>$topid,'page'=>$request['page'],'title'=>$title,'size'=>$request['size']]);
         }catch (\Exception $e){
+            echo model('News')->getLastSql();
             return $this->result('', config('code.error'), $e->getMessage());
         }
-        try{
-
-            // 获取满足条件的数据总数 =》 有多少页
-            $total = model('News')->getCountByCondition($whereData,$catid,$title);
-        }catch (\Exception $e){
-            return $this->result('', config('code.error'), $e->getMessage());
-        }
-        /// 结合总数+size  =》 有多少页
-        $pageTotal = ceil($total/$request['size']);//1.1 =>2
         return $this->fetch('', [
             'cats' => model('Cate')->getCateList(),
             'news' => $news,
-            'pageTotal' => $pageTotal,
             'curr' => $request['page'],
             'start_time' => empty($data['start_time']) ? '' : $data['start_time'],
             'end_time' => empty($data['end_time']) ? '' : $data['end_time'],
             'catid' => empty($data['catid']) ? '' : $data['catid'],
+            'topidV' => empty($data['topid']) ? '' : $data['topid'],
             'title' => empty($data['title']) ? '' : $data['title'],
-            'total' => $total,
+            'total' => $news->total(),
             'size' => $request['size'],
             'query' => $query,
+            'topid'=>Common::getMenu(24)
         ]);
     }
     public function upload(){

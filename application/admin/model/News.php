@@ -21,7 +21,7 @@ class News extends BaseModel {
                 'title',
                 'read_count',
                 'status',
-                'is_position',
+                'topid',
                 'update_time',
                 'create_time'
             ];
@@ -40,20 +40,38 @@ class News extends BaseModel {
      * @param int $order  排序
      * @param array $result  返回按条件获取的新闻列表
      */
-    public function getNewsByCondition($where = [], $catid=[], $from=0, $size = 5,$title='',$field='',$order = ['id' => 'desc']) {
+//$catid=[], $from=0, $size = 5,$title='',$field='',$order = ['id' => 'desc']
+    public function getNewsByCondition($where = [],$param=['']) {
+        $param=$this->_setWhereField($param);
         $model=new News;
-        if(!empty($catid)){
-            $model->where('catid','in',$catid);
+        if(!empty($param['catid'])){
+            $model->where('catid','in',$param['catid']);
         }
-        if(!empty($title)) {
-            $where['title'] = ['like', '%'.trim($title).'%'];
+        if(!empty($param['title'])) {
+            $where['title'] = ['like', '%'.trim($param['catid']).'%'];
+        }
+        if(!empty($param['topid'])) {
+            $model->where( 'FIND_IN_SET(' . $param['topid'] . ',topid)');
         }
         if(!isset($where['status'])) {
             $where['status'] = [
                 'neq', config('code.status_delete')
             ];
         }
-        $result = $model->where($where)->limit($from, $size)->field(self::getListField($field))->order($order)->select();
+        $result = $model->where($where)->field(self::getListField($param['field']))->order($param['order'])
+            ->paginate($param['size'],false,['page' => $param['page']]);
         return $result;
+    }
+
+    private function _setWhereField($param=[]){
+        if(!isset($param['catid'])) $param['catid']=[];
+        if(!isset($param['from'])) $param['from']=0;
+        if(!isset($param['size'])) $param['size']=5;
+        if(!isset($param['title'])) $param['title']='';
+        if(!isset($param['field'])) $param['field']='';
+        if(!isset($param['topid'])) $param['topid']='';
+        if(!isset($param['page'])) $param['page']=1;
+        if(!isset($param['order'])) $param['order']=['id' => 'desc'];
+        return $param;
     }
 }
