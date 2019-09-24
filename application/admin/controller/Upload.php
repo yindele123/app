@@ -140,7 +140,7 @@ class Upload extends BaseController {
         $token = $auth->uploadToken($config['bucket']);
         // 上传到七牛后保存的文件名
         $fn=substr(md5($file), 0, 5).date('YmdHis').rand(0, 9999).'.'.$ext;
-        $key  = 'upload/'.date('Y')."/".date('m')."/".$fn;
+        $key  = 'upload/content/'.date('Y')."/".date('m')."/".$fn;
 
         //初始UploadManager类
         $uploadMgr = new UploadManager();

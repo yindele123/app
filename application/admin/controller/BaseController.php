@@ -171,7 +171,7 @@ class BaseController extends Controller
     {
         if (request()->isAjax()) {
             $model = $this->model ? $this->model : request()->controller();
-            $data = input('post.');
+            $data = $this->_setArray(input('post.'));
             $this->validateCheck($data);
             if ($model == 'Version') {
                 try {
@@ -182,9 +182,6 @@ class BaseController extends Controller
                 if ($appType->version >= $data['version']) {
                     return $this->result('', config('code.error'), '发布的版本必须要比上个版本高,上个版本是：' . $appType->version);
                 }
-            }
-            if ($model == 'AuthGroup' && isset($data['rules'])) {
-                $data['rules'] = implode(',', $data['rules']);
             }
             //入库操作
             try {
@@ -256,11 +253,8 @@ class BaseController extends Controller
     {
         if (request()->isAjax()) {
             $model = $this->model ? $this->model : request()->controller();
-            $data = input('post.');
+            $data = $this->_setArray(input('post.'));
             $this->validateCheck($data);
-            if ($model == 'AuthGroup' && isset($data['rules'])) {
-                $data['rules'] = implode(',', $data['rules']);
-            }
             //入库操作
             try {
                 $save = model($model)->allowField(true)->save($data, ['id' => $data['id']]);
@@ -273,6 +267,15 @@ class BaseController extends Controller
                 return $this->result('', config('code.error'), '更新失败');
             }
         }
+    }
+
+    private function _setArray($data){
+        foreach($data as $key=>$val){
+            if(is_array($val)){
+                $data[$key]=implode(',', $val);
+            }
+        }
+        return $data;
     }
 
     function alert($msg = '', $url = '', $icon = '', $time = 3)

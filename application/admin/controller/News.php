@@ -55,9 +55,24 @@ class News extends BaseController
     }
     public function add() {
         parent::add();
-        return $this->fetch('', [
+        return $this->fetch('info', [
             'cats' => model('Cate')->getCateList(),
-            'menu'=>Common::getMenu(2)
+            'menu'=>Common::getMenu(2),
+            'topid'=>Common::getMenu(24),
+            'action'=>'add'
+        ]);
+    }
+    public function edit()
+    {
+        parent::edit();
+        $id=input('param.id');
+        $news=$this->usuallyId($id);
+        return $this->fetch('info',[
+            'data'=>$news,
+            'cats' => model('Cate')->getCateList(),
+            'menu'=>Common::getMenu(2),
+            'topid'=>Common::getMenu(24),
+            'action'=>'edit'
         ]);
     }
 }

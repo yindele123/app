@@ -8,7 +8,7 @@
           <span class="x-red">*</span>文章标题
         </label>
         <div class="layui-input-inline">
-          <input type="text" id="title" name="title" lay-verify="required"
+          <input type="text" id="title" value="{:empty($data.title) ? '' : $data.title}" name="title" lay-verify="required"
                  autocomplete="off" class="layui-input">
         </div>
         <div class="layui-form-mid layui-word-aux">
@@ -20,7 +20,7 @@
           简略标题
         </label>
         <div class="layui-input-inline">
-          <input type="text" id="small_title" name="small_title" autocomplete="off" class="layui-input">
+          <input type="text" id="small_title" name="small_title" value="{:empty($data.small_title) ? '' : $data.small_title}" autocomplete="off" class="layui-input">
         </div>
 
       </div>
@@ -32,7 +32,7 @@
           <select name="catid" class="select">
             <option value="">请选择分类</option>
             {volist name="$cats" id="vo"}
-            <option value="{$vo.id}">{$vo.html}{$vo.name}</option>
+            <option {if condition="!empty($data) && $data['catid'] eq $vo['id']"}selected="selected"{/if} value="{$vo.id}">{$vo.html}{$vo.name}</option>
             {/volist}
           </select>
         </div>
@@ -45,63 +45,37 @@
           <span class="x-red">*</span>文章摘要
         </label>
         <div class="layui-input-block">
-          <textarea autocomplete="off" class="layui-textarea" name="description" id="description"
-                    lay-verify="required"  class="textarea"  placeholder="说点什么...最少输入10个字符" ></textarea>
+          <textarea autocomplete="off" class="layui-textarea" name="description"id="description"
+                    lay-verify="required"  class="textarea"  placeholder="说点什么...最少输入10个字符" >{:empty($data.description) ? '' : $data.description}</textarea>
         </div>
       </div>
       <div class="layui-form-item">
-        <label for="is_allowcomments" class="layui-form-label">
-          允许评论
+        <label for="topid" class="layui-form-label">
+          所属标签
         </label>
-        <div class="layui-input-inline">
-          <input type="checkbox" id="is_allowcomments" lay-skin="primary" name="is_allowcomments" value="1">
-          <label for="is_allowcomments">&nbsp;</label>
+        <div class="layui-input-block">
+          {volist  name="topid" id="vo"}
+            <input type="checkbox"  {if condition="!empty($data) && in_array($vo['value'],explode(',',$data['topid']))"}checked{/if} name="topid[]" id="topid" title="{$vo['name']}" value="{$vo['value']}">
+          {/volist}
+          <label for="topid">&nbsp;</label>
         </div>
       </div>
-      <div class="layui-form-item">
-        <label for="is_head_figure" class="layui-form-label">
-          是否推荐到首页头图
-        </label>
-        <div class="layui-input-inline">
-          <input type="checkbox" id="is_head_figure" lay-skin="primary" name="is_head_figure" value="1">
-          <label for="is_head_figure">&nbsp;</label>
-        </div>
-      </div>
-      <div class="layui-form-item">
-        <label for="is_position" class="layui-form-label">
-          是否推荐
-        </label>
-        <div class="layui-input-inline">
-          <input type="checkbox" id="is_position" lay-skin="primary" name="is_position" value="1">
-          <label for="is_position">&nbsp;</label>
-        </div>
-      </div>
+
       <div class="layui-form-item">
         <label for="image" class="layui-form-label">
           <span class="x-red">*</span>缩略图：
         </label>
         <div class="layui-input-inline">
-          <!--<input id="file_upload"  type="file" multiple="true" >
-          <img style="display: none" id="upload_org_code_img" src="" width="150" height="150">
-          <input id="file_upload_image" name="image" type="hidden" multiple="true" value="">-->
-          <div class="upload" data-name="image" action='{:url("news/upload")}' data-num='1' id='image'></div>
+          <div class="upload" {if condition="!empty($data)"}data-value="{$data['image']}"{/if} data-name="image" action='{:url("news/upload")}' data-num='1' id='image'></div>
         </div>
       </div>
 
-      <!--<div class="layui-form-item">
-        <label for="L_pass" class="layui-form-label">
-          <span class="x-red">*</span>文章内容：
-        </label>
-        <div class="">
-          <textarea id="editor" name="content" required lay-verify="required" placeholder="请输入" class="layui-textarea"></textarea>
-        </div>
-      </div>-->
       <div class="layui-form-item">
         <label for="editor" class="layui-form-label">
           <span class="x-red">*</span>文章内容：
         </label>
         <div class="layui-input-block">
-          <textarea id="editor" name="content" style="height: 400px;"  required lay-verify="required"  ></textarea>
+          <textarea id="editor" name="content" style="height: 400px;"  required lay-verify="required"  >{:empty($data.content) ? '' : $data.content}</textarea>
         </div>
       </div>
       <div class="layui-form-item">
@@ -110,13 +84,21 @@
         </label>
         <div class="layui-input-block">
           {volist  name="menu" id="vo"}
+          {if condition="!empty($data)"}
+            <input type="radio" name="status" value="{$vo.value}" title="{$vo.name}" {if condition="$data['status'] eq $vo['value']"}checked=""{/if}>
+          {else /}
             <input type="radio" name="status" value="{$vo.value}" title="{$vo.name}" {if condition="$key eq 0"}checked=""{/if}>
+          {/if}
           {/volist}
         </div>
       </div>
       <div class="layui-form-item">
         <label for="L_repass" class="layui-form-label">
         </label>
+        {if condition="!empty($data)" }
+        <input type="hidden" name="id" value="{$data['id']}">
+        {/if}
+        <input type="hidden" name="action" value="{$action}">
         <button  class="layui-btn" lay-submit lay-filter="add" type="button">
           添加
         </button>
@@ -141,11 +123,20 @@
         var form = layui.form,
             layer = layui.layer;
 
+        form.on('checkbox(father)', function (data) {
+            if(data.elem.checked){
+                $(this).val(1);
+                form.render();
+            }else{
+                $(this).val(0);
+                form.render();
+            }
+        });
         //监听提交
         form.on('submit(add)',
             function(data) {
                 // 使用Ajax提交表单数据
-                backtrack('{:url(\'news/add\')}',data.field,true);
+                backtrack("{:url('news/"+data.field.action+"')}",data.field,true);
             });
 
     });</script>
