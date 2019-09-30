@@ -36,7 +36,7 @@
               <td>{$vo.title}</td>
               <td>{$vo.url}</td>
               <td><img src="{$vo.image}"></td>
-              <td>{$vo.url}</td>
+              <td>{:timeStatus($vo['start_time'],$vo['end_time'])}</td>
               <td>
                 <input type="checkbox" name="switch" lay-skin="switch" data-id="{$vo.id}" lay-filter="switch_g"  lay-text="通过|审核"  {if condition="$vo['status'] eq 1"}checked=""{/if} lay-skin="status">
               </td>

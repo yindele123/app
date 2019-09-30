@@ -52,4 +52,22 @@ class Ad extends BaseController{
             'action'=>'edit'
         ]);
     }
+
+    public function del($id = 0){
+        if (request()->isAjax()){
+            $this->model='bannerItem';
+            $banner=$this->usuallyId($id);
+            $bannerID=$banner['banner_id'];
+            try{
+                $del=model('BannerItem')->destroy($id);
+            }catch (\Exception $e){
+                return $this->result('', config('code.error'), $e->getMessage());
+            }
+            if($del){
+                return $this->result(['jump_url' => url('ad/index',['id'=>$bannerID])], config('code.success'), '删除成功');
+            }else{
+                return $this->result('', config('code.error'), '删除失败');
+            }
+        }
+    }
 }
