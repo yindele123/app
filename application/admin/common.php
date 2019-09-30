@@ -15,6 +15,8 @@ if (!function_exists('timeStatus')) {
             $str="正常(还有".timeBefore($end_time-$time)."到期)";
         }elseif ($end_time < $time){
             $str="广告截止了(".timeBefore($time-$end_time)."前)";
+        }elseif ($start_time > $time){
+            $str="广告还有(".timeBefore($start_time-$time)."开始)";
         }
         return $str;
     }

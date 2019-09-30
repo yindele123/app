@@ -26,7 +26,6 @@ class News extends BaseController
         try{
             $news = model('News')->getNewsByCondition($whereData,['catid'=>$catid,'topid'=>$topid,'page'=>$request['page'],'title'=>$title,'size'=>$request['size']]);
         }catch (\Exception $e){
-            echo model('News')->getLastSql();
             return $this->result('', config('code.error'), $e->getMessage());
         }
         return $this->fetch('', [

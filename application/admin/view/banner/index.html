@@ -25,6 +25,16 @@
         <div class="layui-card-header" style="clear: right;">
           <button class="layui-btn" onclick="xadmin.open('添加','{:url(\'banner/add\')}')">
             <i class="layui-icon"></i>添加</button>
+          <div style="float: right;">
+            <button class="layui-btn layui-btn-danger" onclick="xadmin.open('已过期','{:url(\'banner/timeStatus\',[\'type\'=>\'expired\'])}')">
+              已过期</button>
+            <button class="layui-btn layui-btn-normal" onclick="xadmin.open('正常','{:url(\'banner/timeStatus\',[\'type\'=>\'normal\'])}')">
+              正常</button>
+            <button class="layui-btn layui-btn-danger" onclick="xadmin.open('即将过期','{:url(\'banner/timeStatus\',[\'type\'=>\'comingSoon\'])}')">
+              即将过期</button>
+            <button class="layui-btn layui-btn-warm" onclick="xadmin.open('未开始','{:url(\'banner/timeStatus\',[\'type\'=>\'not\'])}')">
+              未开始</button>
+          </div>
         </div>
         <div class="layui-card-body ">
           <table class="layui-table layui-form">

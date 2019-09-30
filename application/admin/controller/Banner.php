@@ -69,4 +69,41 @@ class Banner extends BaseController{
         }
         return $this->alert('请不要非法操作',url('banner/index'),6,3);
     }
+
+    public function timeStatus(){
+        $data = input('param.');
+        $query = http_build_query($data);
+        $whereData = [];
+        switch ($data['type']){
+            case "expired":
+                $whereData['end_time'] = ['lt', time()];
+                break;
+            case "normal":
+                $whereData['end_time'] = ['gt', time()];
+                $whereData['start_time'] = ['lt', time()];
+                break;
+            case "comingSoon":
+                $whereData['end_time'] = ['lt', strtotime("+30 days")];
+                $whereData['end_time'] = ['lt', strtotime("+30 days")];
+                break;
+            case "not":
+                $whereData['start_time'] = ['gt', time()];
+                break;
+            default:
+                return $this->alert('请不要非法操作',url('banner/index'),6,3);
+        }
+        $request=Common::getPageAndSize($data);
+        try{
+            $data=model('BannerItem')->getAdS($whereData,['page'=>$request['page'],'size'=>$request['size']]);
+        }catch (\Exception $e){
+            return $this->alert($e->getMessage(),url('banner/index'),6,3);
+        }
+        return $this->fetch('timeStatus',[
+            'data'=>$data,
+            'query'=>$query,
+            'size' => $request['size'],
+            'curr' => $request['page'],
+            'total'=>$data->total()
+        ]);
+    }
 }

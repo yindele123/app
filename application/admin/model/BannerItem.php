@@ -26,9 +26,9 @@ class BannerItem extends BaseModel{
         }
         return $field;
     }
-    public function getAdS($bannerId,$param=[]){
+    public function getAdS($where=[],$param=[]){
         $param=$this->setWhereField($param);
-        $result = $this->where(['banner_id'=>$bannerId])->field(self::getListField($param['field']))->order($param['order'])
+        $result = $this->where($where)->field(self::getListField($param['field']))->order($param['order'])
             ->paginate($param['size'],false,['page' => $param['page']]);
         return $result;
     }

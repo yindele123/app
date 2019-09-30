@@ -2,7 +2,7 @@
 <body>
 <div class="x-nav">
             <span class="layui-breadcrumb">
-                <a href="{:url('ad/index',['id'=>$bannerId])}">广告列表</a>
+                <a href="#">广告列表</a>
             </span>
   <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
     <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
@@ -12,10 +12,6 @@
   <div class="layui-row layui-col-space15">
     <div class="layui-col-md12">
       <div class="layui-card">
-        <div class="layui-card-header" style="clear: right;">
-          <button class="layui-btn" onclick="xadmin.open('添加','{:url(\'ad/add\',[\'id\'=>$bannerId])}')">
-            <i class="layui-icon"></i>添加</button>
-        </div>
         <div class="layui-card-body ">
           <table class="layui-table layui-form">
             <thead>
@@ -59,7 +55,7 @@
 </div>
 </body>
 <script>
-    var url = '{:url("ad/index")}'+'?{$query}';
+    var url = '{:url("banner/timeStatus")}'+'?{$query}';
     layui.use(['laypage', 'layer'], function(){
         var laypage = layui.laypage
             ,layer = layui.layer;

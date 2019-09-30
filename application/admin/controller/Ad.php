@@ -17,7 +17,7 @@ class Ad extends BaseController{
         $this->model='banner';
         $this->usuallyId($param['id']);
         $ad=new BannerItem();
-        $data=$ad->getAdS($param['id']);
+        $data=$ad->getAdS(['banner_id'=>$param['id']],['page'=>$request['page'],'size'=>$request['size']]);
         return $this->fetch('index',[
             'data'=>$data,
             'query'=>$query,
