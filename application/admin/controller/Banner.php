@@ -83,8 +83,10 @@ class Banner extends BaseController{
                 $whereData['start_time'] = ['lt', time()];
                 break;
             case "comingSoon":
-                $whereData['end_time'] = ['lt', strtotime("+30 days")];
-                $whereData['end_time'] = ['lt', strtotime("+30 days")];
+                $whereData['end_time'] = [
+                    ['lt', strtotime("+30 days")],
+                    ['gt', time()]
+                ];
                 break;
             case "not":
                 $whereData['start_time'] = ['gt', time()];
