@@ -44,9 +44,6 @@ class News extends BaseController
             'topid'=>Common::getMenu(24)
         ]);
     }
-    public function upload(){
-        return $this->single('News');
-    }
     public function add() {
         parent::add();
         return $this->fetch('info', [

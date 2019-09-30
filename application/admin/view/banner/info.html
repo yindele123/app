@@ -1,0 +1,54 @@
+{include file="public/header" /}
+<body>
+<div class="layui-fluid">
+  <div class="layui-row">
+    <form class="layui-form">
+      <div class="layui-form-item">
+        <label for="name" class="layui-form-label">
+          <span class="x-red">*</span>广告分类名称
+        </label>
+        <div class="layui-input-inline">
+          <input type="text" id="name" value="{:empty($data.name) ? '' : $data.name}" name="name" lay-verify="required"
+                 autocomplete="off" class="layui-input">
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <label for="identification" class="layui-form-label">
+          <span class="x-red">*</span>标识
+        </label>
+        <div class="layui-input-inline">
+          <input type="text" id="identification" name="identification" value="{:empty($data.identification) ? '' : $data.identification}" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label for="L_repass" class="layui-form-label">
+        </label>
+        {if condition="!empty($data)" }
+        <input type="hidden" name="id" value="{$data['id']}">
+        {/if}
+        <input type="hidden" name="action" value="{$action}">
+        <button  class="layui-btn" lay-submit lay-filter="add" type="button">
+          添加
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+    layui.use(['form', 'layer'],
+    function() {
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
+        //监听提交
+        form.on('submit(add)',
+            function(data) {
+                // 使用Ajax提交表单数据
+                backtrack("{:url('banner/"+data.field.action+"')}",data.field,true);
+            });
+
+    });</script>
+</body>
+
+</html>

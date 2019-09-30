@@ -26,12 +26,16 @@
                         </td>
                         <td>
                             <div class="layui-input-block">
+                                {if condition="!empty($authRule['children'])"}
                                 {volist  name="$authRule['children']" id="vo"}
                                 <input name="rules[]" {if condition="!empty($data) && in_array($vo['id'], $data['rules'])" }checked{/if} lay-skin="primary" value="{$vo.id}" type="checkbox" title="{$vo['title']}">
-                                {volist  name="$vo['children']" id="v"}
-                                <input name="rules[]" lay-skin="primary" {if condition="!empty($data) && in_array($v['id'], $data['rules'])" }checked{/if} value="{$v.id}" type="checkbox" title="{$v['title']}">
+                                    {if condition="!empty($vo['children'])"}
+                                    {volist  name="$vo['children']" id="v"}
+                                    <input name="rules[]" lay-skin="primary" {if condition="!empty($data) && in_array($v['id'], $data['rules'])" }checked{/if} value="{$v.id}" type="checkbox" title="{$v['title']}">
+                                    {/volist}
+                                    {/if}
                                 {/volist}
-                                {/volist}
+                                {/if}
                             </div>
                         </td>
                     </tr>

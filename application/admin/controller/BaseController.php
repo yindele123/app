@@ -254,6 +254,7 @@ class BaseController extends Controller
         if (request()->isAjax()) {
             $model = $this->model ? $this->model : request()->controller();
             $data = $this->_setArray(input('post.'));
+            $this->usuallyId($data['id']);
             $this->validateCheck($data);
             //入库操作
             try {
@@ -283,6 +284,10 @@ class BaseController extends Controller
         $str = '<script type="text/javascript" src="' . config('admin.admin_static') . 'js/jquery.min.js"></script><script type="text/javascript" src="' . config('admin.common') . 'lib/layui/layui.js"></script><script type="text/javascript" src="' . config('admin.admin_static') . '/js/xadmin.js"></script>';
         $str .= '<script>$(function(){layer.msg("' . $msg . '",{icon:' . $icon . ',time:' . ($time * 1000) . '});setTimeout(function(){self.location.href="' . $url . '"},2000)});</script>';//主要方法
         return $str;
+    }
+    public function upload(){
+        $model = $this->model ? $this->model : request()->controller();
+        return $this->single(lcfirst($model));
     }
     //单个图片上传
     public function single($model){

@@ -1,0 +1,95 @@
+{include file="public/header" /}
+<body>
+<div class="layui-fluid">
+  <div class="layui-row">
+    <form class="layui-form">
+      <div class="layui-form-item">
+        <label for="title" class="layui-form-label">
+          <span class="x-red">*</span>广告标题
+        </label>
+        <div class="layui-input-inline">
+          <input type="text" id="title" value="{:empty($data.title) ? '' : $data.title}" name="title" lay-verify="required"
+                 autocomplete="off" class="layui-input">
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <label for="start" class="layui-form-label">
+          <span class="x-red">*</span>开始日
+        </label>
+        <div class="layui-input-inline">
+          <input class="layui-input" placeholder="开始日" name="start_time" id="start">
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <label for="title" class="layui-form-label">
+          <span class="end">*</span>截止日
+        </label>
+        <div class="layui-input-inline">
+          <input class="layui-input" placeholder="截止日" name="end_time" id="end"></div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label for="small_title" class="layui-form-label">
+          <span class="x-red">*</span>URL
+        </label>
+        <div class="layui-input-inline">
+          <input type="text" id="small_title" name="small_title" value="{:empty($data.small_title) ? '' : $data.small_title}" autocomplete="off" class="layui-input">
+        </div>
+
+      </div>
+
+      <div class="layui-form-item">
+        <label for="image" class="layui-form-label">
+          <span class="x-red">*</span>缩略图：
+        </label>
+        <div class="layui-input-inline">
+          <div class="upload" {if condition="!empty($data)"}data-value="{$data['image']}"{/if} data-name="image" action='{:url("banner/upload")}' data-num='1' id='image'></div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label for="L_repass" class="layui-form-label">
+        </label>
+        {if condition="!empty($data)" }
+        <input type="hidden" name="id" value="{$data['id']}">
+        {/if}
+        <input type="hidden" name="action" value="{$action}">
+        <button  class="layui-btn" lay-submit lay-filter="add" type="button">
+          添加
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+    $(function(){
+        $("#image").upload();
+    })
+    layui.use(['form', 'layer','laydate'],
+    function() {
+        $ = layui.jquery;
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#end' //指定元素
+        });
+        var form = layui.form,
+            layer = layui.layer;
+        //监听提交
+        form.on('submit(add)',
+            function(data) {
+                // 使用Ajax提交表单数据
+                backtrack("{:url('banner/"+data.field.action+"')}",data.field,true);
+            });
+
+    });</script>
+</body>
+
+</html>
