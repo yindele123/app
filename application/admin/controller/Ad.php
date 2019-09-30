@@ -23,12 +23,24 @@ class Ad extends BaseController{
             'query'=>$query,
             'size' => $request['size'],
             'curr' => $request['page'],
+            'bannerId'=>$param['id'],
             'total'=>$data->total()
         ]);
     }
     public function status(){
         $this->model='bannerItem';
         parent::status();
+    }
+    public function add(){
+        $this->model='bannerItem';
+        parent::add();
+        $this->model='banner';
+        $id=input('param.id');
+        $this->usuallyId($id);
+        return $this->fetch('info',[
+            'action'=>'add',
+            'bannerId'=>$id
+        ]);
     }
     public function edit(){
         $this->model='bannerItem';
