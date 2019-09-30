@@ -18,7 +18,7 @@
           <span class="x-red">*</span>开始日
         </label>
         <div class="layui-input-inline">
-          <input class="layui-input" placeholder="开始日" name="start_time" id="start">
+          <input class="layui-input" value="{:empty($data.start_time) ? '' : date('Y-m-d', $data.start_time)}" placeholder="开始日" name="start_time" id="start">
         </div>
       </div>
 
@@ -27,15 +27,15 @@
           <span class="end">*</span>截止日
         </label>
         <div class="layui-input-inline">
-          <input class="layui-input" placeholder="截止日" name="end_time" id="end"></div>
+          <input class="layui-input" value="{:empty($data.end_time) ? '' : date('Y-m-d', $data.end_time)}"  placeholder="截止日" name="end_time" id="end">
         </div>
       </div>
       <div class="layui-form-item">
-        <label for="small_title" class="layui-form-label">
+        <label for="url" class="layui-form-label">
           <span class="x-red">*</span>URL
         </label>
         <div class="layui-input-inline">
-          <input type="text" id="small_title" name="small_title" value="{:empty($data.small_title) ? '' : $data.small_title}" autocomplete="off" class="layui-input">
+          <input type="text" id="url" name="url" value="{:empty($data.url) ? '' : $data.url}" autocomplete="off" class="layui-input">
         </div>
 
       </div>
@@ -86,7 +86,13 @@
         form.on('submit(add)',
             function(data) {
                 // 使用Ajax提交表单数据
-                backtrack("{:url('banner/"+data.field.action+"')}",data.field,true);
+                var start_time = data.field.start_time;
+                start_time = start_time.substring(0,19).replace(/-/g,'/');
+                var end_time = data.field.end_time;
+                end_time = end_time.substring(0,19).replace(/-/g,'/');
+                data.field.start_time=new Date(start_time).getTime()/1000;
+                data.field.end_time=parseInt(new Date(end_time).getTime()/1000);
+                backtrack("{:url('ad/"+data.field.action+"')}",data.field,true);
             });
 
     });</script>

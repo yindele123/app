@@ -40,9 +40,8 @@ class News extends BaseModel {
      * @param int $order  排序
      * @param array $result  返回按条件获取的新闻列表
      */
-//$catid=[], $from=0, $size = 5,$title='',$field='',$order = ['id' => 'desc']
     public function getNewsByCondition($where = [],$param=['']) {
-        $param=$this->_setWhereField($param);
+        $param=$this->setWhereField($param);
         $model=new News;
         if(!empty($param['catid'])){
             $model->where('catid','in',$param['catid']);
@@ -61,17 +60,5 @@ class News extends BaseModel {
         $result = $model->where($where)->field(self::getListField($param['field']))->order($param['order'])
             ->paginate($param['size'],false,['page' => $param['page']]);
         return $result;
-    }
-
-    private function _setWhereField($param=[]){
-        if(!isset($param['catid'])) $param['catid']=[];
-        if(!isset($param['from'])) $param['from']=0;
-        if(!isset($param['size'])) $param['size']=5;
-        if(!isset($param['title'])) $param['title']='';
-        if(!isset($param['field'])) $param['field']='';
-        if(!isset($param['topid'])) $param['topid']='';
-        if(!isset($param['page'])) $param['page']=1;
-        if(!isset($param['order'])) $param['order']=['id' => 'desc'];
-        return $param;
     }
 }

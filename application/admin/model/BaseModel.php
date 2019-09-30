@@ -113,4 +113,16 @@ class BaseModel extends CommonModel
         return getColumn($cateres,$cateid);
     }
 
+    protected function setWhereField($param=[]){
+        if(!isset($param['catid'])) $param['catid']=[];
+        if(!isset($param['from'])) $param['from']=0;
+        if(!isset($param['size'])) $param['size']=10;
+        if(!isset($param['title'])) $param['title']='';
+        if(!isset($param['field'])) $param['field']='';
+        if(!isset($param['topid'])) $param['topid']='';
+        if(!isset($param['page'])) $param['page']=1;
+        if(!isset($param['order'])) $param['order']=['id' => 'desc'];
+        return $param;
+    }
+
 }

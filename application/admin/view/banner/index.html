@@ -50,7 +50,7 @@
               </td>
               <td>{$vo.create_time}</td>
               <td class="td-manage">
-                <button class="layui-btn layui-btn-normal"  onclick="xadmin.open('查看广告','{:url(\'banner/ad\',[\'id\'=>$vo.id])}')" ><i class="layui-icon">&#xe6b2;</i>查看广告</button>
+                <button class="layui-btn layui-btn-normal"  onclick="xadmin.open('查看广告','{:url(\'ad/index\',[\'id\'=>$vo.id])}')" ><i class="layui-icon">&#xe6b2;</i>查看广告</button>
                 <button class="layui-btn layui-btn layui-btn-xs"  onclick="xadmin.open('编辑','{:url(\'banner/edit\',[\'id\'=>$vo.id])}')" ><i class="layui-icon">&#xe642;</i>编辑</button>
                 <button class="layui-btn-danger layui-btn layui-btn-xs"  onClick="current_del(this,'{:url(\'banner/del\', [\'id\'=>$vo.id])}')" href="javascript:;" ><i class="layui-icon">&#xe640;</i>删除</button>
               </td>

@@ -69,12 +69,4 @@ class Banner extends BaseController{
         }
         return $this->alert('请不要非法操作',url('banner/index'),6,3);
     }
-    //广告列表
-    public function ad(){
-        $id=input('param.id');
-        $this->usuallyId($id);
-        return $this->fetch('ad',[
-
-        ]);
-    }
 }
