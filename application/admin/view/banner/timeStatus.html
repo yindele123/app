@@ -17,6 +17,8 @@
             <thead>
             <tr>
               <th>ID</th>
+              <th>广告分类名称(ID)</th>
+              <th>广告分类标识</th>
               <th>广告标题</th>
               <th>URL</th>
               <th>广告图</th>
@@ -29,6 +31,8 @@
             {volist  name="data" id="vo"}
             <tr>
               <td>{$vo.id}</td>
+              <td>{$vo.item.name}({$vo.item.id})</td>
+              <td>{$vo.item.identification}</td>
               <td>{$vo.title}</td>
               <td>{$vo.url}</td>
               <td><img src="{$vo.image}"></td>
