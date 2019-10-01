@@ -76,13 +76,14 @@ class BaseModel extends CommonModel
      * @param string $title  模糊查询的新闻标题
      * @param return $data
      */
-    public function getCountByCondition($where = [], $catid=[],$title='') {
+    public function getCountByCondition($where = [], $param=[]) {
+        $param=$this->setWhereField($param);
         $model=$this;
-        if(!empty($catid)){
-            $model->where('catid','in',$catid);
+        if(!empty($param['catid'])){
+            $model->where('catid','in',$param['catid']);
         }
-        if(!empty($title)) {
-            $where['title'] = ['like', '%'.trim($title).'%'];
+        if(!empty($param['title'])) {
+            $where['title'] = ['like', '%'.trim($param['title']).'%'];
         }
         if(!isset($where['status'])) {
             $where['status'] = [
