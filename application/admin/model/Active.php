@@ -13,13 +13,11 @@ class Active extends BaseModel{
      * @param int $from 取数据开始取
      * @param int $size 取多少条
      * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
-    public function getActiveList($where = [], $from=0, $size = 5)
+    public function getActiveList($where = [], $param=[])
     {
-        $result = $this->where($where)->limit($from, $size)->field('id,version,app_type,version_code,did,create_time,count(id) as number')->group('version,app_type')->order('number desc')->select();
+        $param=$this->setWhereField($param);
+        $result = $this->where($where)->limit($param['from'], $param['size'])->field('id,version,app_type,version_code,did,create_time,count(id) as number')->group('version,app_type')->order('number desc')->select();
         return collection($result)->toArray();
     }
 
@@ -40,13 +38,11 @@ class Active extends BaseModel{
      * @param int $from 取数据开始取
      * @param int $size 取多少条
      * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
-    public function getActiveDetailedList($where = [], $from=0, $size = 5)
+    public function getActiveDetailedList($where = [], $param=[])
     {
-        $result = $this->where($where)->limit($from, $size)->field('id,version,app_type,version_code,did,create_time,did')->order('id desc')->select();
+        $param=$this->setWhereField($param);
+        $result = $this->where($where)->limit($param['from'], $param['size'])->field('id,version,app_type,version_code,did,create_time,did')->order($param['order'])->select();
         return collection($result)->toArray();
     }
 

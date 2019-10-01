@@ -99,7 +99,7 @@ class BaseModel extends CommonModel
      * @return array
      */
     public function getCateList($type='',$field=[]){
-        $cate=new Cate;
+        $cate=$this;
         if(!empty($type)){
             $cate->where( 'FIND_IN_SET(' . $type . ',type)');
         }

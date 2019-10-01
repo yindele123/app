@@ -11,14 +11,17 @@ use app\common\service\Common;
 
 class Cate extends BaseController{
     public function index(){
+        $data = input('param.');
+        $typeValue=empty($data['type']) ? '' : $data['type'];
         try{
-            $cateres=model('Cate')->catetree();
+            $cateres=model('Cate')->catetree(['type'=>$typeValue]);
         }catch (\Exception $e){
             return $this->result('', config('code.error'), $e->getMessage());
         }
         return $this->fetch('index',[
             'cateres'=>$cateres,
-            'menu'=>Common::getMenu(32)
+            'menu'=>Common::getMenu(32),
+            'type_value'=>$typeValue
         ]);
     }
 

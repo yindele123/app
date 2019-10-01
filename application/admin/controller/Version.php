@@ -19,7 +19,7 @@ class Version extends BaseController{
             $whereData['app_type']=$data['app_type'];
         }
         try{
-            $version=model('Version')->getVersionByCondition($whereData,$request['from'], $request['size']);
+            $version=model('Version')->getVersionByCondition($whereData,['size'=>$request['size'],'from'=>$request['from']]);
         }catch (\Exception $e){
             return $this->alert($e->getMessage(),url('version/index'),6,3);
         }

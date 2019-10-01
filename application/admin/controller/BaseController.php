@@ -235,7 +235,7 @@ class BaseController extends Controller
         $model = $this->model ? $this->model : request()->controller();
         try {
             $field = empty($field) ? ['id', 'name', 'pid', 'sort', 'status'] : $field;
-            $cateres = model($model)->getCateList($field);
+            $cateres = model($model)->getCateList('',$field);
         } catch (\Exception $e) {
             if (request()->isAjax()) {
                 return $this->result('', config('code.error'), $e->getMessage());

@@ -21,17 +21,18 @@ class Admin extends BaseModel {
      * @param int $order  排序
      * @param array $result  返回按条件获取的管理员列表
      */
-    public function getAdmin($where = [], $from=0, $size = 5,$search='',$field='',$order = ['id' => 'desc']){
+    public function getAdmin($where = [], $param=[]){
+        $param=$this->setWhereField($param);
         $model=new Admin;
-        if(!empty($search)) {
-            $model->where('username', 'like', '%' . trim($search) . '%');
+        if(!empty($param['title'])) {
+            $model->where('username', 'like', '%' . trim($param['title']) . '%');
         }
         if(!isset($where['status'])) {
             $where['status'] = [
                 'neq', config('code.status_delete')
             ];
         }
-        $result = $model->where($where)->with(['authGroupAccessFind','authGroupAccessFind.authGroupAccessFind'])->limit($from, $size)->field(self::getListField($field))->order($order)->select();
+        $result = $model->where($where)->with(['authGroupAccessFind','authGroupAccessFind.authGroupAccessFind'])->limit($param['from'], $param['size'])->field(self::getListField($param['field']))->order($param['order'])->select();
         return collection($result)->toArray();
     }
     /**

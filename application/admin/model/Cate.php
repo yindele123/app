@@ -10,8 +10,14 @@ class Cate extends BaseModel{
     /**
      * 获取递归分类
      */
-    public function catetree($field=''){
-        $cateres=$this->order('sort desc')->field($this->getListField($field))->select();
+    //,$type='',$field=''
+    public function catetree($param=[]){
+        $param=$this->setWhereField($param);
+        $cate=new Cate;
+        if(!empty($param['type'])){
+            $cate->where( 'FIND_IN_SET(' . $param['type'] . ',type)');
+        }
+        $cateres=$cate->order($param['order'])->field($this->getListField($param['field']))->select();
         return collection($this->sort($cateres))->toArray();
     }
 
@@ -40,6 +46,13 @@ class Cate extends BaseModel{
     public static function getListCate(){
         $cateres=self::field('id,name')->select();
         return collection($cateres)->toArray();
+    }
+
+    protected function setWhereField($param=[]){
+        if(!isset($param['type'])) $param['type']='';
+        if(!isset($param['field'])) $param['field']='';
+        if(!isset($param['order'])) $param['order']=['sort'=>'desc'];
+        return $param;
     }
 
 

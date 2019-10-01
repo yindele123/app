@@ -16,8 +16,9 @@ class Banner extends BaseController{
         $query = http_build_query($data);
         $key=!empty($data['key']) ? $data['key'] : '';
         $request=Common::getPageAndSize($data);
+
         try{
-            $banner=BannerModel::getBanners($key,$request['page'],$request['size']);
+            $banner=model('Banner')->getBanners(['title'=>$key,'page'=>$request['page'],'size'=>$request['size']]);
         }catch (\Exception $e){
             return $this->alert($e->getMessage(),url('banner/index'),6,3);
         }

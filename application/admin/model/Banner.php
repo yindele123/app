@@ -17,12 +17,13 @@ class Banner extends BaseModel{
      * @param int $size  取值多少条
      * @return array $data
      */
-    public static function getBanners($key='',$page=1,$size=10){
+    public function getBanners($param=[]){
+        $param=$this->setWhereField($param);
         $model=new Banner;
-        if(!empty($key)){
-            $model->where('name|identification', 'like', '%' . trim($key) . '%');
+        if(!empty($param['title'])){
+            $model->where('name|identification', 'like', '%' . trim($param['title']) . '%');
         }
-        $data=$model->order('id desc')->withCount('item')->field('id,name,identification,create_time,status')->paginate($size,false,['page' => $page]);
+        $data=$model->order($param['order'])->withCount('item')->field('id,name,identification,create_time,status')->paginate($param['size'],false,['page' => $param['page']]);
         return $data;
     }
 

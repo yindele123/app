@@ -14,7 +14,22 @@
                     <div class="layui-card">
                         <div class="layui-card-header">
                             <button class="layui-btn" onclick="xadmin.open('添加','{:url(\'cate/add\')}')">
-                                <i class="layui-icon"></i>添加</button></div>
+                                <i class="layui-icon"></i>添加</button>
+                            <div style="float: right;">
+                                <div class="layui-card-body ">
+                                    <form class="layui-form layui-col-space5">
+                                        <div class="layui-input-inline layui-show-xs-block" style="float:right">
+                                            <select name="type" lay-filter="type">
+                                                <option value="0">全部分类</option>
+                                                {volist name="$menu" id="vo"}
+                                                <option {if condition="$vo['value'] eq $type_value"}selected{/if}  value="{$vo.value}">{$vo.name}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         <div class="layui-card-body ">
                             <table class="layui-table layui-form">
                               <thead>
@@ -73,6 +88,9 @@
                       "id":requst.elem.dataset.id
                   };
                   setChecked('{:url(\'cate/status\')}',data);
+              });
+              form.on('select(type)', function(data){
+                  self.location='{:url(\'cate/index\')}?type='+data.value;
               });
           });
           // 分类展开收起的分类的逻辑

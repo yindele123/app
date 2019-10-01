@@ -20,7 +20,7 @@ class Active extends BaseController{
             $whereData['app_type']=$data['app_type'];
         }
         try{
-            $active=model('Active')->getActiveList($whereData,$request['from'], $request['size']);
+            $active=model('Active')->getActiveList($whereData,['from'=>$request['from'],'size'=>$request['size']]);
         }catch (\Exception $e){
             return $this->alert($e->getMessage(),url('active/index'),6,3);
         }
@@ -54,7 +54,7 @@ class Active extends BaseController{
             $whereData['version']=$data['version'];
         }
         try{
-            $active=model('Active')->getActiveDetailedList($whereData,$request['from'], $request['size']);
+            $active=model('Active')->getActiveDetailedList($whereData,['from'=>$request['from'],'size'=>$request['size']]);
         }catch (\Exception $e){
             return $this->alert($e->getMessage(),url('active/index'),6,3);
         }

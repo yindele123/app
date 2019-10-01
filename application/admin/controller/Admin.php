@@ -23,7 +23,7 @@ class Admin extends BaseController {
         $request=Common::getPageAndSize($data);
         // 获取表里面的数据
         try{
-            $admin = model('Admin')->getAdmin($whereData, $request['from'], $request['size'],$search);
+            $admin = model('Admin')->getAdmin($whereData, ['from'=>$request['from'],'title'=>$search,'size'=>$request['size']]);
         }catch (\Exception $e){
             return $this->result('', config('code.error'), $e->getMessage());
         }
