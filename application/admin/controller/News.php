@@ -29,7 +29,7 @@ class News extends BaseController
             return $this->result('', config('code.error'), $e->getMessage());
         }
         return $this->fetch('', [
-            'cats' => model('Cate')->getCateList(),
+            'cats' => model('Cate')->getCateList(config('cate.cateNews')),
             'news' => $news,
             'curr' => $request['page'],
             'start_time' => empty($data['start_time']) ? '' : $data['start_time'],
@@ -46,7 +46,7 @@ class News extends BaseController
     public function add() {
         parent::add();
         return $this->fetch('info', [
-            'cats' => model('Cate')->getCateList(),
+            'cats' => model('Cate')->getCateList(config('cate.cateNews')),
             'menu'=>Common::getMenu(2),
             'topid'=>Common::getMenu(24),
             'action'=>'add'
@@ -59,7 +59,7 @@ class News extends BaseController
         $news=$this->usuallyId($id);
         return $this->fetch('info',[
             'data'=>$news,
-            'cats' => model('Cate')->getCateList(),
+            'cats' => model('Cate')->getCateList(config('cate.cateNews')),
             'menu'=>Common::getMenu(2),
             'topid'=>Common::getMenu(24),
             'action'=>'edit'

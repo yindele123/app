@@ -98,8 +98,12 @@ class BaseModel extends CommonModel
      * @param $cateid 父ID
      * @return array
      */
-    public function getCateList($field=[]){
-        $cateres=$this->field($field)->select();
+    public function getCateList($type='',$field=[]){
+        $cate=new Cate;
+        if(!empty($type)){
+            $cate->where( 'FIND_IN_SET(' . $type . ',type)');
+        }
+        $cateres=$cate->field($field)->select();
         return getCategoryTree($cateres);
     }
 
