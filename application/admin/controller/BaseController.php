@@ -227,15 +227,16 @@ class BaseController extends Controller
      * 通用获取分类
      * @return mixed|void
      */
-    public function usuallyCate($field = [])
+    public function usuallyCate($param=[])
     {
         if (request()->action() == 'usuallyCate') {
             return $this->alert('请不要非法操作', url('index/index'), 6, 3);
         }
         $model = $this->model ? $this->model : request()->controller();
         try {
-            $field = empty($field) ? ['id', 'name', 'pid', 'sort', 'status'] : $field;
-            $cateres = model($model)->getCateList('',$field);
+            $field = empty($param['field']) ? ['id', 'name', 'pid', 'sort', 'status'] : $param['field'];
+            $type=empty($param['type']) ? '' : $param['type'];
+            $cateres = model($model)->getCateList($type,$field);
         } catch (\Exception $e) {
             if (request()->isAjax()) {
                 return $this->result('', config('code.error'), $e->getMessage());

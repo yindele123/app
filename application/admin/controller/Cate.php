@@ -36,9 +36,10 @@ class Cate extends BaseController{
     }
     public function edit(){
         parent::edit();
-        $id=input('param.id');
-        $cate=$this->usuallyId($id);
-        $cateres=$this->usuallyCate();
+        $param=input('param.');
+        $cate=$this->usuallyId($param['id']);
+        $type=empty($param['type']) ? '' : $param['type'];
+        $cateres=$this->usuallyCate(['type'=>$type]);
         return $this->fetch('edit',[
             'data'=>$cate,
             'cateres'=>$cateres,

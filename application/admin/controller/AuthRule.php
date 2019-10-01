@@ -14,7 +14,7 @@ class AuthRule extends BaseController{
         }catch (\Exception $e){
             return $this->result('', config('code.error'), $e->getMessage());
         }
-        $menu=$this->usuallyCate($this->field);
+        $menu=$this->usuallyCate(['field'=>$this->field]);
         return $this->fetch('index',[
             'authRule'=>$authRule,
             'menu'=>$menu
@@ -32,7 +32,7 @@ class AuthRule extends BaseController{
         parent::edit();
         $id=input('param.id');
         $cate=$this->usuallyId($id);
-        $menu=$this->usuallyCate($this->field);
+        $menu=$this->usuallyCate(['field'=>$this->field]);
         return $this->fetch('edit',[
             'data'=>$cate,
             'menu'=>$menu
