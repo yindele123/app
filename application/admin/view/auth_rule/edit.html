@@ -39,7 +39,7 @@
                             icon图标
                         </label>
                         <div class="layui-input-inline">
-                            <input placeholder="icon图标" value="{$data->icon}" type="text" id="icon" name="icon" lay-verify="required"
+                            <input placeholder="icon图标" value="{:htmlspecialchars($data['icon'])}" type="text" id="icon" name="icon"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>

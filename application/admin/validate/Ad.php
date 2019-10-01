@@ -11,7 +11,7 @@ class Ad extends BaseValidate{
     protected $rule=[
         'title'=>'require',
         'start_time'=>'require',
-        'end_time'=>'require',
+        'end_time'=>'require|gt:start_time',
         'url'=>'require',
         'image'=>'require'
     ];
@@ -19,6 +19,7 @@ class Ad extends BaseValidate{
         'title.require' => '广告标题不能为空',
         'start_time.require' => '开始日不能为空',
         'end_time.require' => '截止日不能为空',
+        'end_time.gt' => '截止日要大于开始日',
         'url.require' => 'URL不能为空',
         'image.require' => '缩略图不能为空'
     ];
