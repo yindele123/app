@@ -60,13 +60,14 @@ if (!function_exists('getMenuName')) {
         if (empty($menuData)) {
             return false;
         }
+        $value=explode(',',$value);
         $data = '';
         foreach ($menuData as $key => $val) {
-            if ($val['value'] == $value) {
-                $data = $val['name'];
+            if (in_array($val['value'],$value)) {
+                $data .= $val['name'].',';
             }
         }
-        return $data;
+        return trim($data,',');
     }
 }
 

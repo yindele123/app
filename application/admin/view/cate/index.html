@@ -12,22 +12,16 @@
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-body ">
-                            <form class="layui-form layui-col-space5">
-                                <div class="layui-input-inline layui-show-xs-block">
-                                    <input class="layui-input" placeholder="分类名" lay-verify="required" name="name"></div>
-                                <div class="layui-input-inline layui-show-xs-block">
-                                    <button class="layui-btn" type="button"  lay-submit="" lay-filter="add"><i class="layui-icon"></i>增加</button>
-                                </div>
-                            </form>
-                            <hr>
-                        </div>
+                        <div class="layui-card-header">
+                            <button class="layui-btn" onclick="xadmin.open('添加','{:url(\'cate/add\')}')">
+                                <i class="layui-icon"></i>添加</button></div>
                         <div class="layui-card-body ">
                             <table class="layui-table layui-form">
                               <thead>
                                 <tr>
                                   <th width="70">ID</th>
                                   <th>栏目名</th>
+                                  <th width="50">位置</th>
                                   <th width="50">排序</th>
                                   <th width="80">状态</th>
                                   <th width="250">操作</th>
@@ -45,6 +39,7 @@
                                       {/if}
                                       {$cate.name}
                                   </td>
+                                  <td>{$cate.type|getMenuName=$menu,###}</td>
                                   <td><input type="text" class="layui-input x-sort" onclick="setSort('sort{$cate.id}','{:url(\'cate/sort\')}')" id="sort{$cate.id}" data-id="{$cate.id}" name="sort" value="{$cate.sort}"></td>
                                   <td>
                                       <input type="checkbox" name="switch" lay-skin="switch" data-id="{$cate.id}" lay-filter="switchTest"  lay-text="开启|停用"  {if condition="$cate['status'] eq 1"}checked=""{/if} lay-skin="switch">

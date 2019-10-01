@@ -7,6 +7,8 @@
  */
 namespace app\admin\controller;
 
+use app\common\service\Common;
+
 class Cate extends BaseController{
     public function index(){
         try{
@@ -15,16 +17,18 @@ class Cate extends BaseController{
             return $this->result('', config('code.error'), $e->getMessage());
         }
         return $this->fetch('index',[
-            'cateres'=>$cateres
+            'cateres'=>$cateres,
+            'menu'=>Common::getMenu(32)
         ]);
     }
 
     public function add(){
         parent::add();
-        $id=input('param.id');
-        $this->usuallyId($id);
+        $param=input('param.');
+        if(!empty($param['id']))$this->usuallyId($param['id']);
         return $this->fetch('info',[
-            'pid'=>$id
+            'pid'=>empty($param['id']) ? '' : $param['id'],
+            'menu'=>Common::getMenu(32)
         ]);
     }
     public function edit(){
@@ -34,7 +38,8 @@ class Cate extends BaseController{
         $cateres=$this->usuallyCate();
         return $this->fetch('edit',[
             'data'=>$cate,
-            'cateres'=>$cateres
+            'cateres'=>$cateres,
+            'menu'=>Common::getMenu(32)
         ]);
     }
     public function del(){

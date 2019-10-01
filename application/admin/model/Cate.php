@@ -25,6 +25,7 @@ class Cate extends BaseModel{
                 'name',
                 'pid',
                 'sort',
+                'type',
                 'status'
             ];
         }

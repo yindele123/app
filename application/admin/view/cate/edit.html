@@ -26,6 +26,16 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label for="type" class="layui-form-label">
+                            <span class="x-red">*</span>分类位置
+                        </label>
+                        <div class="layui-input-inline">
+                            {volist  name="menu" id="vo"}
+                            <input type="checkbox" {if condition="!empty($data) && in_array($vo['value'],explode(',',$data['type']))"}checked{/if}  name="type[]" id="type" title="{$vo['name']}" value="{$vo['value']}">
+                            {/volist}
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label for="keywords" class="layui-form-label">
                            分类关键词
                         </label>
