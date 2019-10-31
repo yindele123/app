@@ -50,7 +50,9 @@ class News extends BaseModel {
             $where['title'] = ['like', '%'.trim($param['catid']).'%'];
         }
         if(!empty($param['topid'])) {
-            $model->where( 'FIND_IN_SET(' . $param['topid'] . ',topid)');
+            //$model->where( 'FIND_IN_SET(' . $param['topid'] . ',topid)');
+            $model->where("topid & {$param['topid']} = {$param['topid']}");
+            //$map[] = "topid & {$param['topid']} = {$param['topid']}";
         }
         if(!isset($where['status'])) {
             $where['status'] = [

@@ -55,7 +55,7 @@
         </label>
         <div class="layui-input-block">
           {volist  name="topid" id="vo"}
-            <input type="checkbox"  {if condition="!empty($data) && in_array($vo['value'],explode(',',$data['topid']))"}checked{/if} name="topid[]" id="topid" title="{$vo['name']}" value="{$vo['value']}">
+            <input type="checkbox" {if condition="!empty($data) && check_document_position($data['topid'],$vo['value'])"}checked="checked"{/if} name="topid[]" id="topid" title="{$vo['name']}" value="{$vo['value']}">
           {/volist}
           <label for="topid">&nbsp;</label>
         </div>

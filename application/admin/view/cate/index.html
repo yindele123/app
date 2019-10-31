@@ -39,7 +39,7 @@
                                   <th width="50">位置</th>
                                   <th width="50">排序</th>
                                   <th width="80">状态</th>
-                                  <th width="250">操作</th>
+                                  <th width="350">操作</th>
                               </thead>
                               <tbody class="x-cate">
                               {volist name="cateres" id="cate"}
@@ -60,7 +60,8 @@
                                       <input type="checkbox" name="switch" lay-skin="switch" data-id="{$cate.id}" lay-filter="switchTest"  lay-text="开启|停用"  {if condition="$cate['status'] eq 1"}checked=""{/if} lay-skin="switch">
                                   </td>
                                   <td class="td-manage">
-                                    <button class="layui-btn layui-btn layui-btn-xs"  onclick="xadmin.open('编辑','{:url(\'cate/edit\',[\'id\'=>$cate.id,\'type\'=>$type_value])}')" ><i class="layui-icon">&#xe642;</i>编辑</button>
+                                      <button class="layui-btn layui-btn layui-btn-xs"  onclick="xadmin.open('编辑','{:url(\'cate/edit\',[\'id\'=>$cate.id,\'type\'=>$type_value])}')" ><i class="layui-icon">&#xe642;</i>编辑</button>
+                                      <button class="layui-btn layui-btn layui-btn layui-btn-normal layui-btn-xs"  onclick="xadmin.open('栏目图片','{:url(\'cate/images\',[\'id\'=>$cate.id])}')" ><i class="layui-icon">&#xe64a;</i>栏目图片</button>
                                     <button class="layui-btn layui-btn-warm layui-btn-xs"  onclick="xadmin.open('添加','{:url(\'cate/add\',[\'id\'=>$cate.id])}')" ><i class="layui-icon">&#xe642;</i>添加子栏目</button>
                                     <button class="layui-btn-danger layui-btn layui-btn-xs"  onclick="current_del(this,'{:url(\'cate/del\',[\'id\'=>$cate.id])}')" href="javascript:;" ><i class="layui-icon">&#xe640;</i>删除</button>
                                   </td>

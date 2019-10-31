@@ -72,4 +72,22 @@ class Cate extends BaseController{
             }
         }
     }
+    public function images(){
+        $data=input('param.');
+        $this->usuallyId($data['id']);
+        $request=Common::getPageAndSize($data);
+        $query = http_build_query($data);
+        try{
+            $result=model('CateAttach')->getCateAttachS();
+        }catch (\Exception $e){
+            return $this->alert($e->getMessage(),url('cate/index'),6,3);
+        }
+        return $this->fetch('images',[
+            'data' => $result,
+            'curr' => $request['page'],
+            'total' => $result->total(),
+            'size' => $request['size'],
+            'query' => $query
+        ]);
+    }
 }
