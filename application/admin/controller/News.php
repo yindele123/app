@@ -46,6 +46,9 @@ class News extends BaseController
             'topid'=>Common::getMenu(24)
         ]);
     }
+    /*
+     * 测试test
+     * */
     public function add() {
         parent::add();
         return $this->fetch('info', [
