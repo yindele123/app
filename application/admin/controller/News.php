@@ -9,6 +9,9 @@ namespace app\admin\controller;
 use app\common\service\Common;
 class News extends BaseController
 {
+    /*
+     * 首页
+     * */
     public function index() {
         $data = input('param.');
         $catid=[];
