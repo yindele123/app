@@ -58,6 +58,9 @@ class News extends BaseController
             'action'=>'add'
         ]);
     }
+    /*
+     * 测试自己的
+     * */
     public function edit()
     {
         parent::edit();
